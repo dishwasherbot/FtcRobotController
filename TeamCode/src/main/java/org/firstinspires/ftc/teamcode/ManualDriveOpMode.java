@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.bot.EndgameBot;
+import org.firstinspires.ftc.teamcode.bots.EndgameBot;
 
 /**
  * Mecanum teleop (with an optional arcade mode)
