@@ -2,7 +2,7 @@
 // backs up to the starting point using encoders to measure the distance.
 // This example assumes there is one encoder, attached to the left motor.
 
-package org.firstinspires.ftc.teamcode.bot;
+package org.firstinspires.ftc.teamcode.bots;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;

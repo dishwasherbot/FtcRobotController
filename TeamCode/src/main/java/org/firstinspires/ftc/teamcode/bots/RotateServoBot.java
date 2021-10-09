@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.bot;
+package org.firstinspires.ftc.teamcode.bots;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;

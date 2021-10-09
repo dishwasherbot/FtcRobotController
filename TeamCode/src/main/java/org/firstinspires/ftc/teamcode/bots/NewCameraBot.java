@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.bot;
+package org.firstinspires.ftc.teamcode.bots;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
