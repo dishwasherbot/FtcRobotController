@@ -8,16 +8,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.bots.CameraBot;
 
-@Autonomous(name="TemplateAuto", group="Template")
+@Autonomous(name="Camera Test", group="Template")
 
 public class CameraTest extends LinearOpMode {
 
-    protected CameraBot robot = new CameraBot(this); //replace FourWheelDriveBot with whichever Bot is required
+    protected CameraBot robot = new CameraBot(this);
 
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
-        Bitmap bitmap = BitmapFactory.decodeFile("C:/Users/allen/Pictures/FTC Camera/freight frenzy/tse1.jpg");
+        Bitmap bitmap = BitmapFactory.decodeFile("C:/Users/allen/Pictures/FTC Camera/freight frenzy/sample/tse1.jpg");
 
         waitForStart();
         int viablePixels = robot.getNumberOfViablePixels(bitmap, 40, 120);

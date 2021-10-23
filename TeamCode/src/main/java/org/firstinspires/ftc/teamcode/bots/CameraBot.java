@@ -115,7 +115,8 @@ public class CameraBot extends LEDBot {
     protected void printAndSave(Bitmap bmp, int average, String label){
         RobotLog.d("Image %s with %d x %d and average RGB #%02X #%02X #%02X", label, bmp.getWidth(), bmp.getHeight(),
                 Color.red(average), Color.green(average), Color.blue(average));
-        try (FileOutputStream out = new FileOutputStream(String.format("/sdcard/FIRST/ftc_%s.png", label))) {
+        //try (FileOutputStream out = new FileOutputStream(String.format("/sdcard/FIRST/ftc_%s.png", label))) {
+        try (FileOutputStream out = new FileOutputStream(String.format("C:/Users/allen/Pictures/FTC Camera/freight frenzy/output/ftc_%s.png", label))) {
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
         } catch (IOException e) {
             e.printStackTrace();
@@ -123,20 +124,25 @@ public class CameraBot extends LEDBot {
 
     }
 
-    public int detectRings() {
+    protected Bitmap getImageFromCamera() throws InterruptedException {
         BlockingQueue<VuforiaLocalizer.CloseableFrame> queue = vuforia.getFrameQueue();
+        VuforiaLocalizer.CloseableFrame frame = queue.take();
+        RobotLog.d("Took Frames from Vuforia");
+        Image image = frame.getImage(0);
+        Bitmap bmp = vuforia.convertFrameToBitmap(frame);
+        RobotLog.d(String.format("Converted Vuforia frame to BMP: %s", bmp.getConfig().toString()));
+        // DEBUG : uncomment the following line to save the whole picture captured
+        //printAndSave(bmp, "camera");
+        RobotLog.d("Saved camera BMP");
+        frame.close();
+        RobotLog.d("Closed frame");
+        return bmp;
+    }
+
+    public int detectRings() {
         RobotLog.d("Detecting Started ...");
         try {
-            VuforiaLocalizer.CloseableFrame frame = queue.take();
-            RobotLog.d("Took Frames from Vuforia");
-            Image image = frame.getImage(0);
-            Bitmap bmp = vuforia.convertFrameToBitmap(frame);
-            RobotLog.d(String.format("Converted Vuforia frame to BMP: %s", bmp.getConfig().toString()));
-            // DEBUG : uncomment the following line to save the whole picture captured
-            //printAndSave(bmp, "camera");
-            RobotLog.d("Saved camera BMP");
-            frame.close();
-            RobotLog.d("Closed frame");
+            Bitmap bmp = getImageFromCamera();
 //            Bitmap[][] b = new Bitmap[numberOfColumns][numberOfRows];
 //            int[][] c = new int[numberOfColumns][numberOfRows];
 //            for (int i = 0; i < numberOfColumns; i++) {
@@ -249,7 +255,7 @@ public class CameraBot extends LEDBot {
             for (int x = offsetX; x < bmp.getWidth() - offsetX; x += spacing) {
                 int pixel = bmp.getPixel(x, y);
 
-                //cameraView[count] = pixel;
+                cameraView[count] = pixel;
 
                 int red = Color.red(pixel);
                 int green = Color.green(pixel);
@@ -258,10 +264,11 @@ public class CameraBot extends LEDBot {
                 int redGreenDifference = Math.abs(red - green);
                 int greenBlueDifference = Math.abs(green - blue);
 
-                //bmp.setPixel(x, y, Color.RED);
+
 
                 if (red >= average && green > blue && red > green && green > red/2 && greenBlueDifference > 20 && redGreenDifference > 10
                         && ((70 < red && 220 > red && 50 < green && 150 > green) || (70 < red && 220 > red && 100 > blue))) {
+                    bmp.setPixel(x, y, Color.RED);
                     viablePixelsCount++;
                 }
                 count++;
