@@ -18,7 +18,7 @@ import java.io.IOException;
 
 import java.util.concurrent.BlockingQueue;
 
-public class NewCameraBot extends LEDBot {
+public class CameraBot extends LEDBot {
 
 //    class Area extends Object{
 //        public int x;
@@ -45,7 +45,7 @@ public class NewCameraBot extends LEDBot {
 
     //protected Area[][] boxes = new Area[numberOfColumns][numberOfRows];
 
-    public NewCameraBot(LinearOpMode opMode) {
+    public CameraBot(LinearOpMode opMode) {
         super(opMode);
     }
 
@@ -240,7 +240,7 @@ public class NewCameraBot extends LEDBot {
 ////        return Color.rgb(averageRed, averageGreen, averageBlue);
 //    }
 
-    protected int getNumberOfViablePixels (Bitmap bmp, int offsetX, int offsetY){
+    public int getNumberOfViablePixels (Bitmap bmp, int offsetX, int offsetY){
 
         int viablePixelsCount = 0;
         int count = 0;
