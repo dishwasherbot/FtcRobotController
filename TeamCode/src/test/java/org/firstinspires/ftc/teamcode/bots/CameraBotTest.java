@@ -6,16 +6,12 @@ import android.os.Build;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.BuildConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowBitmap;
 
 import static org.mockito.Mockito.*;
-
-import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = {Build.VERSION_CODES.O_MR1})
@@ -36,6 +32,6 @@ public class CameraBotTest{
 //        when(bot.chooseRings()).thenCallRealMethod();
 //        assertEquals(bot.detectRings(), 0);
         Bitmap bitmap = BitmapFactory.decodeFile("C:/Users/allen/Pictures/FTC Camera/freight frenzy/sample/tse1.jpg");
-        bot.getNumberOfViablePixels(bitmap, 40, 120);
+        bot.countPixels(bitmap, 40, 120);
     }
 }

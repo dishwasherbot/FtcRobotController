@@ -20,28 +20,15 @@ import java.util.concurrent.BlockingQueue;
 
 public class CameraBot extends LEDBot {
 
-//    class Area extends Object{
-//        public int x;
-//        public int y;
-//        public int width;
-//        public int height;
-//    }
-
-//    final int startX = 10;
-//    final int startY = 140;
-//    final int boxWidth = 90;
-//    final int boxHeight = 50;
-//    final int numberOfColumns = 14;
-//    final int numberOfRows = 7;
     final int cameraWidth = 1280;
     final int cameraHeight = 720;
-    final int offsetX = 40;
+    final int offsetX = 0;
     final int offsetY = 120;
-    final int spacing = 4;
-    final int redDotWidth = ((cameraWidth - 2*offsetX)/spacing);
-    final int redDotHeight = ((cameraHeight - 2*offsetY)/spacing);
+    final int spacing = 16;
+//    final int redDotWidth = ((cameraWidth - 2*offsetX)/spacing);
+//    final int redDotHeight = ((cameraHeight - 2*offsetY)/spacing);
 
-    public int[] cameraView = new int[redDotWidth*redDotHeight];
+    //public int[] cameraView = new int[redDotWidth*redDotHeight];
 
     //protected Area[][] boxes = new Area[numberOfColumns][numberOfRows];
 
@@ -88,16 +75,6 @@ public class CameraBot extends LEDBot {
     @Override
     public void init(HardwareMap ahwMap) {
 
-//        for (int i = 0; i < numberOfColumns; i++) {
-//            for (int j = 0; j < numberOfRows; j++) {
-//                boxes[i][j] = new Area();
-//                boxes[i][j].x = startX + boxWidth * i;
-//                boxes[i][j].y = startY + boxHeight * j;
-//                boxes[i][j].width = boxWidth;
-//                boxes[i][j].height = boxHeight;
-//            }
-//        }
-
         super.init(ahwMap);
         initVuforia();
 
@@ -108,9 +85,9 @@ public class CameraBot extends LEDBot {
 
     }
 
-    final int NORINGS = 0;
-    final int ONERING = 1;
-    final int FOURRINGS = 4;
+    final int LEFT = 0;
+    final int MIDDLE = 1;
+    final int RIGHT = 2;
 
     protected void printAndSave(Bitmap bmp, int average, String label){
         RobotLog.d("Image %s with %d x %d and average RGB #%02X #%02X #%02X", label, bmp.getWidth(), bmp.getHeight(),
@@ -139,147 +116,72 @@ public class CameraBot extends LEDBot {
         return bmp;
     }
 
-    public int detectRings() {
+    public int detectDuck() {
         RobotLog.d("Detecting Started ...");
         try {
             Bitmap bmp = getImageFromCamera();
-//            Bitmap[][] b = new Bitmap[numberOfColumns][numberOfRows];
-//            int[][] c = new int[numberOfColumns][numberOfRows];
-//            for (int i = 0; i < numberOfColumns; i++) {
-//                for (int j = 0; j < numberOfRows; j++) {
-//                    c[i][j] = getAverageRGB(bmp, boxes[i][j].x, boxes[i][j].y);
-//                    RobotLog.d(String.format("Box %d,%d has coordinates: %d, %d", i, j, boxes[i][j].x, boxes[i][j].y));
-//                }
-//            }
-            //printAndSave(bmp, 10, "full");
-            //Bitmap bmp2 = Bitmap.createBitmap(bmp, 0, 0, redDotWidth, 110);
 
-            int viablePixels = getNumberOfViablePixels(bmp, offsetX, offsetY);
+            int left = countPixels(bmp, 0, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
+            int middle = countPixels(bmp, cameraWidth/3, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
+            int right = countPixels(bmp, (cameraWidth/3)*2, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
+
+            //Bitmap bmp2 = Bitmap.createBitmap(bmp, 0, 0, redDotWidth, 110);
             //printAndSave(bmp, viablePixels, "red");
             //bmp2.setPixels(cameraView, 0, redDotWidth, 0, 0, redDotWidth, redDotHeight);
             //printAndSave(bmp2, viablePixels, "small");
             RobotLog.d("Counted pixels");
-            int numberOfRings = chooseRings(viablePixels);
-            RobotLog.d("Determine # of rings through number of viable pixels");
-            return numberOfRings;
+
+            int positionOfDuck = choosePosition(left, middle, right);
+            RobotLog.d("Determined which position the duck/TSE is in");
+
+            return positionOfDuck;
         } catch (InterruptedException e) {
             print("Photo taken has been interrupted !");
-            return NORINGS;
+            return LEFT;
         }
 
     }
 
-    public int chooseRings (int pixels){
-
-        if (pixels <= 140) {
-            return NORINGS; 
-        } else if (pixels <= 400) {
-            return ONERING;
-        } else {
-            return FOURRINGS;
+    public int choosePosition(int left, int middle, int right){
+        if (left > middle && left > right) {
+            return LEFT;
+        } else if (middle > left && middle > right) {
+            return MIDDLE;
+        } else if (right > left && right > middle) {
+            return RIGHT;
         }
+        return LEFT;
     }
 
-    public boolean colourIsCorrect (int c, int i, int j) {
-        int red = Color.red(c);
-        int green = Color.green(c);
-        int blue = Color.blue(c);
-        int average = (red + green + blue) / 3;
-        int redGreenDifference = Math.abs(red - green);
-        int greenBlueDifference = Math.abs(green - blue);
-//((120 < red && 200 > red && 50 < green && 110 > green) || (120 < red && 200 > red && 100 > blue))
-//(red - green + 10 > 0 && red - blue + 10 > 0)
-//(120 < red && 225 > red && 50 < green && 160 > green && 100 > blue)
-        if (red >= average && green > blue && red > green && green > red/2 && greenBlueDifference > 20 && redGreenDifference > 10
-            && ((70 < red && 220 > red && 50 < green && 150 > green) || (70 < red && 220 > red && 100 > blue))) {
-            RobotLog.d(String.format("Box %d,%d is TRUE", i, j));
-            return true;
-        } else {
-            RobotLog.d(String.format("Box %d,%d is false", i, j));
-            return false;
-        }
-    }
-
-//    protected int getAverageRGB (Bitmap bmp, int offsetX, int offsetY){
-//
-//        int totalRed = 0;
-//        int totalGreen = 0;
-//        int totalBlue = 0;
-//
-////        int bytes = bmp.getWidth() * bmp.getHeight() * 4;
-////
-////        RobotLog.d(String.format("bytes: %d width: %d height: %d", bytes, bmp.getWidth(), bmp.getHeight()));
-////        ByteBuffer buffer = ByteBuffer.allocate(bytes);
-////        bmp.copyPixelsToBuffer(buffer);
-////
-////        byte[] byteArray = buffer.array();
-//
-////        for (int x=offsetX; x < offsetX+boxWidth; x += 4) {
-////            for (int y=offsetY; y < offsetY+boxHeight; y += 4) {
-////                int pixel = bmp.getPixel(x, y);
-////
-////                int red = Color.red(pixel);
-////                int green = Color.green(pixel);
-////                int blue = Color.blue(pixel);
-////
-////                totalRed += red;
-//////                totalRed = Math.max(red, totalRed);
-////                totalGreen += green;
-////                totalBlue += blue;
-////            }
-////        }
-//
-////        for (int i = 0; i<bytes; i++) {
-////            int pixel = byteArray[i];
-////            int red = Color.red(pixel);
-////            int green = Color.green(pixel);
-////            int blue = Color.blue(pixel);
-////            RobotLog.d(String.format("Average RGB of %d: %d %d %d, %d", i, red, green, blue, pixel));
-////        }
-//
-////        int averageRed = totalRed / (boxWidth / 4 * boxHeight / 4);
-////        int averageGreen = totalGreen / (boxWidth / 4 * boxHeight / 4);
-////        int averageBlue = totalBlue / (boxWidth / 4 * boxHeight / 4);
-//
-////        RobotLog.d(String.format("Average RGB: %d %d %d", averageRed, averageGreen, averageBlue));
-////
-////        return Color.rgb(averageRed, averageGreen, averageBlue);
-//    }
-
-    public int getNumberOfViablePixels (Bitmap bmp, int offsetX, int offsetY){
-
+    public int countPixels(Bitmap bmp, int startX, int startY, int offsetX, int offsetY, int width, int height){
         int viablePixelsCount = 0;
-        int count = 0;
 
-        for (int y = offsetY; y < bmp.getHeight() - offsetY; y += spacing) {
-            for (int x = offsetX; x < bmp.getWidth() - offsetX; x += spacing) {
+        for (int y = startY + offsetY; y < height - offsetY; y += spacing) {
+            for (int x = startX + offsetX; x < width - offsetX; x += spacing) {
                 int pixel = bmp.getPixel(x, y);
 
-                cameraView[count] = pixel;
+                //cameraView[count] = pixel;
 
                 int red = Color.red(pixel);
                 int green = Color.green(pixel);
                 int blue = Color.blue(pixel);
-                int average = (red + green + blue) / 3;
+                int redBlueDifference = Math.abs(red - blue);
+                //int average = (red + green + blue) / 3;
                 int redGreenDifference = Math.abs(red - green);
-                int greenBlueDifference = Math.abs(green - blue);
+                //int greenBlueDifference = Math.abs(green - blue);
 
-
-
-                if (red >= average && green > blue && red > green && green > red/2 && greenBlueDifference > 20 && redGreenDifference > 10
-                        && ((70 < red && 220 > red && 50 < green && 150 > green) || (70 < red && 220 > red && 100 > blue))) {
-                    bmp.setPixel(x, y, Color.RED);
+                if ((red < 250 && red > 155) && (green < 230 && green > 145) && (blue < 200 && blue > 50)
+                        && redGreenDifference < 15 && redBlueDifference > 50) {
+                    //bmp.setPixel(x, y, Color.RED);
                     viablePixelsCount++;
                 }
-                count++;
             }
         }
 
         RobotLog.d(String.format("%d pixels meet criteria", viablePixelsCount));
         opMode.telemetry.addData("Viable Pixels: ", viablePixelsCount);
-        opMode.telemetry.addData("Total Pixels: ", count);
+        //opMode.telemetry.addData("Total Pixels: ", count);
         opMode.telemetry.update();
-
         return viablePixelsCount;
     }
 

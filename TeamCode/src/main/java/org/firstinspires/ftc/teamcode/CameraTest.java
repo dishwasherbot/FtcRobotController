@@ -20,7 +20,7 @@ public class CameraTest extends LinearOpMode {
         Bitmap bitmap = BitmapFactory.decodeFile("C:/Users/allen/Pictures/FTC Camera/freight frenzy/sample/tse1.jpg");
 
         waitForStart();
-        int viablePixels = robot.getNumberOfViablePixels(bitmap, 40, 120);
+        int viablePixels = robot.countPixels(bitmap, 40, 120);
 
     }
 
