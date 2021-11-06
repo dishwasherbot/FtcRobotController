@@ -31,12 +31,10 @@ public class NoodleSpinnerBot extends FourWheelDriveBot{
         timeSinceToggle = System.currentTimeMillis() - lastToggleDone;
         if (button && timeSinceToggle > 200) {
             if (isSpinning) {
-                intake.setDirection(DcMotorSimple.Direction.FORWARD);
-                intake.setPower(1);
+                intake.setPower(0);
                 isSpinning = false;
                 lastToggleDone = System.currentTimeMillis();
             } else {
-                intake.setDirection(DcMotorSimple.Direction.REVERSE);
                 intake.setPower(1);
                 isSpinning = true;
                 lastToggleDone = System.currentTimeMillis();

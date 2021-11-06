@@ -18,7 +18,7 @@ import java.io.IOException;
 
 import java.util.concurrent.BlockingQueue;
 
-public class CameraBot extends LEDBot {
+public class CameraBot extends FourWheelDriveBot {
 
     final int cameraWidth = 1280;
     final int cameraHeight = 720;
@@ -88,6 +88,7 @@ public class CameraBot extends LEDBot {
     final int LEFT = 0;
     final int MIDDLE = 1;
     final int RIGHT = 2;
+    final int[] DEFAULT = {0, 0};
 
     protected void printAndSave(Bitmap bmp, int average, String label){
         RobotLog.d("Image %s with %d x %d and average RGB #%02X #%02X #%02X", label, bmp.getWidth(), bmp.getHeight(),
@@ -116,30 +117,41 @@ public class CameraBot extends LEDBot {
         return bmp;
     }
 
-    public int detectDuck() {
+    public int[] detect() {
         RobotLog.d("Detecting Started ...");
         try {
             Bitmap bmp = getImageFromCamera();
 
-            int left = countPixels(bmp, 0, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
-            int middle = countPixels(bmp, cameraWidth/3, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
-            int right = countPixels(bmp, (cameraWidth/3)*2, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
+            int left = countYellowPixels(bmp, 0, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
+            //RobotLog.d("Counted left pixels");
+            int middle = countYellowPixels(bmp, cameraWidth/3, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
+            //RobotLog.d("Counted middle pixels");
+            int right = countYellowPixels(bmp, (cameraWidth/3)*2, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
+            //RobotLog.d("Counted right pixels");
+            //int total = countPixels(bmp, 0, 0, 0, 0, cameraWidth, cameraHeight);
+
+            int blue = countBluePixels(bmp, 0, 0, 0, 200, cameraWidth, cameraHeight);
+            int red = countRedPixels(bmp, 0, 0, 0, 200, cameraWidth, cameraHeight);
 
             //Bitmap bmp2 = Bitmap.createBitmap(bmp, 0, 0, redDotWidth, 110);
             //printAndSave(bmp, viablePixels, "red");
             //bmp2.setPixels(cameraView, 0, redDotWidth, 0, 0, redDotWidth, redDotHeight);
             //printAndSave(bmp2, viablePixels, "small");
-            RobotLog.d("Counted pixels");
 
-            int positionOfDuck = choosePosition(left, middle, right);
-            RobotLog.d("Determined which position the duck/TSE is in");
+//            opMode.telemetry.addData("left:", left);
+//            opMode.telemetry.addData("middle:", middle);
+//            opMode.telemetry.addData("right:", right);
+            //opMode.telemetry.addData("total:", total);
 
-            return positionOfDuck;
+            int[] pos = new int[2];
+            pos[0] = choosePosition(left, middle, right);
+            //RobotLog.d("Determined which position the duck/TSE is in");
+            pos[1] = chooseSide(blue, red);
+            return pos;
         } catch (InterruptedException e) {
             print("Photo taken has been interrupted !");
-            return LEFT;
+            return DEFAULT;
         }
-
     }
 
     public int choosePosition(int left, int middle, int right){
@@ -153,11 +165,19 @@ public class CameraBot extends LEDBot {
         return LEFT;
     }
 
-    public int countPixels(Bitmap bmp, int startX, int startY, int offsetX, int offsetY, int width, int height){
+    public int chooseSide(int blue, int red){
+        if (blue > red) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    public int countYellowPixels(Bitmap bmp, int startX, int startY, int offsetX, int offsetY, int width, int height){
         int viablePixelsCount = 0;
 
-        for (int y = startY + offsetY; y < height - offsetY; y += spacing) {
-            for (int x = startX + offsetX; x < width - offsetX; x += spacing) {
+        for (int y = startY + offsetY; y < startY + height - offsetY; y += spacing) {
+            for (int x = startX + offsetX; x < startX + width - offsetX; x += spacing) {
                 int pixel = bmp.getPixel(x, y);
 
                 //cameraView[count] = pixel;
@@ -169,10 +189,11 @@ public class CameraBot extends LEDBot {
                 //int average = (red + green + blue) / 3;
                 int redGreenDifference = Math.abs(red - green);
                 //int greenBlueDifference = Math.abs(green - blue);
-
+                //RobotLog.d(String.format("tested pixel at %d, %d with rgb %d %d %d", x, y, red, green, blue));
                 if ((red < 250 && red > 155) && (green < 230 && green > 145) && (blue < 200 && blue > 50)
                         && redGreenDifference < 15 && redBlueDifference > 50) {
                     //bmp.setPixel(x, y, Color.RED);
+                    //RobotLog.d(String.format("viable pixel found at %d, %d with rgb %d %d %d", x, y, red, green, blue));
                     viablePixelsCount++;
                 }
             }
@@ -185,4 +206,55 @@ public class CameraBot extends LEDBot {
         return viablePixelsCount;
     }
 
+    public int countBluePixels(Bitmap bmp, int startX, int startY, int offsetX, int offsetY, int width, int height){
+        int viablePixelsCount = 0;
+
+        for (int y = startY + offsetY; y < startY + height - offsetY; y += spacing) {
+            for (int x = startX + offsetX; x < startX + width - offsetX; x += spacing) {
+                int pixel = bmp.getPixel(x, y);
+
+                int red = Color.red(pixel);
+                int green = Color.green(pixel);
+                int blue = Color.blue(pixel);
+                //int redBlueDifference = Math.abs(red - blue);
+                int average = (red + green + blue) / 3;
+                //int redGreenDifference = Math.abs(red - green);
+                //int greenBlueDifference = Math.abs(green - blue);
+                //RobotLog.d(String.format("tested pixel at %d, %d with rgb %d %d %d", x, y, red, green, blue));
+                if ((red < 180 && red > 30) && (green < 220 && green > 90) && blue > 220
+                        && blue > average) {
+                    //bmp.setPixel(x, y, Color.RED);
+                    //RobotLog.d(String.format("viable pixel found at %d, %d with rgb %d %d %d", x, y, red, green, blue));
+                    viablePixelsCount++;
+                }
+            }
+        }
+        return viablePixelsCount;
+    }
+
+    public int countRedPixels(Bitmap bmp, int startX, int startY, int offsetX, int offsetY, int width, int height){
+        int viablePixelsCount = 0;
+
+        for (int y = startY + offsetY; y < startY + height - offsetY; y += spacing) {
+            for (int x = startX + offsetX; x < startX + width - offsetX; x += spacing) {
+                int pixel = bmp.getPixel(x, y);
+
+                int red = Color.red(pixel);
+                int green = Color.green(pixel);
+                int blue = Color.blue(pixel);
+                //int redBlueDifference = Math.abs(red - blue);
+                int average = (red + green + blue) / 3;
+                //int redGreenDifference = Math.abs(red - green);
+                //int greenBlueDifference = Math.abs(green - blue);
+                //RobotLog.d(String.format("tested pixel at %d, %d with rgb %d %d %d", x, y, red, green, blue));
+                if (red > 230 && (green < 200 && green > 120) && (blue < 180 && blue > 100)
+                        && red > average) {
+                    //bmp.setPixel(x, y, Color.RED);
+                    //RobotLog.d(String.format("viable pixel found at %d, %d with rgb %d %d %d", x, y, red, green, blue));
+                    viablePixelsCount++;
+                }
+            }
+        }
+        return viablePixelsCount;
+    }
 }

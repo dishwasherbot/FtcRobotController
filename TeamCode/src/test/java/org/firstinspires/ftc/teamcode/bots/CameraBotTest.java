@@ -32,6 +32,6 @@ public class CameraBotTest{
 //        when(bot.chooseRings()).thenCallRealMethod();
 //        assertEquals(bot.detectRings(), 0);
         Bitmap bitmap = BitmapFactory.decodeFile("C:/Users/allen/Pictures/FTC Camera/freight frenzy/sample/tse1.jpg");
-        bot.countPixels(bitmap, 40, 120);
+        //bot.countYellowPixels(bitmap, 40, 120);
     }
 }
