@@ -17,5 +17,4 @@ public class TemplateAuto extends LinearOpMode {
         waitForStart();
         //call methods here
     }
-
 }

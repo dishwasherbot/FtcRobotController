@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.bots.FourWheelDriveBot;
 import org.firstinspires.ftc.teamcode.bots.NoodleSpinnerBot;
 
-@Autonomous(name="Intake Test", group="Template")
+@Autonomous(name="Intake Test", group="Tests")
 
 public class IntakeTest extends LinearOpMode {
 

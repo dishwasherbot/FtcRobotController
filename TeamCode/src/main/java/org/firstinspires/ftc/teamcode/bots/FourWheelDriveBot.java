@@ -20,11 +20,12 @@ import java.io.OutputStreamWriter;
 
 import java.util.Date;
 
-public class FourWheelDriveBot
-{
+public class FourWheelDriveBot {
 
     // Gobilda 435 rpm DC motor : Encoder Countable Events Per Revolution (Output Shaft) : 383.6 * 2 (2:1 bevel gear ratio)
+    // Gobilda 312 rpm DC motor : Encoder Countable Events Per Revolution (Output Shaft) : 383.6 * 2 (1:1 bevel gear ratio)
     public static final double DRIVING_MOTOR_TICK_COUNT = 767;
+    public static final double CENTIMETER_TO_DRIVING_MOTOR_CONVERSION_RATE = 666.66;
     public static final int DIRECTION_FORWARD = 1;
     public static final int DIRECTION_BACKWARD = 2;
     public static final int DIRECTION_LEFT = 3;
@@ -66,7 +67,6 @@ public class FourWheelDriveBot
     private double getRawHeading() {
         return angles.firstAngle;
     }
-
     public double getHeading() {
         return (getRawHeading() - headingOffset) % (2.0 * Math.PI);
     }
@@ -84,10 +84,8 @@ public class FourWheelDriveBot
         return ret;
     }
 
-
     //    public void driveByHand(double _lf, double _lr, double _rf, double _rr) {
     public void driveByHand(double left_stick_x, double left_stick_y, double right_stick_x, boolean button) {
-
         double drive  = - left_stick_y;
         double strafe = left_stick_x;
         double twist  = right_stick_x;
@@ -125,8 +123,6 @@ public class FourWheelDriveBot
         for(int i = 0; i < speeds.length; i++) {
             if ( max < Math.abs(speeds[i]) ) max = Math.abs(speeds[i]);
         }
-
-
         if (max > 1) {
             for (int i = 0; i < speeds.length; i++) speeds[i] /= max;
         }
@@ -150,7 +146,6 @@ public class FourWheelDriveBot
         this.opMode.telemetry.addData(caption, message);
         this.opMode.telemetry.update();
     }
-
 
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
@@ -183,7 +178,6 @@ public class FourWheelDriveBot
 //                rightFront.getCurrentPosition(),
 //                leftRear.getCurrentPosition(),
 //                rightRear.getCurrentPosition()));
-
     }
 
     public void onLoop(String label){
@@ -272,7 +266,6 @@ public class FourWheelDriveBot
         print(String.format("Completed! %s @ %7d", motor.getDeviceName(), motor.getCurrentPosition()));
 
         this.opMode.sleep(3000);
-
     }
     public void driveStraightByDistance(int direction, double distance){
         // default max power 0.5
@@ -280,11 +273,10 @@ public class FourWheelDriveBot
     }
 
     public void driveStraightByDistance(int direction, double distance, double maxPower){
-        // distance (in mm) = revolution * pi * diameter (100 mm)
-        int target = (int)(distance / 3.1415 / 100 * DRIVING_MOTOR_TICK_COUNT);
+        // distance (in cm) * conversion rate = distance (in ticks)
+        int target = (int)(distance * CENTIMETER_TO_DRIVING_MOTOR_CONVERSION_RATE);
 //        int startingPosition = leftFront.getCurrentPosition();
 //        int realTarget;
-
         switch (direction){
             case DIRECTION_FORWARD:
                 leftFront.setTargetPosition(leftFront.getCurrentPosition() + target);
@@ -340,10 +332,14 @@ public class FourWheelDriveBot
         RobotLog.d(String.format("Set direction and power!"));
 
         while (this.opMode.opModeIsActive() && rightFront.isBusy()) {
-            onLoop(100, "drive straight by distance");
+            onLoop(50, "drive straight by distance");
         }
         RobotLog.d(String.format("Stopping all motion!"));
         // Stop all motion;
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFront.setPower(0);
         rightFront.setPower(0);
         leftRear.setPower(0);
@@ -358,12 +354,12 @@ public class FourWheelDriveBot
 
     public void driveCurveByDistance(int direction, double distance, double curvePower,double maxPower) {
         if (direction != DIRECTION_FORWARD && direction != DIRECTION_BACKWARD && direction != DIRECTION_LEFT && direction != DIRECTION_RIGHT){
-            String msg = String.format("Unaccepted direction value (%d) for driveStraightByGyro()", direction);
+            String msg = String.format("Unaccepted direction value (%d) for driveCurveByDistance()", direction);
             print(msg);
             return;
         }
-        // distance (in mm) = revolution * pi * diameter (100 mm)
-        int distanceTicks = (int) (distance / 3.1415 / 100 * DRIVING_MOTOR_TICK_COUNT);
+        // distance (in cm) * conversion rate = distance (in ticks)
+        int distanceTicks = (int)(distance * CENTIMETER_TO_DRIVING_MOTOR_CONVERSION_RATE);
         int currentPosition;
         int startingPosition;
         if (curvePower > 0) {
@@ -420,6 +416,7 @@ public class FourWheelDriveBot
         leftRear.setPower(0);
         rightRear.setPower(0);
     }
+
     public void driveByDistanceWithAcceleration(int direction, double distance, double maxPower, int accelerationSteps){
         // distance (in mm) = revolution * pi * diameter (100 mm)
         int target = (int)(distance / 3.1415 / 100 * DRIVING_MOTOR_TICK_COUNT);
@@ -481,27 +478,22 @@ public class FourWheelDriveBot
             if (Math.abs(leftFront.getCurrentPosition() - realTarget) > distToDecelerate &&
                     step < accelerationSteps &&
                     Math.abs(leftFront.getCurrentPosition() - startingPosition) > step * accelerationInterval) {
-
                 RobotLog.d("Step up CurrentPosition: %d Step: %d DistToDecelerate: %.2f", leftFront.getCurrentPosition(), step, distToDecelerate);
                 step++;
                 leftFront.setPower(Math.max(accelerationDelta * step, maxPower));
                 rightFront.setPower(Math.max(accelerationDelta * step, maxPower));
                 leftRear.setPower(Math.max(accelerationDelta * step, maxPower));
                 rightRear.setPower(Math.max(accelerationDelta * step, maxPower));
-
-
             }
 
             if (Math.abs(leftFront.getCurrentPosition() - realTarget) < distToDecelerate &&
                     step > 1 && Math.abs(leftFront.getCurrentPosition() - realTarget) < step * accelerationInterval) {
-
                 RobotLog.d("Step down CurrentPosition: %d Step: %d DistToDecelerate: %.2f", leftFront.getCurrentPosition(), step, distToDecelerate);
                 step = (int)Math.floor(Math.abs(leftFront.getCurrentPosition() - realTarget) / accelerationInterval);
                 leftFront.setPower(Math.max(accelerationDelta * step, 0.1));
                 rightFront.setPower(Math.max(accelerationDelta * step, 0.1));
                 leftRear.setPower(Math.max(accelerationDelta * step, 0.1));
                 rightRear.setPower(Math.max(accelerationDelta * step, 0.1));
-
             }
         }
         // Stop all motion;
