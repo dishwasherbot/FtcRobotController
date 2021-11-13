@@ -115,7 +115,7 @@ public class ShooterBot extends IntakeBot {
             try {
                 RobotLog.d("shooterWriter.write");
                 shooterWriter.write(String.format("%d, %f\n", currentTime, currentShooterSpeed));
-                //shooterWriter.write(String.format("%d, %f, %f\n", currentTime, currentShooterSpeed, adjustSpeed));
+                //                //shooterWriter.write(String.format("%d, %f, %f\n", currentTime, currentShooterSpeed, adjustSpeed));
             } catch (IOException e) {
                 throw new RuntimeException("shooter log file writer write failed: " + e.toString());
             }

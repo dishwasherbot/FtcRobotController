@@ -27,7 +27,6 @@ public class ManualDriveOpMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             robot.spinCarousel(gamepad1.a);
-
             robot.onLoop(15, "manual drive");
         }
         robot.close();
