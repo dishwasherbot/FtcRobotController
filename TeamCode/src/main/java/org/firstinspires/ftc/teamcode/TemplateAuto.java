@@ -16,5 +16,6 @@ public class TemplateAuto extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         //call methods here
+        robot.sleep(1000);
     }
 }

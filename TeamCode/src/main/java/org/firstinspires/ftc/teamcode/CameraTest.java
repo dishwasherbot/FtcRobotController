@@ -19,7 +19,7 @@ public class CameraTest extends LinearOpMode {
         telemetry.addData("duck:", pos[0]);
         telemetry.addData("side:", pos[1]);
         telemetry.update();
-        sleep(15000);
+        robot.sleep(15000);
     }
 
 }

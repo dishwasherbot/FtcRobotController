@@ -1,0 +1,30 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.bots.CameraBot;
+
+@Autonomous(name="Auto Test", group="Tests")
+
+public class AutoTest extends LinearOpMode {
+
+    protected CameraBot robot = new CameraBot(this);
+
+    @Override
+    public void runOpMode() {
+        robot.init(hardwareMap);
+        waitForStart();
+        robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 15, 0.5);
+        robot.sleep(2000);
+        robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 15, 0.5);
+        robot.sleep(2000);
+        robot.goToAngle(-90, 0.1);
+        robot.sleep(2000);
+        robot.goToAngle(0, 0.1);
+        robot.sleep(2000);
+        robot.driveCurveByDistance(robot.DIRECTION_FORWARD, 20, 0.3, 0.5);
+        robot.sleep(2000);
+        robot.driveCurveByDistance(robot.DIRECTION_BACKWARD, 20, 0.3, 0.5);
+    }
+}

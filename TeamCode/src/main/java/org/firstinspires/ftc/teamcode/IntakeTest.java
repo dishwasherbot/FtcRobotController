@@ -17,7 +17,7 @@ public class IntakeTest extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         robot.intakeToggle(true);
-        sleep(30000);
+        robot.sleep(30000);
     }
 
 }
