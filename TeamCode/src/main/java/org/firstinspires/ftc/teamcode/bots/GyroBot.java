@@ -24,7 +24,6 @@ public class GyroBot extends FourWheelDriveBot {
         super(opMode);
     }
 
-
     @Override
     public void init(HardwareMap ahwMap) {
         super.init(ahwMap);
@@ -42,7 +41,6 @@ public class GyroBot extends FourWheelDriveBot {
 
         imu = hwMap.get(BNO055IMU.class, "imu 1");
         imu.initialize(parameters);
-
     }
 
     public void resetAngle() {
@@ -51,7 +49,6 @@ public class GyroBot extends FourWheelDriveBot {
         RobotLog.d(String.format("Reset Angle : %.3f , %.3f, %.3f", angles.firstAngle, angles.secondAngle, angles.thirdAngle));
         startAngle = angles.firstAngle;
     }
-
 
     public double getAngle() {
 
@@ -73,7 +70,6 @@ public class GyroBot extends FourWheelDriveBot {
 
         return deltaAngle;
     }
-
 
     public void goBacktoStartAngle() {
 
