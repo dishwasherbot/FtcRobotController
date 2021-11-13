@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.bots.DuckBot;
 import org.firstinspires.ftc.teamcode.bots.EndgameBot;
 import org.firstinspires.ftc.teamcode.bots.FourWheelDriveBot;
 import org.firstinspires.ftc.teamcode.bots.NoodleSpinnerBot;
@@ -19,21 +20,16 @@ import org.firstinspires.ftc.teamcode.bots.NoodleSpinnerBot;
 @TeleOp(name = "Manual Drive")
 public class ManualDriveOpMode extends LinearOpMode {
 
+    private DuckBot robot = new DuckBot(this);
     int count = 0;
-
-    private FourWheelDriveBot robot = new FourWheelDriveBot(this);
 
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
-//        robot.readPosition();
-//        robot.startAngle = robot.savedStartAngle;
-//        robot.isAuto = false;
         waitForStart();
         while (opModeIsActive()) {
-            //robot.intakeToggle(gamepad1.a);
             robot.driveByHand(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_button);
-
+            robot.spinCarousel(gamepad1.a);
             robot.onLoop(15, "manual drive");
         }
         robot.close();
