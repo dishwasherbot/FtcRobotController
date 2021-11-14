@@ -14,7 +14,7 @@ import java.util.Date;
 
 
 
-public class DuckBot extends FourWheelDriveBot{
+public class DuckBot extends GyroBot{
     public DcMotor duckSpinner = null;
 
     long currentTime = 0;
@@ -25,10 +25,12 @@ public class DuckBot extends FourWheelDriveBot{
     double lastPosition = 0;
     double positionDifference = 0;
 
+    boolean isSpinning = false;
+
     public double currentSpinnerSpeed = 1;
 
     //change these values to control what speed the spinner spins around
-    public double setSpinnerSpeed = 0.385; //375
+    public double setSpinnerSpeed = 0.5; //385
 
     OutputStreamWriter spinnerWriter;
 
@@ -42,9 +44,9 @@ public class DuckBot extends FourWheelDriveBot{
     @Override
     public void init(HardwareMap ahwMap) {
         super.init(ahwMap);
-        duckSpinner = hwMap.get(DcMotor.class, "leftFront");
+        duckSpinner = hwMap.get(DcMotor.class, "duckArm");
         duckSpinner.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        duckPID.setOutputLimits(0.9);
+        duckPID.setOutputLimits(0.2, 0.9);
         try {
             spinnerWriter = new FileWriter("/sdcard/FIRST/spinnerlog_" + java.text.DateFormat.getDateTimeInstance().format(new Date()) + ".csv", true);
         } catch (IOException e) {
@@ -52,9 +54,16 @@ public class DuckBot extends FourWheelDriveBot{
         }
     }
 
+    public void toggleSpinner() {
+        if (!isSpinning) {
+            isSpinning = true;
+        } else {
+            isSpinning = false;
+        }
+    }
 
     public void spinCarousel(boolean button) {
-        if (button) {
+        if (button && isSpinning) {
             // determine current speed:
 
             //calculate difference in time between last and current cycle
@@ -79,6 +88,7 @@ public class DuckBot extends FourWheelDriveBot{
             opMode.telemetry.addData("Time Difference", (double)timeDifference);
             opMode.telemetry.addData("Current Position", currentPosition);
             opMode.telemetry.update();
+            RobotLog.d(String.format("Spinner speed: %f, Adjust speed: %f, time difference: %f", currentSpinnerSpeed, adjustSpeed, (double)timeDifference));
             try {
                 RobotLog.d("spinnerWriter.write");
                 spinnerWriter.write(String.format("%d, %f, %f\n", currentTime, currentSpinnerSpeed, adjustSpeed));

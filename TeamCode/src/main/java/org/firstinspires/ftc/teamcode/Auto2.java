@@ -20,7 +20,9 @@ public class Auto2 extends LinearOpMode {
         if (pos[1] == 0) {
 
         } else {
-            robot.driveCurveByDistance(robot.DIRECTION_FORWARD, 100, 0.3, 0.9);
+            robot.driveStraightByDistance(robot.DIRECTION_LEFT, 10, 0.5);
+            robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 15, 0.4);
+
             if (pos[0] == 0) {
                 //robot drops cube on top layer
             } else if (pos[0] == 1) {

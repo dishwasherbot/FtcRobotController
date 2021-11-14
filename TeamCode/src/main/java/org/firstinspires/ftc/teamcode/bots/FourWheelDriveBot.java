@@ -25,7 +25,7 @@ public class FourWheelDriveBot {
     // Gobilda 435 rpm DC motor : Encoder Countable Events Per Revolution (Output Shaft) : 383.6 * 2 (2:1 bevel gear ratio)
     // Gobilda 312 rpm DC motor : Encoder Countable Events Per Revolution (Output Shaft) : 383.6 * 2 (1:1 bevel gear ratio)
     public static final double DRIVING_MOTOR_TICK_COUNT = 767;
-    public static final double CENTIMETER_TO_DRIVING_MOTOR_CONVERSION_RATE = 666.66;
+    public static final double CENTIMETER_TO_DRIVING_MOTOR_CONVERSION_RATE = 66.666;
     public static final int DIRECTION_FORWARD = 1;
     public static final int DIRECTION_BACKWARD = 2;
     public static final int DIRECTION_LEFT = 3;
@@ -330,9 +330,11 @@ public class FourWheelDriveBot {
         leftRear.setPower(power);
         rightRear.setPower(power);
         RobotLog.d(String.format("Set direction and power!"));
+        RobotLog.d(String.format("Target: %d", target));
 
         while (this.opMode.opModeIsActive() && rightFront.isBusy()) {
-            onLoop(50, "drive straight by distance");
+            onLoop(50, "Driving straight by distance");
+            RobotLog.d(String.format("rightFront current pos: %d, target pos: %d", rightFront.getCurrentPosition(), rightFront.getTargetPosition()));
         }
         RobotLog.d(String.format("Stopping all motion!"));
         // Stop all motion;
@@ -362,7 +364,7 @@ public class FourWheelDriveBot {
         int distanceTicks = (int)(distance * CENTIMETER_TO_DRIVING_MOTOR_CONVERSION_RATE);
         int currentPosition;
         int startingPosition;
-        if (curvePower > 0) {
+        if (curvePower < 0) {
             startingPosition = leftFront.getCurrentPosition();
         } else {
             startingPosition = leftRear.getCurrentPosition();
@@ -371,7 +373,7 @@ public class FourWheelDriveBot {
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        if (curvePower > 0) {
+        if (curvePower < 0) {
             currentPosition = leftFront.getCurrentPosition();
         } else {
             currentPosition = leftRear.getCurrentPosition();

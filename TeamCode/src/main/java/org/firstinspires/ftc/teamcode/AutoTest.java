@@ -15,16 +15,20 @@ public class AutoTest extends LinearOpMode {
     public void runOpMode() {
         robot.init(hardwareMap);
         waitForStart();
-        robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 15, 0.5);
+//        robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 15, 0.5);
+//        robot.sleep(2000);
+//        robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 15, 0.5);
+//        robot.sleep(2000);
+//        robot.goToAngle(-90, 0.1);
+//        robot.sleep(2000);
+//        robot.goToAngle(0, 0.1);
+//        robot.sleep(2000);
+//        robot.driveStraightByDistance(robot.DIRECTION_LQUARTER, 5, 0.4);
+//        robot.driveStraightByDistance(robot.DIRECTION_RQUARTER, 5, 0.4);
+//        robot.sleep(2000);
+        robot.toggleSpinner();
         robot.sleep(2000);
-        robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 15, 0.5);
-        robot.sleep(2000);
-        robot.goToAngle(-90, 0.1);
-        robot.sleep(2000);
-        robot.goToAngle(0, 0.1);
-        robot.sleep(2000);
-        robot.driveCurveByDistance(robot.DIRECTION_FORWARD, 20, 0.3, 0.5);
-        robot.sleep(2000);
-        robot.driveCurveByDistance(robot.DIRECTION_BACKWARD, 20, 0.3, 0.5);
+        robot.toggleSpinner();
+        robot.sleep(3000);
     }
 }
