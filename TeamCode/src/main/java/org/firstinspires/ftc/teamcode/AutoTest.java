@@ -26,9 +26,9 @@ public class AutoTest extends LinearOpMode {
 //        robot.driveStraightByDistance(robot.DIRECTION_LQUARTER, 5, 0.4);
 //        robot.driveStraightByDistance(robot.DIRECTION_RQUARTER, 5, 0.4);
 //        robot.sleep(2000);
-        robot.toggleSpinner();
+        robot.toggleSpinner(0.4);
         robot.sleep(2000);
-        robot.toggleSpinner();
+        robot.toggleSpinner(0.4);
         robot.sleep(3000);
     }
 }

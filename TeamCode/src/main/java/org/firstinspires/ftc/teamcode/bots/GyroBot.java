@@ -264,7 +264,7 @@ public class GyroBot extends FourWheelDriveBot {
         }
 
         // distance (in mm) = revolution * pi * diameter (100 mm)
-        int distanceTicks = (int) (distance / 3.1415 / 100 * DRIVING_MOTOR_TICK_COUNT);
+        int distanceTicks = (int) (distance * CENTIMETER_TO_DRIVING_MOTOR_CONVERSION_RATE);
         int startingPosition = leftFront.getCurrentPosition();
         MiniPID pid = new MiniPID(0.03, 0, 0);
         pid.setOutputLimits(maxPower);
@@ -311,16 +311,14 @@ public class GyroBot extends FourWheelDriveBot {
             adjustPower = pid.getOutput(angle, originalAngle);
             currentPosition = leftFront.getCurrentPosition();
         }
-        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFront.setPower(0);
         rightFront.setPower(0);
-        leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftRear.setTargetPosition(leftRear.getCurrentPosition());
-        rightRear.setTargetPosition(leftRear.getCurrentPosition());
-        leftRear.setPower(0.5);
-        rightRear.setPower(0.5);
+        leftRear.setPower(0);
+        rightRear.setPower(0);
         sleep(300, "after gyro wait");
     }
 

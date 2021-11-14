@@ -20,24 +20,34 @@ public class Auto2 extends LinearOpMode {
         if (pos[1] == 0) {
 
         } else {
-            robot.driveStraightByDistance(robot.DIRECTION_LEFT, 10, 0.5);
-            robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 15, 0.4);
-
+            robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 6.5, 0.5);
+            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 15, 0.2);
+            robot.toggleSpinner(0.35);
+            robot.sleep(2700);
+            robot.toggleSpinner(0.35);
+            robot.driveStraightByGyro(robot.DIRECTION_BACKWARD, 27.5, 0.6, false);
+            robot.sleep(3000);
+            robot.goBacktoStartAngle();
+            robot.sleep(500);
+            robot.openPinch();
             if (pos[0] == 0) {
-                //robot drops cube on top layer
+                robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 10, 1);
+                robot.goBacktoStartAngle();
+                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 17, 0.5);
+                robot.driveStraightByDistance(robot.DIRECTION_RIGHT,3, 0.4);
             } else if (pos[0] == 1) {
-                //robot drops cube on middle layer
+                robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 12, 1);
+                robot.goBacktoStartAngle();
+                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 17, 0.5);
+                robot.driveStraightByDistance(robot.DIRECTION_RIGHT,1, 0.3);
             } else {
-                //robot drops cube on bottom layer
+                robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 12, 1);
+                robot.goBacktoStartAngle();
+                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 17, 0.5);
+                robot.driveStraightByDistance(robot.DIRECTION_RIGHT,1, 0.3);
             }
-            robot.driveCurveByDistance(robot.DIRECTION_LEFT, 69, 0.2, 0.8);
-            robot.goToAngle(-90, 0.1);
-            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 95, 0.9);
-            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 50, 0.4);
-            //spin carousel
-            robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 150, 1);
-            robot.driveStraightByDistance(robot.DIRECTION_LEFT, 35, 0.4);
-            robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 120, 1);
+            robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 30, 0.6);
+            robot.driveStraightByDistance(robot.DIRECTION_LEFT, 2, 0.1);
         }
     }
 }

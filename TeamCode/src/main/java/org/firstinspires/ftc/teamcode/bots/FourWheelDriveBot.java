@@ -86,8 +86,8 @@ public class FourWheelDriveBot {
 
     //    public void driveByHand(double _lf, double _lr, double _rf, double _rr) {
     public void driveByHand(double left_stick_x, double left_stick_y, double right_stick_x, boolean button) {
-        double drive  = left_stick_y;
-        double strafe = - left_stick_x;
+        double drive  = - left_stick_y;
+        double strafe = left_stick_x;
         double twist  = right_stick_x;
 
         timeSinceToggle5 = System.currentTimeMillis() - lastToggleDone5;
@@ -99,7 +99,7 @@ public class FourWheelDriveBot {
                 lastToggleDone5 = System.currentTimeMillis();
                 //RobotLog.d("robot not slow");
             } else if (!isSlow) {
-                driveMultiplier = 0.25;
+                driveMultiplier = 0.5;
                 isSlow = true;
                 opMode.telemetry.addData("SLOW", driveMultiplier);
                 lastToggleDone5 = System.currentTimeMillis();

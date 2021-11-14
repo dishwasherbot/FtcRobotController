@@ -30,7 +30,7 @@ public class DuckBot extends GyroBot{
     public double currentSpinnerSpeed = 1;
 
     //change these values to control what speed the spinner spins around
-    public double setSpinnerSpeed = 0.5; //385
+    public double setSpinnerSpeed = 0.4; //385
 
     OutputStreamWriter spinnerWriter;
 
@@ -54,8 +54,18 @@ public class DuckBot extends GyroBot{
         }
     }
 
-    public void toggleSpinner() {
+    public void toggleSpinner(double power) {
+        setSpinnerSpeed = power;
         if (!isSpinning) {
+            isSpinning = true;
+        } else {
+            isSpinning = false;
+        }
+    }
+
+    public void holdSpinner (boolean button, double power) {
+        setSpinnerSpeed = power;
+        if (button) {
             isSpinning = true;
         } else {
             isSpinning = false;
