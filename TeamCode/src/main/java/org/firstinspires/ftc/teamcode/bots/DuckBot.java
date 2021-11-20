@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.bots;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.stormbots.MiniPID;
@@ -54,8 +55,13 @@ public class DuckBot extends GyroBot{
         }
     }
 
-    public void toggleSpinner(double power) {
+    public void toggleSpinner(double power, boolean isForward) {
         setSpinnerSpeed = power;
+        if (isForward) {
+            duckSpinner.setDirection(DcMotorSimple.Direction.FORWARD);
+        } else {
+            duckSpinner.setDirection(DcMotorSimple.Direction.REVERSE);
+        }
         if (!isSpinning) {
             isSpinning = true;
         } else {
@@ -63,12 +69,17 @@ public class DuckBot extends GyroBot{
         }
     }
 
-    public void holdSpinner (boolean button, double power) {
+    public void holdSpinner (boolean button, boolean switchDirection, double power) {
         setSpinnerSpeed = power;
         if (button) {
             isSpinning = true;
         } else {
             isSpinning = false;
+        }
+        if (duckSpinner.getDirection() == DcMotorSimple.Direction.FORWARD && switchDirection) {
+            duckSpinner.setDirection(DcMotorSimple.Direction.REVERSE);
+        } else if (duckSpinner.getDirection() == DcMotorSimple.Direction.REVERSE && switchDirection){
+            duckSpinner.setDirection(DcMotorSimple.Direction.FORWARD);
         }
     }
 

@@ -29,7 +29,7 @@ public class ManualDriveOpMode extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             robot.driveByHand(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_button);
-            robot.holdSpinner(gamepad1.a, 0.4);
+            robot.holdSpinner(gamepad1.a, gamepad1.b, 0.4);
             robot.onLoop(15, "manual drive");
         }
         robot.close();

@@ -99,7 +99,7 @@ public class FourWheelDriveBot {
                 lastToggleDone5 = System.currentTimeMillis();
                 //RobotLog.d("robot not slow");
             } else if (!isSlow) {
-                driveMultiplier = 1;
+                driveMultiplier = 0.25;
                 isSlow = true;
                 opMode.telemetry.addData("FAST", driveMultiplier);
                 lastToggleDone5 = System.currentTimeMillis();
