@@ -44,7 +44,7 @@ public class FourWheelDriveBot {
 
     long timeSinceToggle5 = 0;
     long lastToggleDone5 = 0;
-    double driveMultiplier = 1;
+    double driveMultiplier = 0.5;
 
     HardwareMap hwMap = null;
     private ElapsedTime runtime = new ElapsedTime();

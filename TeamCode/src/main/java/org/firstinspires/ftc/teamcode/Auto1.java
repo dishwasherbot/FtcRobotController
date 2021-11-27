@@ -19,24 +19,72 @@ public class Auto1 extends LinearOpMode {
         int[] pos = new int[2];
         pos = robot.detect();
         if (pos[1] == 0) {
-
-        } else {
-            robot.driveCurveByDistance(robot.DIRECTION_FORWARD, 100, 0.3, 0.9);
+            robot.openPinch();
             if (pos[0] == 0) {
-                //robot drops cube on top layer
+                robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 17.2, 1);
+                robot.sleep(500);
+                robot.driveStraightByDistance(robot.DIRECTION_LEFT, 5, 0.5);
+                robot.goBacktoStartAngle();
+                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 20, 0.5);
+                robot.goToAngle(90, 0.14);
+                robot.driveStraightByDistance(robot.DIRECTION_LEFT, 17, 0.2);
+                robot.driveStraightByDistance(robot.DIRECTION_FORWARD,5, 0.2);
             } else if (pos[0] == 1) {
-                //robot drops cube on middle layer
+                robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 19.5, 1);
+                robot.sleep(500);
+                robot.driveStraightByDistance(robot.DIRECTION_LEFT, 7, 0.5);
+                robot.goBacktoStartAngle();
+                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 20, 0.5);
+                robot.goToAngle(90, 0.14);
+                robot.driveStraightByDistance(robot.DIRECTION_LEFT, 17, 0.2);
+                robot.driveStraightByDistance(robot.DIRECTION_FORWARD,5, 0.2);
             } else {
-                //robot drops cube on bottom layer
+                robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 19.5, 1);
+                robot.sleep(500);
+                robot.driveStraightByDistance(robot.DIRECTION_LEFT, 7, 0.5);
+                robot.goBacktoStartAngle();
+                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 20, 0.5);
+                robot.goToAngle(90, 0.14);
+                robot.driveStraightByDistance(robot.DIRECTION_LEFT, 17, 0.2);
+                robot.driveStraightByDistance(robot.DIRECTION_FORWARD,5, 0.2);
             }
-            robot.driveCurveByDistance(robot.DIRECTION_LEFT, 69, 0.2, 0.8);
-            robot.goToAngle(-90, 0.1);
-            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 95, 0.9);
-            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 50, 0.4);
-            //spin carousel
-            robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 150, 1);
-            robot.driveStraightByDistance(robot.DIRECTION_LEFT, 35, 0.4);
-            robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 120, 1);
+            robot.toggleSpinner(0.35, false);
+            robot.sleep(2700);
+            robot.toggleSpinner(0.35, false);
+            robot.sleep(1000);
+            robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 10, 0.6);
+            robot.goBacktoStartAngle();
+            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 25, 0.5, false);
+            robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 10, 0.5);
+            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 45, 0.6);
+            //robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 70, 0.7);
+        } else {
+            robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 6.5, 0.5);
+            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 15, 0.2);
+            robot.toggleSpinner(0.35, true);
+            robot.sleep(2700);
+            robot.toggleSpinner(0.35, true);
+            robot.sleep(2000);
+            robot.driveStraightByGyro(robot.DIRECTION_BACKWARD, 27.5, 0.6, false);
+            robot.sleep(500);
+            robot.goBacktoStartAngle();
+            robot.sleep(500);
+            robot.openPinch();
+            if (pos[0] == 0) {
+                robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 10, 1);
+                robot.goBacktoStartAngle();
+            } else if (pos[0] == 1) {
+                robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 12, 1);
+                robot.goBacktoStartAngle();
+            } else {
+                robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 12, 1);
+                robot.goBacktoStartAngle();
+            }
+            robot.driveStraightByDistance(robot.DIRECTION_LEFT, 20, 0.2);
+            robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 17, 0.4);
+            robot.driveStraightByDistance(robot.DIRECTION_LEFT, 2, 0.15);
+            robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 20, 0.3);
+            robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 2, 0.1);
         }
     }
 }
