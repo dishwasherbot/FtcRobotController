@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.RobotLog;
 
-public class LEDBot extends WobbleGoalBot{
+public class LEDBot extends ShooterBot{
     public Servo LEDControl = null;
 
     public double shootingDistance = 0;

@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.bots.DuckBot;
 import org.firstinspires.ftc.teamcode.bots.EndgameBot;
 import org.firstinspires.ftc.teamcode.bots.FourWheelDriveBot;
 import org.firstinspires.ftc.teamcode.bots.NoodleSpinnerBot;
+import org.firstinspires.ftc.teamcode.bots.WobbleGoalBot;
 
 /**
  * Mecanum teleop (with an optional arcade mode)
@@ -20,16 +21,18 @@ import org.firstinspires.ftc.teamcode.bots.NoodleSpinnerBot;
 @TeleOp(name = "Manual Drive")
 public class ManualDriveOpMode extends LinearOpMode {
 
-    private DuckBot robot = new DuckBot(this);
-    int count = 0;
+    private WobbleGoalBot robot = new WobbleGoalBot(this);
+    //int count = 0;
 
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
         waitForStart();
         while (opModeIsActive()) {
-            robot.driveByHand(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_button);
-            robot.holdSpinner(gamepad1.a, gamepad1.b, 0.4);
+//            robot.driveByHand(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_button);
+//            robot.holdSpinner(gamepad1.a, gamepad1.b, 0.4);
+            robot.controlServo(gamepad1.dpad_up, gamepad1.dpad_down);
+            robot.controlWobbleArm(gamepad1.y, gamepad1.b);
             robot.onLoop(15, "manual drive");
         }
         robot.close();

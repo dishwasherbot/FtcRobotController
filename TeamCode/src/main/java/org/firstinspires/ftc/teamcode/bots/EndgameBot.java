@@ -33,7 +33,7 @@ public class EndgameBot extends LEDBot{
             goToAnglePID(0);
             toggleFeeder(true);
             toggleShooter(true);
-            controlWobbleArm(true, false);
+            //controlWobbleArm(true, false);
             driveByGyroWithEncodersVertical(DIRECTION_BACKWARD, 55000, 1, false, true);
             driveWithEncodersHorizontal(DIRECTION_LEFT, 7000, 0.3, false);
 
@@ -65,13 +65,13 @@ public class EndgameBot extends LEDBot{
 
             toggleShooter(false);
 
-            controlWobbleArm(true, false);
+            //controlWobbleArm(true, false);
 
             driveWithEncodersVertical(DIRECTION_FORWARD, 90000, 1, true);
 
-            controlWobbleArm(false, true);
+            //controlWobbleArm(false, true);
             sleep(400);
-            toggleWobble(true);
+            //toggleWobble(true);
             driveWithEncodersVertical(DIRECTION_BACKWARD, 106000, 1, true);
         }
     }

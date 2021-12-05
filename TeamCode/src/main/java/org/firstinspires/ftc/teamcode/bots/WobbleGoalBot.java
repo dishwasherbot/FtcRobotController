@@ -6,22 +6,28 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-public class WobbleGoalBot extends ShooterBot {
+public class WobbleGoalBot extends FourWheelDriveBot {
     public Servo wobblePinch = null;
     public DcMotor wobbleArm = null;
 
     //two positions of the wobble servo
-    final double wobblePinched = 0.8;
-    final double wobbleOpened = 0.44;
+    final double wobblePinched = 0.7;
+    final double wobbleOpened = 0.8;
 
-    final int[] armPositions = new int[]{50, 300, 700};
+    final int[] armPositions = new int[]{0, 300, 700};
     int armPosIndex = 0;
+    final double[] servoPositions = new double[]{0.6, 0.71, 0.775};
+    int servoPosIndex = 0;
 
     public boolean isOpen = true;
     long lastToggleDone = 0;
     long timeSinceToggle = 0;
     long lastPosSwitch = 0;
     long timeSincePosSwitch = 0;
+    long lastToggleDone1 = 0;
+    long timeSinceToggle1 = 0;
+    long lastPosSwitch1 = 0;
+    long timeSincePosSwitch1 = 0;
 
     public WobbleGoalBot(LinearOpMode opMode) {
         super(opMode);
@@ -103,6 +109,26 @@ public class WobbleGoalBot extends ShooterBot {
 //        }
         //opMode.telemetry.addData("armPosIndex", armPosIndex);
         //opMode.telemetry.update();
+    }
+
+    public void controlServo(boolean dpadUp, boolean dpadDown) {
+        timeSincePosSwitch1 = System.currentTimeMillis() - lastPosSwitch1;
+        if (dpadUp && timeSincePosSwitch1 > 200) {
+            if (servoPosIndex < 2) {
+                servoPosIndex ++;
+                wobblePinch.setPosition(servoPositions[servoPosIndex]);
+                lastPosSwitch1 = System.currentTimeMillis();
+            }
+        }
+        if (dpadDown && timeSincePosSwitch1 > 200) {
+            if (servoPosIndex > 0) {
+                servoPosIndex --;
+                wobblePinch.setPosition(servoPositions[servoPosIndex]);
+                lastPosSwitch1 = System.currentTimeMillis();
+            }
+        }
+        opMode.telemetry.addData("servoPosIndex", servoPosIndex);
+        opMode.telemetry.update();
     }
 
     public void setArmPosition(int position) {
