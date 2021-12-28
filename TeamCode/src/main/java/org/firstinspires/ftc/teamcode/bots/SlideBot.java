@@ -19,9 +19,10 @@ public class SlideBot extends FourWheelDriveBot{
     public void init(HardwareMap ahwMap) {
         super.init(ahwMap);
 
-        slide = hwMap.get(DcMotor.class, "leftFront");
+        slide = hwMap.get(DcMotor.class, "slide");
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void slideUp(boolean button) {
@@ -40,16 +41,13 @@ public class SlideBot extends FourWheelDriveBot{
             slide.setPower(0);
         }
     }
-    public void slideControl(boolean up, boolean down) {
+    public void slideControl(boolean down, boolean up) {
         if (up){
-            slide.setPower(1);
-            slide.setTargetPosition(slide.getCurrentPosition()+1);
-            slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-        if (down && slide.getCurrentPosition() > 0){
-            slide.setPower(1);
-            slide.setTargetPosition(slide.getCurrentPosition()-10);
-            slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slide.setPower(0.8);
+        } else if (down){
+            slide.setPower(-0.8);
+        } else {
+            slide.setPower(0);
         }
     }
 }

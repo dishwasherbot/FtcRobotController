@@ -9,11 +9,19 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class NoodleSpinnerBot extends FourWheelDriveBot{
     public CRServo intake = null;
+    public Servo inOut = null;
+
+    final double retracted = 0;
+    final double extended = 1;
+
+    int inOutPosIndex = 0;
 
     boolean isSpinning = false;
 
     long lastToggleDone = 0;
     long timeSinceToggle = 0;
+    long lastToggleDone1 = 0;
+    long timeSinceToggle1 = 0;
 
     public NoodleSpinnerBot(LinearOpMode opMode) {
         super(opMode);
@@ -25,6 +33,9 @@ public class NoodleSpinnerBot extends FourWheelDriveBot{
 
         intake = hwMap.get(CRServo.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        inOut = hwMap.get(Servo.class, "inOut");
+        inOut.setPosition(retracted);
     }
 
     public void intakeToggle(boolean button) {
@@ -39,6 +50,20 @@ public class NoodleSpinnerBot extends FourWheelDriveBot{
                 isSpinning = true;
                 lastToggleDone = System.currentTimeMillis();
             }
+        }
+    }
+
+    public void controlExtension(boolean toggle) {
+        timeSinceToggle1 = System.currentTimeMillis() - lastToggleDone1;
+        if (toggle && timeSinceToggle1 > 200) {
+            if (inOutPosIndex == 0) {
+                inOut.setPosition(extended);
+                inOutPosIndex = 1;
+            } else if (inOutPosIndex == 1) {
+                inOut.setPosition(retracted);
+                inOutPosIndex = 0;
+            }
+            lastToggleDone1 = System.currentTimeMillis();
         }
     }
 

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-public class WobbleGoalBot extends FourWheelDriveBot {
+public class WobbleGoalBot extends NoodleSpinnerBot {
     public Servo wobblePinch = null;
     public DcMotor wobbleArm = null;
 
@@ -14,9 +14,9 @@ public class WobbleGoalBot extends FourWheelDriveBot {
     final double wobblePinched = 0.7;
     final double wobbleOpened = 0.8;
 
-    final int[] armPositions = new int[]{0, 300, 700};
+    final int[] armPositions = new int[]{0, -700, -900, -1050};
     int armPosIndex = 0;
-    final double[] servoPositions = new double[]{0.6, 0.71, 0.775};
+    final double[] servoPositions = new double[]{0.6, 0.70, 0.81};
     int servoPosIndex = 0;
 
     public boolean isOpen = true;
@@ -87,7 +87,7 @@ public class WobbleGoalBot extends FourWheelDriveBot {
     public void controlWobbleArm(boolean buttonY, boolean buttonB) {
         timeSincePosSwitch = System.currentTimeMillis() - lastPosSwitch;
         if (buttonY && timeSincePosSwitch > 200) {
-            if (armPosIndex < 2) {
+            if (armPosIndex < 3) {
                 armPosIndex ++;
                 wobbleArm.setTargetPosition(armPositions[armPosIndex]);
                 wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
