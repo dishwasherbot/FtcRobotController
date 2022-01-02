@@ -38,12 +38,11 @@ public class ScoopArmBot extends FourWheelDriveBot{
             if (isSpinning) {
                 intake.setPower(0);
                 isSpinning = false;
-                lastToggleDone = System.currentTimeMillis();
             } else {
                 intake.setPower(1);
                 isSpinning = true;
-                lastToggleDone = System.currentTimeMillis();
             }
+            lastToggleDone = System.currentTimeMillis();
         }
     }
 

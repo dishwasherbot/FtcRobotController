@@ -14,10 +14,10 @@ public class WobbleGoalBot extends NoodleSpinnerBot {
     final double wobblePinched = 0.7;
     final double wobbleOpened = 0.8;
 
-    final int[] armPositions = new int[]{0, -700, -900, -1050};
+    final int[] armPositions = new int[]{0, -650, -800, -950};
     int armPosIndex = 0;
-    final double[] servoPositions = new double[]{0.6, 0.70, 0.81};
-    int servoPosIndex = 0;
+    final double[] servoPositions = new double[]{0.19, 0.32, 0.4};
+    int servoPosIndex = 2;
 
     public boolean isOpen = true;
     long lastToggleDone = 0;
@@ -37,11 +37,12 @@ public class WobbleGoalBot extends NoodleSpinnerBot {
     public void init(HardwareMap ahwMap) {
         super.init(ahwMap);
         wobblePinch = hwMap.get(Servo.class, "wobblePinch");
-        wobblePinch.setPosition(wobbleOpened);
+        wobblePinch.setPosition(servoPositions[servoPosIndex]);
         wobbleArm = hwMap.get(DcMotor.class, "wobbleArm");
         wobbleArm.setPower(0);
         wobbleArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         wobbleArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        wobbleArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     //call openPinch() to open the arm
@@ -91,7 +92,7 @@ public class WobbleGoalBot extends NoodleSpinnerBot {
                 armPosIndex ++;
                 wobbleArm.setTargetPosition(armPositions[armPosIndex]);
                 wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                wobbleArm.setPower(0.4);
+                wobbleArm.setPower(0.3);
                 lastPosSwitch = System.currentTimeMillis();
             }
         }
@@ -100,7 +101,7 @@ public class WobbleGoalBot extends NoodleSpinnerBot {
                 armPosIndex --;
                 wobbleArm.setTargetPosition(armPositions[armPosIndex]);
                 wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                wobbleArm.setPower(0.4);
+                wobbleArm.setPower(0.1);
                 lastPosSwitch = System.currentTimeMillis();
             }
         }
