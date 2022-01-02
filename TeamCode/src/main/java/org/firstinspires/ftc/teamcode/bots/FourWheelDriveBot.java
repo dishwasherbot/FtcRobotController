@@ -46,12 +46,11 @@ public class FourWheelDriveBot extends BotBot{
     long lastToggleDone5 = 0;
     double driveMultiplier = 0.5;
 
-    HardwareMap hwMap = null;
+    //HardwareMap hwMap = null;
     private ElapsedTime runtime = new ElapsedTime();
     private Orientation angles;
     private boolean arcadeMode = false;
     private double headingOffset = 0.0;
-    public LinearOpMode opMode;
 
     public FourWheelDriveBot(LinearOpMode opMode)  {
         super(opMode);
@@ -137,8 +136,8 @@ public class FourWheelDriveBot extends BotBot{
 
     public void print(String message){
         String caption = "4WD";
-        this.opMode.telemetry.addData(caption, message);
-        this.opMode.telemetry.update();
+        opMode.telemetry.addData(caption, message);
+        opMode.telemetry.update();
     }
 
     public void init(HardwareMap ahwMap) {
@@ -192,7 +191,7 @@ public class FourWheelDriveBot extends BotBot{
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(speed);
 
-        while (this.opMode.opModeIsActive() && (runtime.seconds() < timeoutS) && motor.isBusy()) {
+        while (opMode.opModeIsActive() && (runtime.seconds() < timeoutS) && motor.isBusy()) {
             // Display it for the driver.
             print(String.format("Running %s to %7d: @ %7d", motor.getDeviceName(), target, motor.getCurrentPosition()));
         }
@@ -268,7 +267,7 @@ public class FourWheelDriveBot extends BotBot{
         RobotLog.d(String.format("Set direction and power!"));
         RobotLog.d(String.format("Target: %d", target));
 
-        while (this.opMode.opModeIsActive() && rightFront.isBusy()) {
+        while (opMode.opModeIsActive() && rightFront.isBusy()) {
             onLoop(50, "Driving straight by distance");
             RobotLog.d(String.format("rightFront current pos: %d, target pos: %d", rightFront.getCurrentPosition(), rightFront.getTargetPosition()));
         }
@@ -314,7 +313,7 @@ public class FourWheelDriveBot extends BotBot{
         } else {
             currentPosition = leftRear.getCurrentPosition();
         }
-        while (this.opMode.opModeIsActive() && Math.abs(currentPosition - startingPosition) < distanceTicks) {
+        while (opMode.opModeIsActive() && Math.abs(currentPosition - startingPosition) < distanceTicks) {
             RobotLog.d(String.format("driveCurveByDistance : Current: %d - Start:%d > 10 => power: %.3f , curvePower: %.3f", currentPosition, startingPosition, maxPower, curvePower));
             switch (direction){
                 case DIRECTION_FORWARD:
@@ -409,7 +408,7 @@ public class FourWheelDriveBot extends BotBot{
         rightRear.setPower(accelerationDelta);
         int step = 1;
         RobotLog.d("Let's go : Target: %d AccelerationDelta: %.2f CurrentPosition: %d Step: %d", realTarget, accelerationDelta, leftFront.getCurrentPosition(), step);
-        while (this.opMode.opModeIsActive() && leftFront.isBusy()) {
+        while (opMode.opModeIsActive() && leftFront.isBusy()) {
             double distToDecelerate = Math.min(Math.abs(leftFront.getCurrentPosition() - startingPosition), accelerationSteps * accelerationInterval);
             RobotLog.d("In loop : CurrentPosition: %d Step: %d DistToDecelerate: %.2f", leftFront.getCurrentPosition(), step, distToDecelerate);
 

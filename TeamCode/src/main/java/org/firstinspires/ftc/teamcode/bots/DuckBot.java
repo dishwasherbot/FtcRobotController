@@ -15,7 +15,7 @@ import java.util.Date;
 
 
 
-public class DuckBot extends GyroBot{
+public class DuckBot extends WobbleGoalBot{
     public DcMotor duckSpinner = null;
 
     long currentTime = 0;

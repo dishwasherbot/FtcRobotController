@@ -25,7 +25,7 @@ public class ManualDriveOpMode extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             robot.driveByHand(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_button);
-//            robot.holdSpinner(gamepad1.a, gamepad1.b, 0.4);
+            robot.holdSpinner(gamepad1.dpad_left, gamepad1.dpad_right, 0.4);
 // wobble arm code
             robot.controlServo(gamepad1.dpad_up, gamepad1.dpad_down);
             robot.controlWobbleArm(gamepad1.y, gamepad1.b);
