@@ -80,4 +80,8 @@ public class TouchBot extends DuckBot {
         }
         opMode.telemetry.update();
     }
+    protected void onTick() {
+        checkTouch();
+        super.onTick();
+    }
 }

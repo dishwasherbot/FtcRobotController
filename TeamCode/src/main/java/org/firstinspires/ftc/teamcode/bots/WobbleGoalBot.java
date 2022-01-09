@@ -14,7 +14,7 @@ public class WobbleGoalBot extends NoodleSpinnerBot {
     final double wobblePinched = 0.7;
     final double wobbleOpened = 0.8;
 
-    final int[] armPositions = new int[]{0, -650, -800, -950};
+    final int[] armPositions = new int[]{-25, -580, -760, -910};
     int armPosIndex = 0;
     final double[] servoPositions = new double[]{0.19, 0.32, 0.4};
     int servoPosIndex = 2;
@@ -87,8 +87,17 @@ public class WobbleGoalBot extends NoodleSpinnerBot {
 
     public void controlWobbleArm(boolean buttonY, boolean buttonB) {
         timeSincePosSwitch = System.currentTimeMillis() - lastPosSwitch;
-        if (buttonY && timeSincePosSwitch > 200) {
-            if (armPosIndex < 3) {
+        if (buttonY && timeSincePosSwitch > 350) {
+            if (armPosIndex < 3 && armPosIndex > 0) {
+                armPosIndex ++;
+                wobbleArm.setTargetPosition(armPositions[armPosIndex]);
+                wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                wobbleArm.setPower(0.3);
+                lastPosSwitch = System.currentTimeMillis();
+            }
+            if (armPosIndex == 0) {
+                inOutPosIndex = 1;
+                inOut.setPosition(inOutPositions[inOutPosIndex]);
                 armPosIndex ++;
                 wobbleArm.setTargetPosition(armPositions[armPosIndex]);
                 wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -96,12 +105,23 @@ public class WobbleGoalBot extends NoodleSpinnerBot {
                 lastPosSwitch = System.currentTimeMillis();
             }
         }
-        if (buttonB && timeSincePosSwitch > 200) {
-            if (armPosIndex > 0) {
+        if (buttonB && timeSincePosSwitch > 350) {
+            if (armPosIndex > 1) {
                 armPosIndex --;
                 wobbleArm.setTargetPosition(armPositions[armPosIndex]);
                 wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 wobbleArm.setPower(0.1);
+                lastPosSwitch = System.currentTimeMillis();
+            }
+            if (armPosIndex == 1) {
+                inOutPosIndex = 1;
+                inOut.setPosition(inOutPositions[inOutPosIndex]);
+                armPosIndex --;
+                wobbleArm.setTargetPosition(armPositions[armPosIndex]);
+                wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                wobbleArm.setPower(0.1);
+                servoPosIndex = 2;
+                wobblePinch.setPosition(servoPositions[servoPosIndex]);
                 lastPosSwitch = System.currentTimeMillis();
             }
         }
@@ -110,6 +130,18 @@ public class WobbleGoalBot extends NoodleSpinnerBot {
 //        }
         //opMode.telemetry.addData("armPosIndex", armPosIndex);
         //opMode.telemetry.update();
+    }
+
+    public void fineTuneWobbleArm(float down, float up) {
+        if (up > 0){
+            wobbleArm.setTargetPosition((int) (wobbleArm.getCurrentPosition()+up*25));
+            wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            wobbleArm.setPower(0.1);
+        } else if (down > 0){
+            wobbleArm.setTargetPosition((int) (wobbleArm.getCurrentPosition()-down*25));
+            wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            wobbleArm.setPower(0.1);
+        }
     }
 
     public void controlServo(boolean dpadUp, boolean dpadDown) {
@@ -128,8 +160,8 @@ public class WobbleGoalBot extends NoodleSpinnerBot {
                 lastPosSwitch1 = System.currentTimeMillis();
             }
         }
-        opMode.telemetry.addData("servoPosIndex", servoPosIndex);
-        opMode.telemetry.update();
+//        opMode.telemetry.addData("servoPosIndex", servoPosIndex);
+//        opMode.telemetry.update();
     }
 
     public void setArmPosition(int position) {

@@ -54,10 +54,10 @@ public class GyroBot extends FourWheelDriveBot {
 
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        opMode.telemetry.addData("Angle", angles.firstAngle - startAngle);
-        opMode.telemetry.addData("Raw angle", angles.firstAngle);
-        opMode.telemetry.addData("Start angle", startAngle);
-        opMode.telemetry.update();
+//        opMode.telemetry.addData("Angle", angles.firstAngle - startAngle);
+//        opMode.telemetry.addData("Raw angle", angles.firstAngle);
+//        opMode.telemetry.addData("Start angle", startAngle);
+//        opMode.telemetry.update();
 
         return angles.firstAngle - startAngle;
     }
