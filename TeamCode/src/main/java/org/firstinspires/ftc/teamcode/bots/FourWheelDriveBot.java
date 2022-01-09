@@ -20,7 +20,7 @@ import java.io.OutputStreamWriter;
 
 import java.util.Date;
 
-public class FourWheelDriveBot {
+public class FourWheelDriveBot extends BotBot{
 
     // Gobilda 435 rpm DC motor : Encoder Countable Events Per Revolution (Output Shaft) : 383.6 * 2 (2:1 bevel gear ratio)
     // Gobilda 312 rpm DC motor : Encoder Countable Events Per Revolution (Output Shaft) : 383.6 * 2 (1:1 bevel gear ratio)
@@ -44,25 +44,18 @@ public class FourWheelDriveBot {
 
     long timeSinceToggle5 = 0;
     long lastToggleDone5 = 0;
-    double driveMultiplier = 1;
+    double driveMultiplier = 0.5;
 
-    HardwareMap hwMap = null;
+    //HardwareMap hwMap = null;
     private ElapsedTime runtime = new ElapsedTime();
     private Orientation angles;
     private boolean arcadeMode = false;
     private double headingOffset = 0.0;
-    public LinearOpMode opMode;
 
-    OutputStreamWriter onLoopWriter;
-
-    public FourWheelDriveBot(LinearOpMode opMode) {
-        this.opMode = opMode;
-        try {
-            onLoopWriter = new FileWriter("/sdcard/FIRST/onlooplog_" + java.text.DateFormat.getDateTimeInstance().format(new Date()) + ".csv", true);
-        } catch (IOException e) {
-            throw new RuntimeException("onloop file writer open failed: " + e.toString());
-        }
+    public FourWheelDriveBot(LinearOpMode opMode)  {
+        super(opMode);
     }
+
     // manual drive
     private double getRawHeading() {
         return angles.firstAngle;
@@ -86,22 +79,22 @@ public class FourWheelDriveBot {
 
     //    public void driveByHand(double _lf, double _lr, double _rf, double _rr) {
     public void driveByHand(double left_stick_x, double left_stick_y, double right_stick_x, boolean button) {
-        double drive  = left_stick_y;
-        double strafe = - left_stick_x;
+        double drive  = - left_stick_y;
+        double strafe = left_stick_x;
         double twist  = right_stick_x;
 
         timeSinceToggle5 = System.currentTimeMillis() - lastToggleDone5;
         if (button && timeSinceToggle5 > 300) {
             if (isSlow) {
-                driveMultiplier = 1;
+                driveMultiplier = 0.5;
                 isSlow = false;
-                opMode.telemetry.addData("NOT SLOW", driveMultiplier);
+                opMode.telemetry.addData("SLOW", driveMultiplier);
                 lastToggleDone5 = System.currentTimeMillis();
                 //RobotLog.d("robot not slow");
             } else if (!isSlow) {
                 driveMultiplier = 0.25;
                 isSlow = true;
-                opMode.telemetry.addData("SLOW", driveMultiplier);
+                opMode.telemetry.addData("FAST", driveMultiplier);
                 lastToggleDone5 = System.currentTimeMillis();
                 //RobotLog.d("robot slow");
             }
@@ -143,12 +136,12 @@ public class FourWheelDriveBot {
 
     public void print(String message){
         String caption = "4WD";
-        this.opMode.telemetry.addData(caption, message);
-        this.opMode.telemetry.update();
+        opMode.telemetry.addData(caption, message);
+        opMode.telemetry.update();
     }
 
     public void init(HardwareMap ahwMap) {
-        hwMap = ahwMap;
+        super.init(ahwMap);
 
         leftFront = (DcMotorEx) hwMap.get(DcMotor.class, "leftFront");
         rightFront = (DcMotorEx) hwMap.get(DcMotor.class, "rightFront");
@@ -180,67 +173,9 @@ public class FourWheelDriveBot {
 //                rightRear.getCurrentPosition()));
     }
 
-    public void onLoop(String label){
-        onLoop(100, label);
-    }
-    long lastOnLoopFinished = 0;
-    String lastOnLoopLabel = "";
-    int onLoopTolerance = 400;
-    public void onLoop(int interval, String label){
-        long start = System.currentTimeMillis();
-        // TRICKY : DEBUG feature, please comment following block out before competition
-//        if (lastOnLoopFinished > 0 && start - lastOnLoopFinished > (interval + onLoopTolerance)){
-//            close();
-//            throw new RuntimeException("onLoop(" + label + ") has been called too long (" + (start - lastOnLoopFinished) + ") ago, last onLoop label is "+lastOnLoopLabel);
-//        }
-        //RobotLog.d("FourWDBot OnLoop start ");
-        this.onTick();
-        long timeElapsed = System.currentTimeMillis() - start;
-        RobotLog.d("FourWDBot OnLoop stop @ " + timeElapsed);
-        // TRICKY : DEBUG feature, please comment following block out before competition
-//        if (timeElapsed > interval){
-//            close();
-//            throw new RuntimeException("onTick(" + label + ") took too long (" + timeElapsed + ") to finish, last onLoop label is " + lastOnLoopLabel);
-//        }
-        try {
-            RobotLog.d("onLoopWriter.write");
-            onLoopWriter.write(String.format("%d, %d, %d, %s\n", interval, timeElapsed, start - lastOnLoopFinished, label));
-        } catch (IOException e) {
-            throw new RuntimeException("onloop file writer write failed: " + e.toString());
-        }
-        if (interval > timeElapsed) {
-            opMode.sleep(interval - (int) timeElapsed);
-        }
-        lastOnLoopFinished = System.currentTimeMillis();
-        lastOnLoopLabel = label;
-    }
-
     protected void onTick(){
         //driveByHand(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_button);
-    }
-
-    public void close(){
-        try {
-            RobotLog.d("onLoopWriter.close");
-            onLoopWriter.close();
-        } catch (IOException e) {
-            throw new RuntimeException("onloop file writer close failed: " + e.toString());
-        }
-    }
-
-    /**
-     * Not blocking sleep, sleep n milliseconds while keep the onLoop() called every 100 milliseconds
-     * @param milliseconds
-     * @param label
-     */
-    public void sleep(int milliseconds, String label){
-        for (int i=0; i < milliseconds; i+=100){
-            onLoop(100, label);
-        }
-    }
-
-    public void sleep(int milliseconds){
-        sleep(milliseconds, "default sleep");
+        //super.onTick();
     }
 
     public void testOneMotor(DcMotor motor, double speed, int direction){
@@ -256,7 +191,7 @@ public class FourWheelDriveBot {
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(speed);
 
-        while (this.opMode.opModeIsActive() && (runtime.seconds() < timeoutS) && motor.isBusy()) {
+        while (opMode.opModeIsActive() && (runtime.seconds() < timeoutS) && motor.isBusy()) {
             // Display it for the driver.
             print(String.format("Running %s to %7d: @ %7d", motor.getDeviceName(), target, motor.getCurrentPosition()));
         }
@@ -265,7 +200,7 @@ public class FourWheelDriveBot {
 
         print(String.format("Completed! %s @ %7d", motor.getDeviceName(), motor.getCurrentPosition()));
 
-        this.opMode.sleep(3000);
+        sleep(3000);
     }
     public void driveStraightByDistance(int direction, double distance){
         // default max power 0.5
@@ -332,7 +267,7 @@ public class FourWheelDriveBot {
         RobotLog.d(String.format("Set direction and power!"));
         RobotLog.d(String.format("Target: %d", target));
 
-        while (this.opMode.opModeIsActive() && rightFront.isBusy()) {
+        while (opMode.opModeIsActive() && rightFront.isBusy()) {
             onLoop(50, "Driving straight by distance");
             RobotLog.d(String.format("rightFront current pos: %d, target pos: %d", rightFront.getCurrentPosition(), rightFront.getTargetPosition()));
         }
@@ -378,7 +313,7 @@ public class FourWheelDriveBot {
         } else {
             currentPosition = leftRear.getCurrentPosition();
         }
-        while (this.opMode.opModeIsActive() && Math.abs(currentPosition - startingPosition) < distanceTicks) {
+        while (opMode.opModeIsActive() && Math.abs(currentPosition - startingPosition) < distanceTicks) {
             RobotLog.d(String.format("driveCurveByDistance : Current: %d - Start:%d > 10 => power: %.3f , curvePower: %.3f", currentPosition, startingPosition, maxPower, curvePower));
             switch (direction){
                 case DIRECTION_FORWARD:
@@ -406,7 +341,7 @@ public class FourWheelDriveBot {
                     rightRear.setPower(+ maxPower + curvePower);
                     break;
             }
-            opMode.sleep(50);
+            sleep(50);
             if (curvePower > 0) {
                 currentPosition = leftFront.getCurrentPosition();
             } else {
@@ -473,7 +408,7 @@ public class FourWheelDriveBot {
         rightRear.setPower(accelerationDelta);
         int step = 1;
         RobotLog.d("Let's go : Target: %d AccelerationDelta: %.2f CurrentPosition: %d Step: %d", realTarget, accelerationDelta, leftFront.getCurrentPosition(), step);
-        while (this.opMode.opModeIsActive() && leftFront.isBusy()) {
+        while (opMode.opModeIsActive() && leftFront.isBusy()) {
             double distToDecelerate = Math.min(Math.abs(leftFront.getCurrentPosition() - startingPosition), accelerationSteps * accelerationInterval);
             RobotLog.d("In loop : CurrentPosition: %d Step: %d DistToDecelerate: %.2f", leftFront.getCurrentPosition(), step, distToDecelerate);
 

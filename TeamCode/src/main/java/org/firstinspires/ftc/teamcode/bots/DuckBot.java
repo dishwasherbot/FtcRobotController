@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.bots;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.stormbots.MiniPID;
@@ -14,7 +15,7 @@ import java.util.Date;
 
 
 
-public class DuckBot extends GyroBot{
+public class DuckBot extends WobbleGoalBot{
     public DcMotor duckSpinner = null;
 
     long currentTime = 0;
@@ -30,7 +31,7 @@ public class DuckBot extends GyroBot{
     public double currentSpinnerSpeed = 1;
 
     //change these values to control what speed the spinner spins around
-    public double setSpinnerSpeed = 0.5; //385
+    public double setSpinnerSpeed = 0.4; //385
 
     OutputStreamWriter spinnerWriter;
 
@@ -54,11 +55,31 @@ public class DuckBot extends GyroBot{
         }
     }
 
-    public void toggleSpinner() {
+    public void toggleSpinner(double power, boolean isForward) {
+        setSpinnerSpeed = power;
+        if (isForward) {
+            duckSpinner.setDirection(DcMotorSimple.Direction.FORWARD);
+        } else {
+            duckSpinner.setDirection(DcMotorSimple.Direction.REVERSE);
+        }
         if (!isSpinning) {
             isSpinning = true;
         } else {
             isSpinning = false;
+        }
+    }
+
+    public void holdSpinner (boolean button, boolean switchDirection, double power) {
+        setSpinnerSpeed = power;
+        if (button) {
+            isSpinning = true;
+        } else {
+            isSpinning = false;
+        }
+        if (duckSpinner.getDirection() == DcMotorSimple.Direction.FORWARD && switchDirection) {
+            duckSpinner.setDirection(DcMotorSimple.Direction.REVERSE);
+        } else if (duckSpinner.getDirection() == DcMotorSimple.Direction.REVERSE && switchDirection){
+            duckSpinner.setDirection(DcMotorSimple.Direction.FORWARD);
         }
     }
 
