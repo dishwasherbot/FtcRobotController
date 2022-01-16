@@ -174,8 +174,8 @@ public class WobbleGoalBot extends NoodleSpinnerBot {
         wobbleArm.setPower(0.5);
     }
 
-    public void setArmPositionNoWait(int position) {
-        wobbleArm.setPower(0.4);
+    public void setArmPositionNoWait(int position, double power) {
+        wobbleArm.setPower(power);
         wobbleArm.setTargetPosition(position);
         wobbleArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }

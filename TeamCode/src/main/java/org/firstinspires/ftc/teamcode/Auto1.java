@@ -16,7 +16,7 @@ public class Auto1 extends LinearOpMode {
     public void runOpMode() {
         robot.init(hardwareMap);
         waitForStart();
-        int[] pos = new int[2];
+        int[] pos;
         pos = robot.detect();
         if (pos[1] == 0) {
             robot.openPinch();
