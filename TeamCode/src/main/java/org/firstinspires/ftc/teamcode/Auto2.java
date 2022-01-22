@@ -50,7 +50,7 @@ public class Auto2 extends LinearOpMode {
                 robot.driveStraightByDistance(robot.DIRECTION_FORWARD,5, 0.2);
             }
             robot.toggleSpinner(0.35, false);
-            robot.sleep(2700);
+            robot.sleep(3200);
             robot.toggleSpinner(0.35, false);
             robot.sleep(1000);
             robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 10, 0.6);
@@ -63,43 +63,45 @@ public class Auto2 extends LinearOpMode {
             robot.driveStraightByDistance(robot.DIRECTION_LEFT, 6.5, 0.5);
             robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 12, 0.2);
             robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 1, 0.2);
+            robot.driveStraightByDistance(robot.DIRECTION_LEFT, 0.1, 0.14);
             robot.toggleSpinner(0.35, true);
-            robot.sleep(2700);
+            robot.sleep(3500);
             robot.toggleSpinner(0.35, true);
-            robot.sleep(2000);
+            robot.sleep(1000);
             robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 32.5, 0.6, false);
             robot.sleep(500);
             robot.goBacktoStartAngle();
             robot.controlExtension(true);
             robot.sleep(500);
             if (pos[0] == 0) {
-                robot.setArmPositionNoWait(-930, 0.3);
-                robot.goToAngle(-90, 0.25);
-                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 8, 0.2);
+                robot.setArmPositionNoWait(-940, 0.2);
+                robot.goToAngle(-90, 0.18);
+                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 6, 0.2);
                 robot.controlServo(false, true);
+                robot.sleep(1000);
+                robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 2, 0.5);
             } else if (pos[0] == 1) {
-                robot.setArmPositionNoWait(-760, 0.3);
-                robot.goToAngle(-90, 0.3);
-                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 10, 0.5);
+                robot.setArmPositionNoWait(-760, 0.18);
+                robot.goToAngle(-90, 0.2);
+                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 6, 0.2);
                 robot.controlServo(false, true);
-
+                robot.sleep(1000);
+                robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 2, 0.5);
             } else {
-                robot.setArmPositionNoWait(-580, 0.3);
-                robot.goToAngle(-90, 0.3);
-                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 10, 0.5);
+                robot.setArmPositionNoWait(-580, 0.18);
+                robot.goToAngle(-90, 0.2);
+                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 11, 0.2);
                 robot.controlServo(false, true);
-
+                robot.sleep(1000);
+                robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 7, 0.7);
             }
-            robot.sleep(1000);
-            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 4, 0.5);
             robot.controlServo(true, false);
             robot.sleep(300);
             robot.controlServo(true, false);
             robot.setArmPositionNoWait(-25, 0.1);
             robot.goBacktoStartAngle();
             robot.controlExtension(true);
-            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 45, 0.6);
-            robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 2, 0.1);
+            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 43, 0.6);
         }
     }
 }

@@ -81,7 +81,7 @@ public class GyroBot extends FourWheelDriveBot {
         double delta = getDeltaAngle();
 
         while (Math.abs(delta) > 2 && this.opMode.opModeIsActive()) {
-            onLoop("goBacktoStartAngle");
+            onLoop(50, "goBacktoStartAngle");
             if (delta < 0) {
                 // turn clockwize
                 direction = -1;
