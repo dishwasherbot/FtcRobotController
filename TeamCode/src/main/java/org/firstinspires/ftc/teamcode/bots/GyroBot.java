@@ -17,7 +17,7 @@ public class GyroBot extends FourWheelDriveBot {
 
     BNO055IMU imu;
     public double startAngle = 0;
-    double power = 0.14;
+    double power = 0.1;
 
 
     public GyroBot(LinearOpMode opMode) {
@@ -106,7 +106,7 @@ public class GyroBot extends FourWheelDriveBot {
 
     public void goBacktoStartAnglePID() {
 
-        MiniPID pid = new MiniPID(0.03, 0, 0);
+        MiniPID pid = new MiniPID(0.008, 0.00005, 0.0045);
         pid.setOutputLimits(0.5);
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -115,14 +115,13 @@ public class GyroBot extends FourWheelDriveBot {
         double angle;
         angle = getAngle();
         double power = pid.getOutput(angle, startAngle);
-        while (Math.abs(power) > 0.06 && this.opMode.opModeIsActive()) {
-            onLoop("goBacktoStartAnglePID");
+        while (Math.abs(power) > 0.1 && this.opMode.opModeIsActive()) {
+            onLoop(50,"goBacktoStartAnglePID");
             RobotLog.d(String.format("PID(source: %.3f, target: %.3f) = power: %.3f", angle, startAngle, power));
             leftFront.setPower(-power);
             rightFront.setPower(power * highRPMToLowRPM);
             leftRear.setPower(-power * highRPMToLowRPM);
             rightRear.setPower(power);
-            opMode.sleep(50);
             angle = getAngle();
             power = pid.getOutput(angle, startAngle);
         };
@@ -141,7 +140,7 @@ public class GyroBot extends FourWheelDriveBot {
         double delta = getAngle() - targetAngle;
 
         while (Math.abs(delta) > 1 && this.opMode.opModeIsActive()) {
-            onLoop(50, "goBacktoStartAngle");
+            onLoop(50, "goToAngle");
             if (delta < 0) {
                 // turn clockwize
                 direction = -1;
@@ -166,8 +165,8 @@ public class GyroBot extends FourWheelDriveBot {
 
     public void goToAnglePID(double targetAngle) {
 
-        MiniPID pid = new MiniPID(0.025, 0.005, 0.015);
-        pid.setOutputLimits(0.7);
+        MiniPID pid = new MiniPID(0.008, 0.00005, 0.0045);
+        pid.setOutputLimits(1);
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -176,13 +175,12 @@ public class GyroBot extends FourWheelDriveBot {
         angle = getAngle();
         double power = pid.getOutput(angle, targetAngle);
         while (Math.abs(power) > 0.1 && this.opMode.opModeIsActive()) {
-            onLoop("goBacktoStartAnglePID");
+            onLoop(50, "goToAnglePID");
             RobotLog.d(String.format("PID(source: %.3f, target: %.3f) = power: %.3f", angle, targetAngle, power));
             leftFront.setPower(-power);
             rightFront.setPower(power * highRPMToLowRPM);
             leftRear.setPower(-power * highRPMToLowRPM);
             rightRear.setPower(power);
-            opMode.sleep(30);
             angle = getAngle();
             power = pid.getOutput(angle, targetAngle);
         };
@@ -250,7 +248,7 @@ public class GyroBot extends FourWheelDriveBot {
 
     }
 
-    public void driveStraightByGyro(int direction, double distance, double maxPower, boolean useCurrentAngle) {
+    public void driveStraightByGyro(int direction, double distance, double maxPower, boolean useCurrentAngle, double newAngle) {
         if (direction != DIRECTION_FORWARD && direction != DIRECTION_BACKWARD && direction != DIRECTION_LEFT && direction != DIRECTION_RIGHT){
             String msg = String.format("Unaccepted direction value (%d) for driveStraightByGyro()", direction);
             print(msg);
@@ -258,7 +256,7 @@ public class GyroBot extends FourWheelDriveBot {
         }
         double originalAngle;
         if (useCurrentAngle) {
-            originalAngle = getAngle();
+            originalAngle = newAngle;
         } else {
             originalAngle = startAngle;
         }
@@ -319,7 +317,7 @@ public class GyroBot extends FourWheelDriveBot {
         rightFront.setPower(0);
         leftRear.setPower(0);
         rightRear.setPower(0);
-        sleep(300, "after gyro wait");
+        //sleep(100, "after gyro wait");
     }
 
     public void driveByGyroWithEncodersVertical(int direction, double distance, double maxPower, boolean useCurrentAngle, boolean decelerate) {

@@ -13,15 +13,19 @@ public class NoodleSpinnerBot extends GyroBot{
     final double retracted = 0;
     final double extended = 1;
 
-    final double[] inOutPositions = new double[]{0, 1};
+    public final double[] inOutPositions = new double[]{0, 1, 0.8};
     public int inOutPosIndex = 0;
 
     boolean isIntakeSpinning = false;
+    boolean shouldToggle = false;
+    boolean shouldUpdateIntake = true;
 
-    long lastToggleDone9 = 0;
-    long timeSinceToggle9 = 0;
-    long lastToggleDone1 = 0;
-    long timeSinceToggle1 = 0;
+    private long lastToggleDone9 = 0;
+    private long timeSinceToggle9 = 0;
+    private long lastToggleDone1 = 0;
+    private long timeSinceToggle1 = 0;
+    private long lastToggleDone4 = 0;
+    private long timeSinceToggle4 = 0;
 
     public NoodleSpinnerBot(LinearOpMode opMode) {
         super(opMode);
@@ -35,6 +39,7 @@ public class NoodleSpinnerBot extends GyroBot{
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
         inOut = hwMap.get(Servo.class, "inOut");
+        inOutPosIndex = 0;
         inOut.setPosition(inOutPositions[inOutPosIndex]);
     }
 
@@ -51,10 +56,12 @@ public class NoodleSpinnerBot extends GyroBot{
         }
     }
     protected void updateIntake() {
-        if (isIntakeSpinning) {
-            intake.setPower(1);
-        } else {
-            intake.setPower(0);
+        if (shouldUpdateIntake) {
+            if (isIntakeSpinning) {
+                intake.setPower(1);
+            } else {
+                intake.setPower(0);
+            }
         }
     }
 
@@ -62,17 +69,33 @@ public class NoodleSpinnerBot extends GyroBot{
         timeSinceToggle1 = System.currentTimeMillis() - lastToggleDone1;
         if (toggle && timeSinceToggle1 > 200) {
             if (inOutPosIndex == 0) {
-                inOutPosIndex = 1;
-                inOut.setPosition(inOutPositions[inOutPosIndex]);
+                goToInOutPosition(1);
             } else if (inOutPosIndex == 1) {
-                inOutPosIndex = 0;
-                inOut.setPosition(inOutPositions[inOutPosIndex]);
+                goToInOutPosition(0);
             }
             lastToggleDone1 = System.currentTimeMillis();
         }
     }
+
+    protected void toggleInOut() {
+        timeSinceToggle4 = System.currentTimeMillis() - lastToggleDone4;
+        if (shouldToggle && inOutPosIndex == 0 && timeSinceToggle4 > 300) {
+            controlExtension(true);
+            lastToggleDone4 = System.currentTimeMillis();
+        } else if (shouldToggle && inOutPosIndex == 1 && timeSinceToggle4 > 800) {
+            controlExtension(true);
+            lastToggleDone4 = System.currentTimeMillis();
+        }
+    }
+
+    public void goToInOutPosition(int index) {
+        inOutPosIndex = index;
+        inOut.setPosition(inOutPositions[inOutPosIndex]);
+    }
+
     protected void onTick() {
         updateIntake();
+        toggleInOut();
         super.onTick();
     }
 }

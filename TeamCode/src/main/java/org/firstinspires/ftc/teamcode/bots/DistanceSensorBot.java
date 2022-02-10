@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode.bots;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -49,6 +50,12 @@ public class DistanceSensorBot extends DuckBot {
     public double sensorDistance = 0;
 
     public boolean isRepeating = false;
+
+    boolean shouldGrabDrive = false;
+    private boolean grabDriveForward = true;
+
+    private long lastToggleDone6 = 0;
+    private long timeSinceToggle6 = 0;
 
     public DistanceSensorBot(LinearOpMode opMode) {
         super(opMode);
@@ -89,9 +96,93 @@ public class DistanceSensorBot extends DuckBot {
         }
     }
 
+    public void grabDrive(double power) {
+        timeSinceToggle6 = System.currentTimeMillis() - lastToggleDone6;
+        if (shouldGrabDrive && grabDriveForward && timeSinceToggle6 > 600) {
+            leftFront.setPower(power);
+            rightFront.setPower(power);
+            leftRear.setPower(power);
+            rightRear.setPower(power);
+            grabDriveForward = false;
+            lastToggleDone6 = System.currentTimeMillis();
+        } else if (shouldGrabDrive && !grabDriveForward && timeSinceToggle6 > 1800) {
+            leftFront.setPower(-power);
+            rightFront.setPower(-power);
+            leftRear.setPower(-power);
+            rightRear.setPower(-power);
+            grabDriveForward = true;
+            lastToggleDone6 = System.currentTimeMillis();
+        }
+    }
+
+    public void autoGrabFreight(double power) {
+        int LFStartingPos = leftFront.getCurrentPosition();
+        int RFStartingPos = rightFront.getCurrentPosition();
+        int LRStartingPos = leftRear.getCurrentPosition();
+        int RRStartingPos = rightRear.getCurrentPosition();
+
+        leftFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setPower(power);
+        rightFront.setPower(power);
+        leftRear.setPower(power);
+        rightRear.setPower(power);
+        goToInOutPosition(1);
+        isIntakeSpinning = true;
+//        while (sensorDistance > 14 && opMode.opModeIsActive()) {
+//            onLoop(50, "autoGrab");
+//        }
+//        leftFront.setPower(0);
+//        rightFront.setPower(0);
+//        leftRear.setPower(0);
+//        rightRear.setPower(0);
+//        inOutPosIndex = 0;
+//        inOut.setPosition(inOutPositions[inOutPosIndex]);
+        //int distanceTravelled = Math.abs(leftFront.getCurrentPosition() - LFStartingPos);
+        shouldToggle = true;
+        shouldGrabDrive = true;
+        while (sensorDistance > 3 && opMode.opModeIsActive()){
+            onLoop(50, "autoGrab 2");
+        }
+        shouldToggle = false;
+        shouldGrabDrive = false;
+        servoPosIndex = 1;
+        wobblePinch.setPosition(servoPositions[servoPosIndex]);
+        goToInOutPosition(1);
+        isIntakeSpinning = false;
+        shouldUpdateIntake = false;
+        intake.setPower(-1);
+        leftFront.setTargetPosition(LFStartingPos);
+        rightFront.setTargetPosition(RFStartingPos);
+        leftRear.setTargetPosition(LRStartingPos);
+        rightRear.setTargetPosition(RRStartingPos);
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setPower(0.3);
+        rightFront.setPower(0.3);
+        leftRear.setPower(0.3);
+        rightRear.setPower(0.3);
+        setArmPositionNoWait(-580, 0.18);
+        while (opMode.opModeIsActive() && rightFront.isBusy()) {
+            onLoop(50, "Driving straight by distance");
+        }
+        intake.setPower(0);
+        shouldUpdateIntake = true;
+        grabDriveForward = true;
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftRear.setPower(0);
+        rightRear.setPower(0);
+    }
+
     protected void onTick() {
         getDistance();
         checkFreightInBox();
+        grabDrive(0.12);
         opMode.telemetry.addData("distance: ", sensorDistance);
         opMode.telemetry.addData("isRepeating: ", isRepeating);
         opMode.telemetry.addData("isSpinning: ", isIntakeSpinning);

@@ -55,7 +55,7 @@ public class Auto2 extends LinearOpMode {
             robot.sleep(1000);
             robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 10, 0.6);
             robot.goBacktoStartAngle();
-            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 25, 0.5, false);
+            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 25, 0.5, false, 0);
             robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 10, 0.5);
             robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 45, 0.6);
             //robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 70, 0.7);
@@ -64,11 +64,11 @@ public class Auto2 extends LinearOpMode {
             robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 9, 0.2);
             robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 2, 0.2);
             robot.driveStraightByDistance(robot.DIRECTION_LEFT, 0.2, 0.14);
-            robot.toggleSpinner(0.35, true);
+            robot.toggleSpinner(0.35, true);   
             robot.sleep(3500);
             robot.toggleSpinner(0.35, true);
             robot.sleep(1000);
-            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 32.5, 0.6, false);
+            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 32.5, 0.6, false, 0);
             robot.sleep(500);
             robot.goBacktoStartAngle();
             robot.controlExtension(true);
