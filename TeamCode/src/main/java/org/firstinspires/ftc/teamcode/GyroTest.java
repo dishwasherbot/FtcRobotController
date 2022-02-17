@@ -16,14 +16,16 @@ public class GyroTest extends LinearOpMode {
     public void runOpMode() {
         robot.init(hardwareMap);
         waitForStart();
-        robot.goToAnglePID(90);
-        robot.goToAngle(90, 0.1);
-        robot.sleep(3000);
-        robot.goToAnglePID(45);
-        robot.goToAngle(45, 0.1);
-        robot.sleep(3000);
-        robot.goToAnglePID(-90);
-        robot.goToAngle(-90, 0.1);
-        robot.sleep(3000);
+//        robot.goToAnglePID(90);
+//        robot.goToAngle(90, 0.18);
+//        robot.sleep(2000);
+//        robot.goToAnglePID(45);
+//        robot.goToAngle(45, 0.18);
+//        robot.sleep(2000);
+//        robot.goToAnglePID(-90);
+//        robot.goToAngle(-90, 0.18);
+        robot.sleep(10000);
+        robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 40, 0.3, false, 0);
+
     }
 }

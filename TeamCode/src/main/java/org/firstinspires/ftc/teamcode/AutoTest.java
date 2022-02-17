@@ -15,13 +15,13 @@ public class AutoTest extends LinearOpMode {
     public void runOpMode() {
         robot.init(hardwareMap);
         waitForStart();
-        for (int i = 0; i < 2; i++) {
-            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 10, 0.3, false, 0);
+        for (int i = 0; i < 3; i++) {
+            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 18, 0.5, false, 0);
             robot.autoGrabFreight(0.12);
-            robot.driveStraightByGyro(robot.DIRECTION_BACKWARD, 10, 0.3, false, 0);
+            robot.driveStraightByGyro(robot.DIRECTION_BACKWARD, 18, 0.5, false, 0);
             robot.servoPosIndex = 0;
             robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
-            robot.sleep(2000);
+            robot.sleep(500);
             robot.setArmPositionNoWait(-25, 0.3);
             robot.servoPosIndex = 2;
             robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);

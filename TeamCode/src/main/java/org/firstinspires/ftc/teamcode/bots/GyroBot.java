@@ -248,7 +248,7 @@ public class GyroBot extends FourWheelDriveBot {
 
     }
 
-    public void driveStraightByGyro(int direction, double distance, double maxPower, boolean useCurrentAngle, double newAngle) {
+    public void driveStraightByGyro(int direction, double distance, double maxPower, boolean useCurrentAngle, double currentAngle) {
         if (direction != DIRECTION_FORWARD && direction != DIRECTION_BACKWARD && direction != DIRECTION_LEFT && direction != DIRECTION_RIGHT){
             String msg = String.format("Unaccepted direction value (%d) for driveStraightByGyro()", direction);
             print(msg);
@@ -256,7 +256,7 @@ public class GyroBot extends FourWheelDriveBot {
         }
         double originalAngle;
         if (useCurrentAngle) {
-            originalAngle = newAngle;
+            originalAngle = currentAngle;
         } else {
             originalAngle = startAngle;
         }
