@@ -25,7 +25,7 @@ public class GyroTest extends LinearOpMode {
 //        robot.goToAnglePID(-90);
 //        robot.goToAngle(-90, 0.18);
         robot.sleep(10000);
-        robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 40, 0.3, false, 0);
+        robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 40, 0.3, false, 0, true);
 
     }
 }

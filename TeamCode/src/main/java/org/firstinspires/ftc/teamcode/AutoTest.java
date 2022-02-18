@@ -16,9 +16,9 @@ public class AutoTest extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         for (int i = 0; i < 3; i++) {
-            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 18, 0.5, false, 0);
+            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 18, 0.5, false, 0, true);
             robot.autoGrabFreight(0.12);
-            robot.driveStraightByGyro(robot.DIRECTION_BACKWARD, 18, 0.5, false, 0);
+            robot.driveStraightByGyro(robot.DIRECTION_BACKWARD, 18, 0.5, false, 0, true);
             robot.servoPosIndex = 0;
             robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
             robot.sleep(500);

@@ -248,7 +248,7 @@ public class GyroBot extends FourWheelDriveBot {
 
     }
 
-    public void driveStraightByGyro(int direction, double distance, double maxPower, boolean useCurrentAngle, double currentAngle) {
+    public void driveStraightByGyro(int direction, double distance, double maxPower, boolean useCurrentAngle, double currentAngle, boolean brake) {
         if (direction != DIRECTION_FORWARD && direction != DIRECTION_BACKWARD && direction != DIRECTION_LEFT && direction != DIRECTION_RIGHT){
             String msg = String.format("Unaccepted direction value (%d) for driveStraightByGyro()", direction);
             print(msg);
@@ -309,10 +309,17 @@ public class GyroBot extends FourWheelDriveBot {
             adjustPower = pid.getOutput(angle, originalAngle);
             currentPosition = leftFront.getCurrentPosition();
         }
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        if (brake) {
+            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        } else {
+            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        }
         leftFront.setPower(0);
         rightFront.setPower(0);
         leftRear.setPower(0);

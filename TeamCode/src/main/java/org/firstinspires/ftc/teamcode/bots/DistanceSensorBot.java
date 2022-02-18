@@ -183,11 +183,11 @@ public class DistanceSensorBot extends DuckBot {
         getDistance();
         checkFreightInBox();
         grabDrive(0.12);
-        opMode.telemetry.addData("distance: ", sensorDistance);
-        opMode.telemetry.addData("isRepeating: ", isRepeating);
-        opMode.telemetry.addData("isSpinning: ", isIntakeSpinning);
-        opMode.telemetry.addData("wobbleArm position: ", Math.abs(wobbleArm.getCurrentPosition() - armPositions[0]));
-        opMode.telemetry.update();
+//        opMode.telemetry.addData("distance: ", sensorDistance);
+//        opMode.telemetry.addData("isRepeating: ", isRepeating);
+//        opMode.telemetry.addData("isSpinning: ", isIntakeSpinning);
+//        opMode.telemetry.addData("wobbleArm position: ", Math.abs(wobbleArm.getCurrentPosition() - armPositions[0]));
+//        opMode.telemetry.update();
         super.onTick();
     }
 }

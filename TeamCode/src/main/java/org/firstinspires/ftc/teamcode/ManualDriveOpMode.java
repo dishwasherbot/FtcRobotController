@@ -11,13 +11,14 @@ import org.firstinspires.ftc.teamcode.bots.FourWheelDriveBot;
 import org.firstinspires.ftc.teamcode.bots.NoodleSpinnerBot;
 import org.firstinspires.ftc.teamcode.bots.ScoopArmBot;
 import org.firstinspires.ftc.teamcode.bots.SlideBot;
+import org.firstinspires.ftc.teamcode.bots.TapeMeasureBot;
 import org.firstinspires.ftc.teamcode.bots.TouchBot;
 import org.firstinspires.ftc.teamcode.bots.WobbleGoalBot;
 
 @TeleOp(name = "Manual Drive")
 public class ManualDriveOpMode extends LinearOpMode {
 
-    private DistanceSensorBot robot = new DistanceSensorBot(this);
+    private TapeMeasureBot robot = new TapeMeasureBot(this);
     //int count = 0;
 
     @Override
@@ -46,6 +47,11 @@ public class ManualDriveOpMode extends LinearOpMode {
 //            robot.slideToggle(gamepad1.a);
 //            robot.toggleDropper(gamepad1.b);
 // slide arm end
+// tape arm code
+            robot.controlElevation(gamepad1.dpad_up, gamepad1.dpad_down);
+            robot.controlSwing(gamepad1.dpad_left, gamepad1.dpad_right);
+            robot.controlCoreHex(gamepad1.left_trigger, gamepad1.right_trigger);
+// tape arm end
             robot.onLoop(15, "manual drive");
         }
         robot.close();

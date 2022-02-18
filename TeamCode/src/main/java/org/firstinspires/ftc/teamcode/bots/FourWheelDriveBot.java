@@ -289,6 +289,70 @@ public class FourWheelDriveBot extends BotBot{
                 rightRear.getCurrentPosition()));
     }
 
+    public void driveStraightByTime(int direction, int time, double maxPower){
+        long startTime = System.currentTimeMillis();
+        long timeSince = System.currentTimeMillis() - startTime;
+
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        switch (direction){
+            case DIRECTION_FORWARD:
+                leftFront.setPower(maxPower);
+                rightFront.setPower(maxPower);
+                leftRear.setPower(maxPower);
+                rightRear.setPower(maxPower);
+                break;
+            case DIRECTION_BACKWARD:
+                leftFront.setPower(-maxPower);
+                rightFront.setPower(-maxPower);
+                leftRear.setPower(-maxPower);
+                rightRear.setPower(-maxPower);
+                break;
+            case DIRECTION_LEFT:
+                leftFront.setPower(-maxPower);
+                rightFront.setPower(maxPower);
+                leftRear.setPower(maxPower);
+                rightRear.setPower(-maxPower);
+                break;
+            case DIRECTION_RIGHT:
+                leftFront.setPower(maxPower);
+                rightFront.setPower(-maxPower);
+                leftRear.setPower(-maxPower);
+                rightRear.setPower(maxPower);
+                break;
+            case DIRECTION_RQUARTER:
+                leftFront.setPower(maxPower);
+                rightFront.setPower(-maxPower);
+                leftRear.setPower(maxPower);
+                rightRear.setPower(-maxPower);
+                break;
+            case DIRECTION_LQUARTER:
+                leftFront.setPower(-maxPower);
+                rightFront.setPower(maxPower);
+                leftRear.setPower(-maxPower);
+                rightRear.setPower(maxPower);
+                break;
+            default:
+        }
+
+        while (opMode.opModeIsActive() && timeSince < time) {
+            timeSince = System.currentTimeMillis() - startTime;
+            onLoop(50, "Driving straight by distance");
+        }
+        RobotLog.d(String.format("Stopping all motion!"));
+        // Stop all motion;
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftRear.setPower(0);
+        rightRear.setPower(0);
+    }
+
     public void driveCurveByDistance(int direction, double distance, double curvePower,double maxPower) {
         if (direction != DIRECTION_FORWARD && direction != DIRECTION_BACKWARD && direction != DIRECTION_LEFT && direction != DIRECTION_RIGHT){
             String msg = String.format("Unaccepted direction value (%d) for driveCurveByDistance()", direction);

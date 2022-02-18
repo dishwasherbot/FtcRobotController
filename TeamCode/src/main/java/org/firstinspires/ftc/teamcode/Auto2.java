@@ -55,7 +55,7 @@ public class Auto2 extends LinearOpMode {
             robot.sleep(1000);
             robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 10, 0.6);
             robot.goBacktoStartAngle();
-            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 25, 0.5, false, 0);
+            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 25, 0.5, false, 0, true);
             robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 10, 0.5);
             robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 45, 0.6);
             //robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 70, 0.7);
@@ -67,29 +67,28 @@ public class Auto2 extends LinearOpMode {
             robot.toggleSpinner(0.35, true);   
             robot.sleep(3500);
             robot.toggleSpinner(0.35, true);
-            robot.sleep(1000);
-            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 32.5, 0.6, false, 0);
+
+            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 20, 0.6, true, 0, true);
             robot.sleep(500);
-            robot.goBacktoStartAngle();
+            robot.goToAnglePID(-150);
+            robot.driveStraightByGyro(robot.DIRECTION_BACKWARD, 7, 0.6, true, -150, true);
+            robot.goToAnglePID(-150);
             robot.controlExtension(true);
             robot.sleep(500);
             if (pos[0] == 0) {
                 robot.setArmPositionNoWait(-935, 0.2);
-                robot.goToAngle(-90, 0.18);
                 robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 6, 0.2);
                 robot.controlServo(false, true);
                 robot.sleep(1000);
                 robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 2, 0.5);
             } else if (pos[0] == 1) {
                 robot.setArmPositionNoWait(-760, 0.18);
-                robot.goToAngle(-90, 0.2);
                 robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 6, 0.2);
                 robot.controlServo(false, true);
                 robot.sleep(1000);
                 robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 2, 0.5);
             } else {
                 robot.setArmPositionNoWait(-580, 0.18);
-                robot.goToAngle(-90, 0.2);
                 robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 11, 0.2);
                 robot.controlServo(false, true);
                 robot.sleep(1000);
@@ -101,8 +100,8 @@ public class Auto2 extends LinearOpMode {
             robot.setArmPositionNoWait(-25, 0.1);
             robot.goBacktoStartAngle();
             robot.controlExtension(true);
-            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 43, 0.6);
-            robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 8, 0.7);
+            robot.goToAnglePID(0);
+            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 15, 0.6);
         }
     }
 }

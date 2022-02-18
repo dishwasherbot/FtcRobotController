@@ -18,7 +18,7 @@ import java.io.IOException;
 
 import java.util.concurrent.BlockingQueue;
 
-public class CameraBot extends DistanceSensorBot {
+public class CameraBot extends TapeMeasureBot {
 
     final int cameraWidth = 1280;
     final int cameraHeight = 720;
