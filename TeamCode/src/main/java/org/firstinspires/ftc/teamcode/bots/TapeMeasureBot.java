@@ -22,7 +22,7 @@ public class TapeMeasureBot extends DistanceSensorBot{
         coreHex.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         coreHex.setDirection(DcMotorSimple.Direction.FORWARD);
         tapeSwing = hwMap.get(Servo.class, "tapeSwing");
-        tapeSwing.setPosition(0.59);
+        tapeSwing.setPosition(0.9);
         tapeElevate = hwMap.get(Servo.class, "tapeElevate");
         tapeElevate.setPosition(0.5);
     }

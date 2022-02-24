@@ -146,11 +146,12 @@ public class DistanceSensorBot extends DuckBot {
         while (sensorDistance > 3 && opMode.opModeIsActive()){
             onLoop(50, "autoGrab 2");
         }
+        goToInOutPosition(1);
         shouldToggle = false;
         shouldGrabDrive = false;
         servoPosIndex = 1;
         wobblePinch.setPosition(servoPositions[servoPosIndex]);
-        goToInOutPosition(1);
+
         isIntakeSpinning = false;
         shouldUpdateIntake = false;
         intake.setPower(-1);
@@ -166,7 +167,7 @@ public class DistanceSensorBot extends DuckBot {
         rightFront.setPower(0.3);
         leftRear.setPower(0.3);
         rightRear.setPower(0.3);
-        setArmPositionNoWait(-580, 0.18);
+        setArmPositionNoWait(-620, 0.18);
         while (opMode.opModeIsActive() && rightFront.isBusy()) {
             onLoop(50, "Driving straight by distance");
         }
