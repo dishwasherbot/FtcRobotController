@@ -98,7 +98,7 @@ public class DistanceSensorBot extends DuckBot {
 
     public void grabDrive(double power) {
         timeSinceToggle6 = System.currentTimeMillis() - lastToggleDone6;
-        if (shouldGrabDrive && grabDriveForward && timeSinceToggle6 > 600) {
+        if (shouldGrabDrive && grabDriveForward && timeSinceToggle6 > 1200) {
             leftFront.setPower(power);
             rightFront.setPower(power);
             leftRear.setPower(power);
@@ -143,8 +143,14 @@ public class DistanceSensorBot extends DuckBot {
         //int distanceTravelled = Math.abs(leftFront.getCurrentPosition() - LFStartingPos);
         shouldToggle = true;
         shouldGrabDrive = true;
-        while (sensorDistance > 3 && opMode.opModeIsActive()){
+        long autoGrabStart = System.currentTimeMillis();
+        long timeSinceAutoGrab = 0;
+        while (sensorDistance > 3 && timeSinceAutoGrab < 5000 && opMode.opModeIsActive() ){
+            isRepeating = true;
             onLoop(50, "autoGrab 2");
+            timeSinceAutoGrab = Math.abs(autoGrabStart - System.currentTimeMillis());
+            opMode.telemetry.addData("time: ", timeSinceAutoGrab);
+            opMode.telemetry.update();
         }
         goToInOutPosition(1);
         shouldToggle = false;
@@ -167,7 +173,7 @@ public class DistanceSensorBot extends DuckBot {
         rightFront.setPower(0.3);
         leftRear.setPower(0.3);
         rightRear.setPower(0.3);
-        setArmPositionNoWait(-620, 0.18);
+        setArmPositionNoWait(-600, 0.18);
         while (opMode.opModeIsActive() && rightFront.isBusy()) {
             onLoop(50, "Driving straight by distance");
         }

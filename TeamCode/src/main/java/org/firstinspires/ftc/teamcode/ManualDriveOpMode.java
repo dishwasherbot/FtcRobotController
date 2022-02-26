@@ -24,6 +24,9 @@ public class ManualDriveOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
+        robot.setSwing(0.57);
+        robot.servoPosIndex = 2;
+        robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
         waitForStart();
         while (opModeIsActive()) {
             robot.driveByHand(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_button);

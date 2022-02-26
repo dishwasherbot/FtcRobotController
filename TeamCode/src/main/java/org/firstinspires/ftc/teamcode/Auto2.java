@@ -14,94 +14,126 @@ public class Auto2 extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
-        robot.controlServo(false, true);
         robot.isRepeating = true;
+        robot.setSwing(0.57);
         waitForStart();
         int[] pos;
         pos = robot.detect();
         if (pos[1] == 0) {
+            robot.driveStraightByDistance(robot.DIRECTION_LEFT, 10.5, 0.5);
+            robot.goToAnglePID(90);
+            robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 9, 0.2);
+            robot.driveStraightByTime(robot.DIRECTION_RIGHT, 1500, 0.2);
+            robot.driveStraightByTime(robot.DIRECTION_BACKWARD, 500, 0.2);
+            //robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 2, 0.2);
+            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 0.2, 0.14);
+            robot.toggleSpinner(0.35, false);
+            robot.sleep(3500);
+            robot.toggleSpinner(0.35, false);
 
+            robot.driveStraightByDistance(robot.DIRECTION_LEFT, 5, 0.6);
+            robot.sleep(200);
+            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 19, 0.8);
+            robot.sleep(500);
+            robot.goToAnglePID(0);
+            robot.driveStraightByGyro(robot.DIRECTION_BACKWARD, 6, 0.6, true, 0, true);
+            robot.goToAnglePID(0);
+            robot.controlExtension(true);
+            robot.sleep(500);
             if (pos[0] == 0) {
-                robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 17.2, 1);
-                robot.sleep(500);
-                robot.driveStraightByDistance(robot.DIRECTION_LEFT, 5, 0.5);
-                robot.goBacktoStartAngle();
-                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 20, 0.5);
-                robot.goToAngle(90, 0.14);
-                robot.driveStraightByDistance(robot.DIRECTION_LEFT, 17, 0.2);
-                robot.driveStraightByDistance(robot.DIRECTION_FORWARD,5, 0.2);
+                robot.setArmPositionNoWait(-935, 0.2);
+                robot.sleep(2000);
+                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 6, 0.2);
+                robot.servoPosIndex = 0;
+                robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
+                robot.sleep(300);
+                robot.servoPosIndex = 2;
+                robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
+                robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 2, 0.5);
             } else if (pos[0] == 1) {
-                robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 19.5, 1);
-                robot.sleep(500);
-                robot.driveStraightByDistance(robot.DIRECTION_LEFT, 7, 0.5);
-                robot.goBacktoStartAngle();
-                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 20, 0.5);
-                robot.goToAngle(90, 0.14);
-                robot.driveStraightByDistance(robot.DIRECTION_LEFT, 17, 0.2);
-                robot.driveStraightByDistance(robot.DIRECTION_FORWARD,5, 0.2);
+                robot.setArmPositionNoWait(-760, 0.18);
+                robot.sleep(2000);
+                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 6, 0.2);
+                robot.servoPosIndex = 0;
+                robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
+                robot.sleep(300);
+                robot.servoPosIndex = 2;
+                robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
+                robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 2, 0.5);
             } else {
-                robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 19.5, 1);
-                robot.sleep(500);
-                robot.driveStraightByDistance(robot.DIRECTION_LEFT, 7, 0.5);
-                robot.goBacktoStartAngle();
-                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 20, 0.5);
-                robot.goToAngle(90, 0.14);
-                robot.driveStraightByDistance(robot.DIRECTION_LEFT, 17, 0.2);
-                robot.driveStraightByDistance(robot.DIRECTION_FORWARD,5, 0.2);
+                robot.setArmPositionNoWait(-600, 0.18);
+                robot.sleep(2000);
+                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 15, 0.2);
+                robot.servoPosIndex = 0;
+                robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
+                robot.sleep(300);
+                robot.servoPosIndex = 2;
+                robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
+                robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 11, 0.7);
             }
-            robot.toggleSpinner(0.35, false);
-            robot.sleep(3200);
-            robot.toggleSpinner(0.35, false);
-            robot.sleep(1000);
-            robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 10, 0.6);
-            robot.goBacktoStartAngle();
-            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 25, 0.5, false, 0, true);
-            robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 10, 0.5);
-            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 45, 0.6);
-            //robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 70, 0.7);
+            robot.setArmPositionNoWait(-25, 0.1);
+            robot.goToAnglePID(170);
+            robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 18, 0.6);
+            robot.goToAnglePID(170);
+            robot.driveStraightByDistance(robot.DIRECTION_LEFT, 5, 0.3);
+            //robot.driveStraightByDistance(robot.DIRECTION_LEFT, 3, 0.4);
+            robot.goToInOutPosition(0);
         } else {
             robot.driveStraightByDistance(robot.DIRECTION_LEFT, 6.5, 0.5);
             robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 9, 0.2);
-            robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 2, 0.2);
+            robot.driveStraightByTime(robot.DIRECTION_RIGHT, 500, 0.2);
+            //robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 2, 0.2);
             robot.driveStraightByDistance(robot.DIRECTION_LEFT, 0.2, 0.14);
             robot.toggleSpinner(0.35, true);   
             robot.sleep(3500);
             robot.toggleSpinner(0.35, true);
 
-            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 20, 0.6, true, 0, true);
+            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 5, 0.6, true, 0, true);
+            robot.sleep(200);
+            robot.driveStraightByDistance(robot.DIRECTION_LEFT, 20, 0.8);
             robot.sleep(500);
-            robot.goToAnglePID(-150);
-            robot.driveStraightByGyro(robot.DIRECTION_BACKWARD, 7, 0.6, true, -150, true);
-            robot.goToAnglePID(-150);
+            robot.goToAnglePID(-170);
+            robot.driveStraightByGyro(robot.DIRECTION_BACKWARD, 6, 0.6, true, -170, true);
+            robot.goToAnglePID(-170);
             robot.controlExtension(true);
             robot.sleep(500);
             if (pos[0] == 0) {
                 robot.setArmPositionNoWait(-935, 0.2);
+                robot.sleep(2000);
                 robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 6, 0.2);
-                robot.controlServo(false, true);
-                robot.sleep(1000);
+                robot.servoPosIndex = 0;
+                robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
+                robot.sleep(300);
+                robot.servoPosIndex = 2;
+                robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
                 robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 2, 0.5);
             } else if (pos[0] == 1) {
                 robot.setArmPositionNoWait(-760, 0.18);
+                robot.sleep(2000);
                 robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 6, 0.2);
-                robot.controlServo(false, true);
-                robot.sleep(1000);
+                robot.servoPosIndex = 0;
+                robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
+                robot.sleep(300);
+                robot.servoPosIndex = 2;
+                robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
                 robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 2, 0.5);
             } else {
-                robot.setArmPositionNoWait(-580, 0.18);
-                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 11, 0.2);
-                robot.controlServo(false, true);
-                robot.sleep(1000);
-                robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 7, 0.7);
+                robot.setArmPositionNoWait(-600, 0.18);
+                robot.sleep(2000);
+                robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 15, 0.2);
+                robot.servoPosIndex = 0;
+                robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
+                robot.sleep(300);
+                robot.servoPosIndex = 2;
+                robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
+                robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 11, 0.7);
             }
-            robot.controlServo(true, false);
-            robot.sleep(300);
-            robot.controlServo(true, false);
             robot.setArmPositionNoWait(-25, 0.1);
-            robot.goBacktoStartAngle();
-            robot.controlExtension(true);
+            robot.goToAnglePID(20);
+            robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 18, 0.6);
             robot.goToAnglePID(0);
-            robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 15, 0.6);
+            //robot.driveStraightByDistance(robot.DIRECTION_LEFT, 3, 0.4);
+            robot.goToInOutPosition(0);
         }
     }
 }

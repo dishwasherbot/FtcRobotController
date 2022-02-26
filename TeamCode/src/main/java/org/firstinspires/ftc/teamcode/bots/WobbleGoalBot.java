@@ -16,8 +16,8 @@ public class WobbleGoalBot extends NoodleSpinnerBot {
 
     final int[] armPositions = new int[]{-25, -580, -760, -910};
     int armPosIndex = 0;
-    public final double[] servoPositions = new double[]{0.19, 0.31, 0.4, 0.35};
-    public int servoPosIndex = 3;
+    public final double[] servoPositions = new double[]{0.19, 0.32, 0.4, 0.35};
+    public int servoPosIndex = 1;
 
     public boolean isOpen = true;
     long lastToggleDone = 0;

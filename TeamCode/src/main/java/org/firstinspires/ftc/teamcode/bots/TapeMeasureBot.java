@@ -62,9 +62,9 @@ public class TapeMeasureBot extends DistanceSensorBot{
     }
 
     protected void onTick() {
-        opMode.telemetry.addData("swing: ", tapeSwing.getPosition());
-        opMode.telemetry.addData("elevation: ", tapeElevate.getPosition());
-        opMode.telemetry.update();
+//        opMode.telemetry.addData("swing: ", tapeSwing.getPosition());
+//        opMode.telemetry.addData("elevation: ", tapeElevate.getPosition());
+//        opMode.telemetry.update();
         super.onTick();
     }
 }
