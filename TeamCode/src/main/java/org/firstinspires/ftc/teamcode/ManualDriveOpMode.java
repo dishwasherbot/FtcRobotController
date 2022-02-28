@@ -29,6 +29,16 @@ public class ManualDriveOpMode extends LinearOpMode {
         robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
         waitForStart();
         while (opModeIsActive()) {
+            robot.driveByHand(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.back);
+            robot.holdSpinner(gamepad1.y, gamepad1.b, 0.4);
+            //wobble arm code
+            robot.controlWobbleArm(gamepad1.left_bumper, gamepad1.right_bumper);
+            robot.controlServo(gamepad1.left_stick_button, gamepad1.right_stick_button);
+            robot.fineTuneWobbleArm(gamepad1.left_trigger, gamepad1.right_trigger);
+            //intake code
+            robot.simpleIntake(gamepad1.a);
+
+            /*
             robot.driveByHand(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_button);
             robot.holdSpinner(gamepad2.dpad_left, gamepad2.dpad_right, 0.4);
 // wobble arm code
@@ -40,6 +50,8 @@ public class ManualDriveOpMode extends LinearOpMode {
             robot.intakeToggle(gamepad2.a);
             robot.controlExtension(gamepad2.x);
 // intake end
+
+             */
 // scoop arm code
 //            robot.checkTouch();
 //            robot.intakeToggle(gamepad1.a);
@@ -51,9 +63,9 @@ public class ManualDriveOpMode extends LinearOpMode {
 //            robot.toggleDropper(gamepad1.b);
 // slide arm end
 // tape arm code
-            robot.controlElevation(gamepad1.dpad_up, gamepad1.dpad_down);
-            robot.controlSwing(gamepad1.dpad_left, gamepad1.dpad_right);
-            robot.controlCoreHex(gamepad1.left_trigger, gamepad1.right_trigger);
+            robot.controlElevation(gamepad2.dpad_up, gamepad2.dpad_down);
+            robot.controlSwing(gamepad2.dpad_left, gamepad2.dpad_right);
+            robot.controlCoreHex(gamepad2.left_trigger, gamepad2.right_trigger);
 // tape arm end
             robot.onLoop(15, "manual drive");
         }

@@ -86,13 +86,13 @@ public class FourWheelDriveBot extends BotBot{
         timeSinceToggle5 = System.currentTimeMillis() - lastToggleDone5;
         if (button && timeSinceToggle5 > 300) {
             if (isSlow) {
-                driveMultiplier = 0.8;
+                driveMultiplier = 0.85;
                 isSlow = false;
                 opMode.telemetry.addData("SLOW", driveMultiplier);
                 lastToggleDone5 = System.currentTimeMillis();
                 //RobotLog.d("robot not slow");
             } else if (!isSlow) {
-                driveMultiplier = 0.25;
+                driveMultiplier = 0.85;
                 isSlow = true;
                 opMode.telemetry.addData("FAST", driveMultiplier);
                 lastToggleDone5 = System.currentTimeMillis();

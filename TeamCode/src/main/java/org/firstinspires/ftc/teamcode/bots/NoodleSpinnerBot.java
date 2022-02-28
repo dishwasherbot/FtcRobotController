@@ -87,7 +87,24 @@ public class NoodleSpinnerBot extends GyroBot{
             lastToggleDone4 = System.currentTimeMillis();
         }
     }
-
+    public void simpleIntake(boolean toggle) {
+        timeSinceToggle1 = System.currentTimeMillis() - lastToggleDone1;
+        if (toggle && timeSinceToggle1 > 200) {
+            if (inOutPosIndex == 0) {
+                //spinning and out
+                inOutPosIndex = 1;
+                isIntakeSpinning = true;
+                inOut.setPosition(inOutPositions[inOutPosIndex]);
+            } else if (inOutPosIndex == 1) {
+                //not spinning and in
+                inOutPosIndex = 0;
+                inOut.setPosition(inOutPositions[inOutPosIndex]);
+                sleep(300);
+                isIntakeSpinning = false;
+            }
+            lastToggleDone1 = System.currentTimeMillis();
+        }
+    }
     public void goToInOutPosition(int index) {
         inOutPosIndex = index;
         inOut.setPosition(inOutPositions[inOutPosIndex]);
