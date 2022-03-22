@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class TapeMeasureBot extends DistanceSensorBot{
-    public DcMotor coreHex = null;
+    public CRServo tapeExtend = null;
     public Servo tapeSwing = null;
     public Servo tapeElevate = null;
 
@@ -18,11 +18,10 @@ public class TapeMeasureBot extends DistanceSensorBot{
 
     public void init(HardwareMap ahwMap) {
         super.init(ahwMap);
-        coreHex = hwMap.get(DcMotor.class, "coreHex");
-        coreHex.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        coreHex.setDirection(DcMotorSimple.Direction.FORWARD);
+        tapeExtend = hwMap.get(CRServo.class, "tapeExtend");
+        tapeExtend.setDirection(DcMotorSimple.Direction.FORWARD);
         tapeSwing = hwMap.get(Servo.class, "tapeSwing");
-        tapeSwing.setPosition(0.9);
+        tapeSwing.setPosition(0.5);
         tapeElevate = hwMap.get(Servo.class, "tapeElevate");
         tapeElevate.setPosition(0.5);
     }
@@ -53,11 +52,13 @@ public class TapeMeasureBot extends DistanceSensorBot{
 
     public void controlCoreHex(float extend, float retract) {
         if (extend > 0){
-            coreHex.setPower(-extend);
+            tapeExtend.setDirection(DcMotorSimple.Direction.FORWARD);
+            tapeExtend.setPower(extend);
         } else if (retract > 0){
-            coreHex.setPower(retract);
+            tapeExtend.setDirection(DcMotorSimple.Direction.REVERSE);
+            tapeExtend.setPower(retract);
         } else {
-            coreHex.setPower(0);
+            tapeExtend.setPower(0);
         }
     }
 

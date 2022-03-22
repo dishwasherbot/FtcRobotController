@@ -4,28 +4,25 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.bots.CameraBot;
+import org.firstinspires.ftc.teamcode.bots.SnarmBot;
 
 @Autonomous(name="Auto Test", group="Tests")
 
 public class AutoTest extends LinearOpMode {
 
-    protected CameraBot robot = new CameraBot(this);
+    protected SnarmBot robot = new SnarmBot(this);
 
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
         waitForStart();
-        for (int i = 0; i < 3; i++) {
-            robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 18, 0.5, false, 0, true);
-            robot.autoGrabFreight(0.12);
-            robot.driveStraightByGyro(robot.DIRECTION_BACKWARD, 18, 0.5, false, 0, true);
-            robot.servoPosIndex = 0;
-            robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
-            robot.sleep(500);
-            robot.setArmPositionNoWait(-25, 0.3);
-            robot.servoPosIndex = 2;
-            robot.wobblePinch.setPosition(robot.servoPositions[robot.servoPosIndex]);
-            robot.sleep(500);
-        }
+        robot.setElevationPosition(0.8);
+        robot.sleep(1000);
+        robot.setRotationPosition(0.4);
+        robot.sleep(1000);
+        robot.setExtension(3000);
+        robot.sleep(7000);
+        robot.setExtension(0);
+        robot.sleep(7000);
     }
 }

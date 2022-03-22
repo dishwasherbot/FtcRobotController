@@ -24,8 +24,6 @@ public class WobbleGoalBot extends NoodleSpinnerBot {
     long timeSinceToggle = 0;
     long lastPosSwitch = 0;
     long timeSincePosSwitch = 0;
-    long lastToggleDone1 = 0;
-    long timeSinceToggle1 = 0;
     long lastPosSwitch1 = 0;
     long timeSincePosSwitch1 = 0;
 
