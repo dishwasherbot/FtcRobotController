@@ -18,8 +18,8 @@ public class NewIntakeBot extends BotBot{
     private long timeSincePosSwitch1 = 0;
     private long lastPosSwitch1 = 0;
 
-    public final double[] intakePositions = new double[]{0, 0.1, 0.3, 0.5};
-    public int intakePosIndex = 1;
+    public final double[] intakePositions = new double[]{0.5, 0.6, 0.7, 1};
+    public int intakePosIndex = 3;
 
     public NewIntakeBot(LinearOpMode opMode) {
         super(opMode);
@@ -72,7 +72,7 @@ public class NewIntakeBot extends BotBot{
     protected void updateIntake() {
         if (shouldUpdateIntake) {
             if (isIntakeSpinning) {
-                intakeSpin.setPower(1);
+                intakeSpin.setPower(-0.7);
             } else {
                 intakeSpin.setPower(0);
             }
@@ -80,11 +80,11 @@ public class NewIntakeBot extends BotBot{
     }
 
     public void startRotation() {
-        intakeSpin.setPower(1);
+        isIntakeSpinning = true;
     }
 
     public void stopRotation() {
-        intakeSpin.setPower(0);
+        isIntakeSpinning = false;
     }
 
     protected void onTick() {
