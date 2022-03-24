@@ -6,8 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-
-public class NewIntakeBot extends BotBot{
+public class NewIntakeBot extends SnarmBot{
     public DcMotor intakeSpin = null;
     public Servo intakeRaise = null;
 

@@ -33,19 +33,18 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.bots;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-
 public class NewDistanceSensorBot extends NewIntakeBot {
 
-    protected DistanceSensor distSensor = null;
+    protected DistanceSensor distSensorIntake = null;
+    protected DistanceSensor distSensorBox = null;
 
-    public double sensorDistance = 0;
+    public double distanceIntake = 0;
+    public double distanceBox = 0;
 
     public boolean isRepeating = false;
 
@@ -62,10 +61,11 @@ public class NewDistanceSensorBot extends NewIntakeBot {
     @Override
     public void init(HardwareMap ahwMap) {
         super.init(ahwMap);
-        distSensor = hwMap.get(DistanceSensor.class, "distanceSensor");
+        distSensorIntake = hwMap.get(DistanceSensor.class, "distanceSensorIntake");
+        distSensorBox = hwMap.get(DistanceSensor.class, "distanceSensorBox");
     }
 
-    public void getDistance() {
+    public void getDistanceIntake() {
 //        opMode.telemetry.addData("range", String.format("%.01f cm", distSensor.getDistance(DistanceUnit.CM)));
 
         // you can also cast this to a Rev2mDistanceSensor if you want to use added
@@ -75,26 +75,40 @@ public class NewDistanceSensorBot extends NewIntakeBot {
 //        opMode.telemetry.addData("ID", String.format("%x", sensorTimeOfFlight.getModelID()));
 //        opMode.telemetry.addData("did time out", Boolean.toString(sensorTimeOfFlight.didTimeoutOccur()));
 //        opMode.telemetry.update();
-        sensorDistance = distSensor.getDistance(DistanceUnit.CM);
+        distanceIntake = distSensorIntake.getDistance(DistanceUnit.CM);
     }
 
-    public void checkFreightInBox() {
-        if (sensorDistance < 5) {
+    public void getDistanceBox() {
+        distanceBox = distSensorBox.getDistance(DistanceUnit.CM);
+    }
+
+    public void checkFreightInIntake() {
+        if (distanceIntake < 5 && intakePosIndex == 3) {
             stopRotation();
             goToIntakePosition(1);
             sleep(500);
             startRotation();
-            sleep(200);
+            sleep(400);
+            stopRotation();
             goToIntakePosition(3);
-            
+            box.setPosition(boxLocked);
+            setRotationPosition(0.4);
+            setElevationPosition(0.6);
+            setExtension(maxExtension);
+        }
+    }
+
+    public void checkFreightInBox() {
+        if (distanceBox < 5) {
+
         }
     }
 
     protected void onTick() {
-        getDistance();
-        checkFreightInBox();
-        opMode.telemetry.addData("distance: ", sensorDistance);
-        opMode.telemetry.update();
+        getDistanceIntake();
+        checkFreightInIntake();
+//        opMode.telemetry.addData("distance: ", distanceIntake);
+//        opMode.telemetry.update();
         super.onTick();
     }
 }
