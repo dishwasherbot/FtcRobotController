@@ -18,7 +18,6 @@ public class Auto1 extends LinearOpMode {
         robot.isRepeating = true;
         waitForStart();
         int[] pos;
-        robot.setSwing(0.57);
         pos = robot.detect();
         if (pos[1] == 0) {
             robot.servoPosIndex = 1;

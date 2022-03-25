@@ -15,7 +15,6 @@ public class Auto2 extends LinearOpMode {
     public void runOpMode() {
         robot.init(hardwareMap);
         robot.isRepeating = true;
-        robot.setSwing(0.57);
         waitForStart();
         int[] pos;
         pos = robot.detect();

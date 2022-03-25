@@ -35,10 +35,11 @@ package org.firstinspires.ftc.teamcode.bots;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-public class NewDistanceSensorBot extends NewIntakeBot {
+public class NewDistanceSensorBot extends TapeMeasureBot {
 
     protected DistanceSensor distSensorIntake = null;
     protected DistanceSensor distSensorBox = null;
@@ -62,7 +63,7 @@ public class NewDistanceSensorBot extends NewIntakeBot {
     public void init(HardwareMap ahwMap) {
         super.init(ahwMap);
         distSensorIntake = hwMap.get(DistanceSensor.class, "distanceSensorIntake");
-        distSensorBox = hwMap.get(DistanceSensor.class, "distanceSensorBox");
+        //distSensorBox = hwMap.get(DistanceSensor.class, "distanceSensorBox");
     }
 
     public void getDistanceIntake() {
@@ -84,25 +85,29 @@ public class NewDistanceSensorBot extends NewIntakeBot {
 
     public void checkFreightInIntake() {
         if (distanceIntake < 5 && intakePosIndex == 3) {
+            //RobotLog.d("freight detected");
             stopRotation();
-            goToIntakePosition(1);
+            goToIntakePosition(2);
             sleep(500);
+            intakeFast = true;
             startRotation();
-            sleep(400);
+            sleep(500);
             stopRotation();
+            sleep(500);
             goToIntakePosition(3);
             box.setPosition(boxLocked);
-            setRotationPosition(0.4);
-            setElevationPosition(0.6);
+            setElevationPosition(0.5);
             setExtension(maxExtension);
+            intakeFast = false;
+            //sleep(500);
         }
     }
 
-    public void checkFreightInBox() {
-        if (distanceBox < 5) {
-
-        }
-    }
+//    public void checkFreightInBox() {
+//        if (distanceBox < 5) {
+//
+//        }
+//    }
 
     protected void onTick() {
         getDistanceIntake();

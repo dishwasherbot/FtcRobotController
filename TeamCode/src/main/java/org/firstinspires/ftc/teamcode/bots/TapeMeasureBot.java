@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class TapeMeasureBot extends DistanceSensorBot{
+public class TapeMeasureBot extends NewIntakeBot{
     public CRServo tapeExtend = null;
     public Servo tapeSwing = null;
     public Servo tapeElevate = null;
@@ -21,7 +21,7 @@ public class TapeMeasureBot extends DistanceSensorBot{
         tapeExtend = hwMap.get(CRServo.class, "tapeExtend");
         tapeExtend.setDirection(DcMotorSimple.Direction.FORWARD);
         tapeSwing = hwMap.get(Servo.class, "tapeSwing");
-        tapeSwing.setPosition(0.5);
+        tapeSwing.setPosition(0.95);
         tapeElevate = hwMap.get(Servo.class, "tapeElevate");
         tapeElevate.setPosition(0.5);
     }

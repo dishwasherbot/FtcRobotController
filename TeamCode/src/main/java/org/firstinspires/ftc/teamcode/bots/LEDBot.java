@@ -39,19 +39,11 @@ public class LEDBot extends ShooterBot{
     }
 
     public boolean checkShootingDistance() {
-        if (shootingDistance < shootingDistanceFar && shootingDistance > shootingDistanceClose) {
-            return true;
-        } else {
-            return false;
-        }
+        return shootingDistance < shootingDistanceFar && shootingDistance > shootingDistanceClose;
     }
 
     public boolean checkShooterSpeed() {
-        if (currentShooterSpeed > 1.321) {
-            return true;
-        } else {
-            return false;
-        }
+        return currentShooterSpeed > 1.321;
     }
 
     public void updateLED() {

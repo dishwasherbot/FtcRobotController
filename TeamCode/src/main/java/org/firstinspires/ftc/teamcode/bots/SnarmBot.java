@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.RobotLog;
 
 public class SnarmBot extends BotBot {
     public Servo box = null;
@@ -12,13 +13,16 @@ public class SnarmBot extends BotBot {
     public Servo elevation = null;
     public DcMotor extender = null;
 
-    final public int maxExtension = 1500;
+    final public int maxExtension = 2850;
     final public int minExtension = 0;
 
-    final public double boxLocked = 0.6;
-    final public double boxOpened = 0.5;
+    final public double boxInit = 0.42;
+    final public double boxLocked = 0.45;
+    final public double boxOpened = 0.65;
 
-    public final double[] flipperPositions = new double[]{0.5, 0.6, 0.7, 1};
+    final public double rotationCenter = 0.475;
+
+    public final double[] flipperPositions = new double[]{0, 0.05, 0.6, 0.65, 0.7};
     public int flipperPosIndex = 0;
 
     public SnarmBot(LinearOpMode opMode) {
@@ -29,13 +33,13 @@ public class SnarmBot extends BotBot {
     public void init(HardwareMap ahwMap) {
         super.init(ahwMap);
         box = hwMap.get(Servo.class, "box");
-        box.setPosition(boxOpened);
+        box.setPosition(boxInit);
         flipper = hwMap.get(Servo.class, "flipper");
-        goToFlipperPosition(0);
+        goToFlipperPosition(4);
         rotation = hwMap.get(Servo.class, "rotation");
-        rotation.setPosition(0.5);
+        rotation.setPosition(rotationCenter);
         elevation = hwMap.get(Servo.class, "elevation");
-        elevation.setPosition(0.7);
+        elevation.setPosition(0.4);
         extender = hwMap.get(DcMotor.class, "extender");
         extender.setPower(0);
         extender.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -49,7 +53,7 @@ public class SnarmBot extends BotBot {
     }
 
     public void setExtension(int position) {
-        extender.setPower(0.2);
+        extender.setPower(1);
         extender.setTargetPosition(position);
         extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
@@ -97,7 +101,8 @@ public class SnarmBot extends BotBot {
     }
 
     public void waitOnExtension(int targetExtension) {
-        while (Math.abs(targetExtension - extender.getCurrentPosition()) < 100 && opMode.opModeIsActive()) {
+        while (Math.abs(targetExtension - extender.getCurrentPosition()) > 100 && opMode.opModeIsActive()) {
+            //RobotLog.d(String.format("target: %d  current: %d", targetExtension, extender.getCurrentPosition()));
             sleep(50, "waitOnExtension");
         }
     }
