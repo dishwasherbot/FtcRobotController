@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.bots.DistanceSensorBot;
 import org.firstinspires.ftc.teamcode.bots.DuckBot;
 import org.firstinspires.ftc.teamcode.bots.EndgameBot;
 import org.firstinspires.ftc.teamcode.bots.FourWheelDriveBot;
+import org.firstinspires.ftc.teamcode.bots.NewDistanceSensorBot;
 import org.firstinspires.ftc.teamcode.bots.NewIntakeBot;
 import org.firstinspires.ftc.teamcode.bots.NoodleSpinnerBot;
 import org.firstinspires.ftc.teamcode.bots.ScoopArmBot;
@@ -20,7 +21,7 @@ import org.firstinspires.ftc.teamcode.bots.WobbleGoalBot;
 @TeleOp(name = "Manual Drive")
 public class ManualDriveOpMode extends LinearOpMode {
 
-    private NewIntakeBot robot = new NewIntakeBot(this);
+    private NewDistanceSensorBot robot = new NewDistanceSensorBot(this);
     //int count = 0;
 
     @Override
@@ -34,14 +35,14 @@ public class ManualDriveOpMode extends LinearOpMode {
 //            robot.driveByHand(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.back);
 //            robot.holdSpinner(gamepad1.y, gamepad1.b, 0.4);
 // snarm code
-//            robot.controlExtension(gamepad1.left_trigger, gamepad1.right_trigger);
-//            robot.controlElevation(gamepad1.dpad_down, gamepad1.dpad_up);
-//            robot.controlRotation(gamepad1.dpad_left, gamepad1.dpad_right);
-//            if (gamepad1.a) {
-//                robot.setExtension(0);
-//            }
+            robot.controlExtension(gamepad1.left_trigger, gamepad1.right_trigger);
+            robot.controlElevation(gamepad1.dpad_down, gamepad1.dpad_up);
+            robot.controlRotation(gamepad1.dpad_left, gamepad1.dpad_right);
+            if (gamepad1.a) {
+                robot.setExtension(0);
+            }
 // intake code
-            robot.changeIntakePosition(gamepad1.dpad_up, gamepad1.dpad_down);
+            //robot.changeIntakePosition(gamepad1.dpad_up, gamepad1.dpad_down);
             robot.intakeToggle(gamepad1.a);
 // driving code
 //            robot.driveByHand(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_button);

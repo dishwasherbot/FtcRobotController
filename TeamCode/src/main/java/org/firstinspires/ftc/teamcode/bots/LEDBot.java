@@ -34,9 +34,9 @@ public class LEDBot extends ShooterBot{
         LEDControl.setPosition(input);
     }
 
-    public void calculateShootingDistance() {
-        shootingDistance = Math.sqrt(Math.pow(xBlue - towerGoalX, 2) + Math.pow(yBlue - towerGoalY, 2));
-    }
+//    public void calculateShootingDistance() {
+//        shootingDistance = Math.sqrt(Math.pow(xBlue - towerGoalX, 2) + Math.pow(yBlue - towerGoalY, 2));
+//    }
 
     public boolean checkShootingDistance() {
         return shootingDistance < shootingDistanceFar && shootingDistance > shootingDistanceClose;
@@ -61,12 +61,12 @@ public class LEDBot extends ShooterBot{
         }
     }
 
-    protected void onTick(){
-        calculateShootingDistance();
-        updateLED();
-        RobotLog.d(String.format("Distance to tower: %.2f", shootingDistance));
-        //opMode.telemetry.addData("Shooting Distance", shootingDistance);
-        //opMode.telemetry.update();
-        super.onTick();
-    }
+//    protected void onTick(){
+//        calculateShootingDistance();
+//        updateLED();
+//        RobotLog.d(String.format("Distance to tower: %.2f", shootingDistance));
+//        //opMode.telemetry.addData("Shooting Distance", shootingDistance);
+//        //opMode.telemetry.update();
+//        super.onTick();
+//    }
 }

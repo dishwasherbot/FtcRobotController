@@ -33,6 +33,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.bots;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -50,7 +52,7 @@ public class NewDistanceSensorBot extends TapeMeasureBot {
     public boolean isRepeating = false;
 
     boolean shouldGrabDrive = false;
-    private boolean grabDriveForward = true;
+    private boolean canDrive = false;
 
     private long lastToggleDone6 = 0;
     private long timeSinceToggle6 = 0;
@@ -83,24 +85,110 @@ public class NewDistanceSensorBot extends TapeMeasureBot {
         distanceBox = distSensorBox.getDistance(DistanceUnit.CM);
     }
 
-    public void checkFreightInIntake() {
+    protected void checkFreightInIntake() {
         if (distanceIntake < 5 && intakePosIndex == 3) {
-            //RobotLog.d("freight detected");
+            RobotLog.d("freight detected");
             stopRotation();
             goToIntakePosition(2);
-            sleep(500);
+            leftFront.setPower(0);
+            rightFront.setPower(0);
+            leftRear.setPower(0);
+            rightRear.setPower(0);
+            sleep(1000);
             intakeFast = true;
             startRotation();
-            sleep(500);
+            sleep(1000);
             stopRotation();
             sleep(500);
             goToIntakePosition(3);
             box.setPosition(boxLocked);
+            RobotLog.d("can drive true");
+            canDrive = true;
             setElevationPosition(0.5);
             setExtension(maxExtension);
+            RobotLog.d("extension started");
             intakeFast = false;
             //sleep(500);
         }
+    }
+
+    protected void checkExtension200() {
+        int index = 0;
+        if (extender.getCurrentPosition() > 200 && extensionCheckpoints[index]) {
+            RobotLog.d("200 passed");
+            setElevationPosition(0.5);
+            setRotationPosition(0.57);
+            extensionCheckpoints[index] = false;
+        }
+    }
+
+    protected void checkExtension1000() {
+        int index = 1;
+        if (extender.getCurrentPosition() > 1000 && extensionCheckpoints[index]) {
+            RobotLog.d("1000 passed");
+            goToFlipperPosition(3);
+            extensionCheckpoints[index] = false;
+        }
+    }
+
+    protected void checkExtensionMax() {
+        int index = 2;
+        if (extender.getCurrentPosition() > maxExtension-100 && extensionCheckpoints[index]) {
+            RobotLog.d("max passed");
+            box.setPosition(boxOpened);
+            extensionCheckpoints[index] = false;
+            RobotLog.d("max finished");
+        }
+    }
+
+    protected void checkExtension2600() {
+        int index = 3;
+        if (extender.getCurrentPosition() < 2600 && extensionCheckpoints[index]) {
+            RobotLog.d("2600 passed");
+            box.setPosition(boxOpened);
+            setElevationPosition(0.23);
+            extensionCheckpoints[index] = false;
+        }
+    }
+
+    public void autoGrabFreight(double power) {
+        int startingPos = horizontal.getCurrentPosition();
+
+        leftFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setPower(power);
+        rightFront.setPower(power);
+        leftRear.setPower(power);
+        rightRear.setPower(power);
+        startRotation();
+//        while (sensorDistance > 14 && opMode.opModeIsActive()) {
+//            onLoop(50, "autoGrab");
+//        }
+//        leftFront.setPower(0);
+//        rightFront.setPower(0);
+//        leftRear.setPower(0);
+//        rightRear.setPower(0);
+//        inOutPosIndex = 0;
+//        inOut.setPosition(inOutPositions[inOutPosIndex]);
+        //int distanceTravelled = Math.abs(leftFront.getCurrentPosition() - LFStartingPos);
+        long autoGrabStart = System.currentTimeMillis();
+        long timeSinceAutoGrab = 0;
+        while (!canDrive && timeSinceAutoGrab < 5000 && opMode.opModeIsActive() ){
+            onLoop(50, "autoGrab 2");
+            timeSinceAutoGrab = Math.abs(autoGrabStart - System.currentTimeMillis());
+            opMode.telemetry.addData("time: ", timeSinceAutoGrab);
+            opMode.telemetry.update();
+            RobotLog.d("can drive waiting %d", timeSinceAutoGrab);
+        }
+        int distanceFromStart = Math.abs(horizontal.getCurrentPosition());
+        driveByGyroWithEncodersVertical(DIRECTION_BACKWARD, distanceFromStart-7000, false, 500, 0);
+        RobotLog.d("drive finished");
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftRear.setPower(0);
+        rightRear.setPower(0);
     }
 
 //    public void checkFreightInBox() {
@@ -112,6 +200,10 @@ public class NewDistanceSensorBot extends TapeMeasureBot {
     protected void onTick() {
         getDistanceIntake();
         checkFreightInIntake();
+        checkExtension200();
+        checkExtension1000();
+        checkExtensionMax();
+        checkExtension2600();
 //        opMode.telemetry.addData("distance: ", distanceIntake);
 //        opMode.telemetry.update();
         super.onTick();

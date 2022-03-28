@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.RobotLog;
 
-public class SnarmBot extends BotBot {
+public class SnarmBot extends OdometryBot {
     public Servo box = null;
     public Servo flipper = null;
     public Servo rotation = null;
@@ -15,6 +15,8 @@ public class SnarmBot extends BotBot {
 
     final public int maxExtension = 2850;
     final public int minExtension = 0;
+    public boolean[] extensionCheckpoints = new boolean[]{true, true, true, false};
+    public boolean extending = true;
 
     final public double boxInit = 0.42;
     final public double boxLocked = 0.45;
@@ -35,11 +37,11 @@ public class SnarmBot extends BotBot {
         box = hwMap.get(Servo.class, "box");
         box.setPosition(boxInit);
         flipper = hwMap.get(Servo.class, "flipper");
-        goToFlipperPosition(4);
+        goToFlipperPosition(4);//4
         rotation = hwMap.get(Servo.class, "rotation");
         rotation.setPosition(rotationCenter);
         elevation = hwMap.get(Servo.class, "elevation");
-        elevation.setPosition(0.4);
+        elevation.setPosition(0.4);//0.4
         extender = hwMap.get(DcMotor.class, "extender");
         extender.setPower(0);
         extender.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -68,6 +70,9 @@ public class SnarmBot extends BotBot {
             extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             extender.setPower(0.5);
         }
+    }
+
+    private void extensionSafeties() {
         if (extender.getCurrentPosition() < minExtension) {
             setExtension(minExtension);
         }
@@ -102,7 +107,7 @@ public class SnarmBot extends BotBot {
 
     public void waitOnExtension(int targetExtension) {
         while (Math.abs(targetExtension - extender.getCurrentPosition()) > 100 && opMode.opModeIsActive()) {
-            //RobotLog.d(String.format("target: %d  current: %d", targetExtension, extender.getCurrentPosition()));
+            RobotLog.d(String.format("target: %d  current: %d", targetExtension, extender.getCurrentPosition()));
             sleep(50, "waitOnExtension");
         }
     }
@@ -112,6 +117,8 @@ public class SnarmBot extends BotBot {
         opMode.telemetry.addData("elevation: ", elevation.getPosition());
         opMode.telemetry.addData("extension: ", extender.getCurrentPosition());
         opMode.telemetry.update();
+        RobotLog.d(String.format("current extension: %d", extender.getCurrentPosition()));
+        //extensionSafeties();
         super.onTick();
     }
 }

@@ -174,6 +174,7 @@ public class GyroBot extends FourWheelDriveBot {
         double angle;
         angle = getAngle();
         double power = pid.getOutput(angle, targetAngle);
+        RobotLog.d(String.format("PID(source: %.3f, target: %.3f) = power: %.3f", angle, targetAngle, power));
         while (Math.abs(power) > 0.1 && this.opMode.opModeIsActive()) {
             onLoop(50, "goToAnglePID");
             RobotLog.d(String.format("PID(source: %.3f, target: %.3f) = power: %.3f", angle, targetAngle, power));
@@ -327,133 +328,134 @@ public class GyroBot extends FourWheelDriveBot {
         //sleep(100, "after gyro wait");
     }
 
-    public void driveByGyroWithEncodersVertical(int direction, double distance, double maxPower, boolean useCurrentAngle, boolean decelerate) {
-        driveByGyroWithEncodersVertical(direction, distance, maxPower, useCurrentAngle, decelerate, 500);
-    }
-
-    public void driveByGyroWithEncodersVertical(int direction, double distance, double maxPower, boolean useCurrentAngle, boolean decelerate, int wait) {
-        if (direction != DIRECTION_FORWARD && direction != DIRECTION_BACKWARD && direction != DIRECTION_LEFT && direction != DIRECTION_RIGHT){
-            String msg = String.format("Unaccepted direction value (%d) for driveStraightByGyro()", direction);
-            print(msg);
-            return;
-        }
-        double originalAngle;
-        if (useCurrentAngle) {
-            originalAngle = getAngle();
-        } else {
-            originalAngle = 0;
-        }
-
-        // distance (in mm) = revolution * pi * diameter (100 mm)
-        int distanceTicks = (int) distance;
-        int startingPosition = leftFront.getCurrentPosition();
-
-        double powerMultiplier = 1;
-        double increment = 0.8;
-
-        MiniPID pid = new MiniPID(0.03, 0, 0);
-        pid.setOutputLimits(maxPower);
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        double angle;
-        angle = getAngle();
-        double adjustPower = pid.getOutput(angle, originalAngle);
-        int currentPosition = leftFront.getCurrentPosition();
-        while (Math.abs(currentPosition - startingPosition) < distanceTicks && this.opMode.opModeIsActive()) {
-            onLoop(60, "gyro drive 1");
-            RobotLog.d(String.format("driveStraightByGyro : Current: %d - Start:%d > 10 => power: %.3f  +/- PID(source: %.3f, target: %.3f) = adjustPower: %.3f", currentPosition, startingPosition, maxPower, angle, originalAngle, adjustPower));
-            if (Math.abs(currentPosition - startingPosition) > distanceTicks - (40000 * increment) && decelerate) {
-                powerMultiplier = powerMultiplier * increment;
-                increment -= 0.1;
-                RobotLog.d(String.format("Current Position: %d Powermultiplier: %.1f Increment: %.1f", currentPosition, powerMultiplier, increment));
-            }
-            switch (direction){
-                case DIRECTION_FORWARD:
-                    leftFront.setPower((maxPower - adjustPower) * powerMultiplier);
-                    rightFront.setPower((maxPower + adjustPower) * powerMultiplier * highRPMToLowRPM);
-                    leftRear.setPower((maxPower - adjustPower) * powerMultiplier * highRPMToLowRPM);
-                    rightRear.setPower((maxPower + adjustPower) * powerMultiplier);
-                    break;
-                case DIRECTION_BACKWARD:
-                    leftFront.setPower((- maxPower - adjustPower) * powerMultiplier);
-                    rightFront.setPower((- maxPower + adjustPower) * powerMultiplier * highRPMToLowRPM);
-                    leftRear.setPower((- maxPower - adjustPower) * powerMultiplier * highRPMToLowRPM);
-                    rightRear.setPower((- maxPower + adjustPower) * powerMultiplier);
-                    break;
-            }
-            //onLoop(30, "gyro drive 2");
-            angle = getAngle();
-            adjustPower = pid.getOutput(angle, originalAngle);
-            currentPosition = leftFront.getCurrentPosition();
-        }
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        leftRear.setPower(0);
-        rightRear.setPower(0);
-        sleep(wait, "after gyro wait");
-    }
-
-    public void driveWithEncodersVertical(int direction, double distance, double maxPower, boolean decelerate) {
-        if (direction != DIRECTION_FORWARD && direction != DIRECTION_BACKWARD && direction != DIRECTION_LEFT && direction != DIRECTION_RIGHT){
-            String msg = String.format("Unaccepted direction value (%d) for driveStraightByGyro()", direction);
-            print(msg);
-            return;
-        }
-
-        // distance (in mm) = revolution * pi * diameter (100 mm)
-        int distanceTicks = (int) distance;
-        int startingPosition = leftFront.getCurrentPosition();
-
-        double powerMultiplier = 1;
-        double increment = 0.8;
-
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        int currentPosition = leftFront.getCurrentPosition();
-        while (Math.abs(currentPosition - startingPosition) < distanceTicks && this.opMode.opModeIsActive()) {
-            onLoop(60, "gyro drive 1");
-            if (Math.abs(currentPosition - startingPosition) > distanceTicks - (40000 * increment) && decelerate) {
-                powerMultiplier = powerMultiplier * increment;
-                increment -= 0.1;
-                RobotLog.d(String.format("Current Position: %d Powermultiplier: %.1f Increment: %.1f", currentPosition, powerMultiplier, increment));
-            }
-            switch (direction){
-                case DIRECTION_FORWARD:
-                    leftFront.setPower((maxPower) * powerMultiplier);
-                    rightFront.setPower((maxPower) * powerMultiplier * highRPMToLowRPM);
-                    leftRear.setPower((maxPower) * powerMultiplier * highRPMToLowRPM);
-                    rightRear.setPower((maxPower) * powerMultiplier);
-                    break;
-                case DIRECTION_BACKWARD:
-                    leftFront.setPower((- maxPower) * powerMultiplier);
-                    rightFront.setPower((- maxPower) * powerMultiplier * highRPMToLowRPM);
-                    leftRear.setPower((- maxPower) * powerMultiplier * highRPMToLowRPM);
-                    rightRear.setPower((- maxPower) * powerMultiplier);
-                    break;
-            }
-            currentPosition = leftFront.getCurrentPosition();
-        }
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        leftRear.setPower(0);
-        rightRear.setPower(0);
-        sleep(500, "after driving wait");
-    }
+//    public void driveByGyroWithEncodersVertical(int direction, double distance, double maxPower, boolean useCurrentAngle, boolean decelerate) {
+//        driveByGyroWithEncodersVertical(direction, distance, maxPower, useCurrentAngle, decelerate, 500);
+//    }
+//
+//    public void driveByGyroWithEncodersVertical(int direction, double distance, double maxPower, boolean useCurrentAngle, boolean decelerate, int wait) {
+//        if (direction != DIRECTION_FORWARD && direction != DIRECTION_BACKWARD && direction != DIRECTION_LEFT && direction != DIRECTION_RIGHT){
+//            String msg = String.format("Unaccepted direction value (%d) for driveStraightByGyro()", direction);
+//            print(msg);
+//            return;
+//        }
+//        double originalAngle;
+//        if (useCurrentAngle) {
+//            originalAngle = getAngle();
+//        } else {
+//            originalAngle = 0;
+//        }
+//
+//        // distance (in mm) = revolution * pi * diameter (100 mm)
+//        int distanceTicks = (int) distance;
+//        int startingPosition = leftFront.getCurrentPosition();
+//
+//        double powerMultiplier = 1;
+//        double increment = 0.8;
+//
+//        MiniPID pid = new MiniPID(0.03, 0, 0);
+//        pid.setOutputLimits(maxPower);
+//        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        double angle;
+//        angle = getAngle();
+//        double adjustPower = pid.getOutput(angle, originalAngle);
+//        int currentPosition = leftFront.getCurrentPosition();
+//        while (Math.abs(currentPosition - startingPosition) < distanceTicks && this.opMode.opModeIsActive()) {
+//            onLoop(60, "gyro drive 1");
+//            RobotLog.d(String.format("driveStraightByGyro : Current: %d - Start:%d > 10 => power: %.3f  +/- PID(source: %.3f, target: %.3f) = adjustPower: %.3f", currentPosition, startingPosition, maxPower, angle, originalAngle, adjustPower));
+//            if (Math.abs(currentPosition - startingPosition) > distanceTicks - (40000 * increment) && decelerate) {
+//                powerMultiplier = powerMultiplier * increment;
+//                increment -= 0.1;
+//                RobotLog.d(String.format("Current Position: %d Powermultiplier: %.1f Increment: %.1f", currentPosition, powerMultiplier, increment));
+//            }
+//            switch (direction){
+//                case DIRECTION_FORWARD:
+//                    leftFront.setPower((maxPower - adjustPower) * powerMultiplier);
+//                    rightFront.setPower((maxPower + adjustPower) * powerMultiplier * highRPMToLowRPM);
+//                    leftRear.setPower((maxPower - adjustPower) * powerMultiplier * highRPMToLowRPM);
+//                    rightRear.setPower((maxPower + adjustPower) * powerMultiplier);
+//                    break;
+//                case DIRECTION_BACKWARD:
+//                    leftFront.setPower((- maxPower - adjustPower) * powerMultiplier);
+//                    rightFront.setPower((- maxPower + adjustPower) * powerMultiplier * highRPMToLowRPM);
+//                    leftRear.setPower((- maxPower - adjustPower) * powerMultiplier * highRPMToLowRPM);
+//                    rightRear.setPower((- maxPower + adjustPower) * powerMultiplier);
+//                    break;
+//            }
+//            //onLoop(30, "gyro drive 2");
+//            angle = getAngle();
+//            adjustPower = pid.getOutput(angle, originalAngle);
+//            currentPosition = leftFront.getCurrentPosition();
+//        }
+//        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        leftFront.setPower(0);
+//        rightFront.setPower(0);
+//        leftRear.setPower(0);
+//        rightRear.setPower(0);
+//        sleep(wait, "after gyro wait");
+//    }
+//
+//    public void driveWithEncodersVertical(int direction, double distance, double maxPower, boolean decelerate) {
+//        if (direction != DIRECTION_FORWARD && direction != DIRECTION_BACKWARD && direction != DIRECTION_LEFT && direction != DIRECTION_RIGHT){
+//            String msg = String.format("Unaccepted direction value (%d) for driveStraightByGyro()", direction);
+//            print(msg);
+//            return;
+//        }
+//
+//        // distance (in mm) = revolution * pi * diameter (100 mm)
+//        int distanceTicks = (int) distance;
+//        int startingPosition = leftFront.getCurrentPosition();
+//
+//        double powerMultiplier = 1;
+//        double increment = 0.8;
+//
+//        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        int currentPosition = leftFront.getCurrentPosition();
+//        while (Math.abs(currentPosition - startingPosition) < distanceTicks && this.opMode.opModeIsActive()) {
+//            onLoop(60, "gyro drive 1");
+//            if (Math.abs(currentPosition - startingPosition) > distanceTicks - (40000 * increment) && decelerate) {
+//                powerMultiplier = powerMultiplier * increment;
+//                increment -= 0.1;
+//                RobotLog.d(String.format("Current Position: %d Powermultiplier: %.1f Increment: %.1f", currentPosition, powerMultiplier, increment));
+//            }
+//            switch (direction){
+//                case DIRECTION_FORWARD:
+//                    leftFront.setPower((maxPower) * powerMultiplier);
+//                    rightFront.setPower((maxPower) * powerMultiplier * highRPMToLowRPM);
+//                    leftRear.setPower((maxPower) * powerMultiplier * highRPMToLowRPM);
+//                    rightRear.setPower((maxPower) * powerMultiplier);
+//                    break;
+//                case DIRECTION_BACKWARD:
+//                    leftFront.setPower((- maxPower) * powerMultiplier);
+//                    rightFront.setPower((- maxPower) * powerMultiplier * highRPMToLowRPM);
+//                    leftRear.setPower((- maxPower) * powerMultiplier * highRPMToLowRPM);
+//                    rightRear.setPower((- maxPower) * powerMultiplier);
+//                    break;
+//            }
+//            currentPosition = leftFront.getCurrentPosition();
+//        }
+//        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        leftFront.setPower(0);
+//        rightFront.setPower(0);
+//        leftRear.setPower(0);
+//        rightRear.setPower(0);
+//        sleep(500, "after driving wait");
+//    }
 
     protected void onTick() {
-        getDeltaAngle();
+        opMode.telemetry.addData("angle: ", getAngle());
+        opMode.telemetry.update();
         super.onTick();
     }
 }

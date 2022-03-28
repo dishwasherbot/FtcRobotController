@@ -144,55 +144,55 @@ public class ShooterBot extends IntakeBot {
         }
     }
 
-    public void shootPowerShots() {
-        double originalAngle;
-        originalAngle = startAngle;
-
-        // distance (in mm) = revolution * pi * diameter (100 mm)
-        int distanceTicks = 35000;
-        int powerShotSpacing = 9000;
-        int startingPosition = horizontal.getCurrentPosition();
-        double maxPower = 0.4;
-
-        MiniPID pid = new MiniPID(0.025, 0.005, 0.015);
-        pid.setOutputLimits(maxPower);
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        double angle;
-        angle = getAngle();
-        double adjustPower = pid.getOutput(angle, originalAngle);
-        int currentPosition = horizontal.getCurrentPosition();
-        while (Math.abs(currentPosition - startingPosition) < distanceTicks) {
-            onLoop(50, "gyro drive 1");
-
-            if (Math.abs(currentPosition - startingPosition) > (powerShotSpacing - powerShotSpacing)) {
-                launchRing(true);
-                powerShotSpacing += powerShotSpacing;
-            }
-
-            leftFront.setPower(- maxPower - adjustPower);
-            rightFront.setPower(+ maxPower + adjustPower * highRPMToLowRPM);
-            leftRear.setPower(+ maxPower - adjustPower * highRPMToLowRPM);
-            rightRear.setPower(- maxPower + adjustPower);
-
-            //onLoop(30, "gyro drive 2");
-            angle = getAngle();
-            adjustPower = pid.getOutput(angle, originalAngle);
-            currentPosition = horizontal.getCurrentPosition();
-        }
-
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        leftRear.setPower(0);
-        rightRear.setPower(0);
-        sleep(500, "after gyro wait");
-    }
+//    public void shootPowerShots() {
+//        double originalAngle;
+//        originalAngle = startAngle;
+//
+//        // distance (in mm) = revolution * pi * diameter (100 mm)
+//        int distanceTicks = 35000;
+//        int powerShotSpacing = 9000;
+//        int startingPosition = horizontal.getCurrentPosition();
+//        double maxPower = 0.4;
+//
+//        MiniPID pid = new MiniPID(0.025, 0.005, 0.015);
+//        pid.setOutputLimits(maxPower);
+//        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        double angle;
+//        angle = getAngle();
+//        double adjustPower = pid.getOutput(angle, originalAngle);
+//        int currentPosition = horizontal.getCurrentPosition();
+//        while (Math.abs(currentPosition - startingPosition) < distanceTicks) {
+//            onLoop(50, "gyro drive 1");
+//
+//            if (Math.abs(currentPosition - startingPosition) > (powerShotSpacing - powerShotSpacing)) {
+//                launchRing(true);
+//                powerShotSpacing += powerShotSpacing;
+//            }
+//
+//            leftFront.setPower(- maxPower - adjustPower);
+//            rightFront.setPower(+ maxPower + adjustPower * highRPMToLowRPM);
+//            leftRear.setPower(+ maxPower - adjustPower * highRPMToLowRPM);
+//            rightRear.setPower(- maxPower + adjustPower);
+//
+//            //onLoop(30, "gyro drive 2");
+//            angle = getAngle();
+//            adjustPower = pid.getOutput(angle, originalAngle);
+//            currentPosition = horizontal.getCurrentPosition();
+//        }
+//
+//        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        leftFront.setPower(0);
+//        rightFront.setPower(0);
+//        leftRear.setPower(0);
+//        rightRear.setPower(0);
+//        sleep(500, "after gyro wait");
+//    }
 
     protected void onTick(){
         spinShooter();

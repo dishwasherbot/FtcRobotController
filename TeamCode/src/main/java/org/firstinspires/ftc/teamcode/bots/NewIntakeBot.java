@@ -20,7 +20,7 @@ public class NewIntakeBot extends SnarmBot{
     private long lastPosSwitch1 = 0;
 
     public final double[] intakePositions = new double[]{0.43, 0.5, 0.7, 1};
-    public int intakePosIndex = 0;
+    public int intakePosIndex = 0;//0
 
     public NewIntakeBot(LinearOpMode opMode) {
         super(opMode);
@@ -74,11 +74,11 @@ public class NewIntakeBot extends SnarmBot{
         if (intakeFast) {
             intakePower = -0.7;
         } else {
-            intakePower = -0.3;
+            intakePower = -0.35;
         }
         if (shouldUpdateIntake) {
             if (isIntakeSpinning) {
-                intakeSpin.setPower(-0.7);
+                intakeSpin.setPower(intakePower);
             } else {
                 intakeSpin.setPower(0);
             }

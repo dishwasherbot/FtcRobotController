@@ -34,8 +34,8 @@ public class EndgameBot extends LEDBot{
             toggleFeeder(true);
             toggleShooter(true);
             //controlWobbleArm(true, false);
-            driveByGyroWithEncodersVertical(DIRECTION_BACKWARD, 55000, 1, false, true);
-            driveWithEncodersHorizontal(DIRECTION_LEFT, 7000, 0.3, false);
+            //driveByGyroWithEncodersVertical(DIRECTION_BACKWARD, 55000, 1, false, true);
+            //driveWithEncodersHorizontal(DIRECTION_LEFT, 7000, 0.3, false);
 
             goToAngle(-20 , 0.2);
 
@@ -67,24 +67,24 @@ public class EndgameBot extends LEDBot{
 
             //controlWobbleArm(true, false);
 
-            driveWithEncodersVertical(DIRECTION_FORWARD, 90000, 1, true);
+            //driveWithEncodersVertical(DIRECTION_FORWARD, 90000, 1, true);
 
             //controlWobbleArm(false, true);
             sleep(400);
             //toggleWobble(true);
-            driveWithEncodersVertical(DIRECTION_BACKWARD, 106000, 1, true);
+            //driveWithEncodersVertical(DIRECTION_BACKWARD, 106000, 1, true);
         }
     }
 
-    public void goToShoot(int count){
-        if (count == 1) {
-            angleToGoal = Math.toDegrees(Math.atan2((towerGoalX - xBlue)*-1, (towerGoalY - yBlue)*-1));
-            xTarget = (Math.sin(Math.toRadians(angleToGoal)) * optimalDistance) + towerGoalX;
-            yTarget = (Math.cos(Math.toRadians(angleToGoal)) * optimalDistance) + towerGoalY;
-        }
-        driveToCoordinate(xTarget, yTarget, angleToGoal+5, 4000, 0.8);
-        RobotLog.d(String.format("Angle: %.2f xTarget: %.2f yTarget: %.2f", angleToGoal, xTarget, yTarget));
-
-    }
+//    public void goToShoot(int count){
+//        if (count == 1) {
+//            angleToGoal = Math.toDegrees(Math.atan2((towerGoalX - xBlue)*-1, (towerGoalY - yBlue)*-1));
+//            xTarget = (Math.sin(Math.toRadians(angleToGoal)) * optimalDistance) + towerGoalX;
+//            yTarget = (Math.cos(Math.toRadians(angleToGoal)) * optimalDistance) + towerGoalY;
+//        }
+//        driveToCoordinate(xTarget, yTarget, angleToGoal+5, 4000, 0.8);
+//        RobotLog.d(String.format("Angle: %.2f xTarget: %.2f yTarget: %.2f", angleToGoal, xTarget, yTarget));
+//
+//    }
 
 }
