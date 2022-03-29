@@ -18,9 +18,15 @@ public class IntakeTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
+        robot.goToIntakePosition(4);
         waitForStart();
+        robot.intakeFast = false;
+        robot.goToFlipperPosition(0);
+        robot.setElevationPosition(0.2);//0.23
+        robot.box.setPosition(robot.boxOpened);
+        robot.sleep(3000);
         robot.startRotation();
-        robot.sleep(15000);
+        robot.sleep(30000);
     }
 
 }

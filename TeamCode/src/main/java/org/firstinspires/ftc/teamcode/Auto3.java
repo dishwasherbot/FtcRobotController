@@ -35,18 +35,18 @@ public class Auto3 extends LinearOpMode {
             robot.driveByGyroWithEncodersVertical(robot.DIRECTION_FORWARD, 35000, false, 500, 0);
             robot.goToAngle(0, 0.16);
             robot.sleep(300);
-            robot.extensionCheckpoints = new boolean[]{true, true, true, false};
+            
             robot.autoGrabFreight(0.2);
 
             robot.goToAngle(0, 0.16);
             robot.waitOnExtension(robot.maxExtension);
-            robot.sleep(500);
+            robot.sleep(1000);
             robot.goToFlipperPosition(0);
             robot.extensionCheckpoints[3] = true;
             robot.setExtension(robot.minExtension);
             robot.setRotationPosition(robot.rotationCenter);
 
-            robot.driveByGyroWithEncodersVertical(robot.DIRECTION_FORWARD, 35000, false, 500, 0);
+            robot.driveByGyroWithEncodersVertical(robot.DIRECTION_FORWARD, 45000, false, 500, 0);
             robot.goToAngle(0, 0.16);
 
 

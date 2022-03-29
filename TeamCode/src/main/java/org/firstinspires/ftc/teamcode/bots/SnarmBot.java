@@ -13,7 +13,7 @@ public class SnarmBot extends OdometryBot {
     public Servo elevation = null;
     public DcMotor extender = null;
 
-    final public int maxExtension = 2850;
+    final public int maxExtension = 3000;//2850
     final public int minExtension = 0;
     public boolean[] extensionCheckpoints = new boolean[]{true, true, true, false};
     public boolean extending = true;
@@ -22,7 +22,8 @@ public class SnarmBot extends OdometryBot {
     final public double boxLocked = 0.45;
     final public double boxOpened = 0.65;
 
-    final public double rotationCenter = 0.475;
+    final public double rotationInit = 0.475;
+    final public double rotationCenter = 0.485;//0.475
 
     public final double[] flipperPositions = new double[]{0, 0.05, 0.6, 0.65, 0.7};
     public int flipperPosIndex = 0;
@@ -39,7 +40,7 @@ public class SnarmBot extends OdometryBot {
         flipper = hwMap.get(Servo.class, "flipper");
         goToFlipperPosition(4);//4
         rotation = hwMap.get(Servo.class, "rotation");
-        rotation.setPosition(rotationCenter);
+        rotation.setPosition(rotationInit);
         elevation = hwMap.get(Servo.class, "elevation");
         elevation.setPosition(0.4);//0.4
         extender = hwMap.get(DcMotor.class, "extender");

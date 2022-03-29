@@ -86,7 +86,7 @@ public class NewDistanceSensorBot extends TapeMeasureBot {
     }
 
     protected void checkFreightInIntake() {
-        if (distanceIntake < 5 && intakePosIndex == 3) {
+        if (distanceIntake < 5 && (intakePosIndex == 3 || intakePosIndex == 4) && extender.getCurrentPosition() < 100) {
             RobotLog.d("freight detected");
             stopRotation();
             goToIntakePosition(2);
@@ -105,6 +105,7 @@ public class NewDistanceSensorBot extends TapeMeasureBot {
             RobotLog.d("can drive true");
             canDrive = true;
             setElevationPosition(0.5);
+            extensionCheckpoints = new boolean[]{true, true, true, false};
             setExtension(maxExtension);
             RobotLog.d("extension started");
             intakeFast = false;
@@ -117,7 +118,7 @@ public class NewDistanceSensorBot extends TapeMeasureBot {
         if (extender.getCurrentPosition() > 200 && extensionCheckpoints[index]) {
             RobotLog.d("200 passed");
             setElevationPosition(0.5);
-            setRotationPosition(0.57);
+            setRotationPosition(0.65);
             extensionCheckpoints[index] = false;
         }
     }
@@ -146,12 +147,13 @@ public class NewDistanceSensorBot extends TapeMeasureBot {
         if (extender.getCurrentPosition() < 2600 && extensionCheckpoints[index]) {
             RobotLog.d("2600 passed");
             box.setPosition(boxOpened);
-            setElevationPosition(0.23);
+            setElevationPosition(0.2);//0.23
             extensionCheckpoints[index] = false;
         }
     }
 
     public void autoGrabFreight(double power) {
+        goToIntakePosition(4);
         int startingPos = horizontal.getCurrentPosition();
 
         leftFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
