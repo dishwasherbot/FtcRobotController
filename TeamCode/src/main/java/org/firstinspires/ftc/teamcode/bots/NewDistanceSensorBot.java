@@ -41,6 +41,9 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+import static org.firstinspires.ftc.teamcode.bots.CameraBot.autoSide.RED;
+import static org.firstinspires.ftc.teamcode.bots.CameraBot.autoSide.BLUE;
+
 public class NewDistanceSensorBot extends TapeMeasureBot {
 
     protected DistanceSensor distSensorIntake = null;
@@ -81,9 +84,9 @@ public class NewDistanceSensorBot extends TapeMeasureBot {
         distanceIntake = distSensorIntake.getDistance(DistanceUnit.CM);
     }
 
-    public void getDistanceBox() {
-        distanceBox = distSensorBox.getDistance(DistanceUnit.CM);
-    }
+//    public void getDistanceBox() {
+//        distanceBox = distSensorBox.getDistance(DistanceUnit.CM);
+//    }
 
     protected void checkFreightInIntake() {
         if (distanceIntake < 5 && (intakePosIndex == 3 || intakePosIndex == 4) && extender.getCurrentPosition() < 100) {
@@ -152,40 +155,25 @@ public class NewDistanceSensorBot extends TapeMeasureBot {
         }
     }
 
-    public void autoGrabFreight(double power) {
-        goToIntakePosition(4);
-        int startingPos = horizontal.getCurrentPosition();
-
+    public void autoGrabFreight(double power, int side) {
         leftFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         leftRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         rightRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        leftFront.setPower(power);
-        rightFront.setPower(power);
-        leftRear.setPower(power);
-        rightRear.setPower(power);
-        startRotation();
-//        while (sensorDistance > 14 && opMode.opModeIsActive()) {
-//            onLoop(50, "autoGrab");
-//        }
-//        leftFront.setPower(0);
-//        rightFront.setPower(0);
-//        leftRear.setPower(0);
-//        rightRear.setPower(0);
-//        inOutPosIndex = 0;
-//        inOut.setPosition(inOutPositions[inOutPosIndex]);
-        //int distanceTravelled = Math.abs(leftFront.getCurrentPosition() - LFStartingPos);
-        long autoGrabStart = System.currentTimeMillis();
-        long timeSinceAutoGrab = 0;
-        while (!canDrive && timeSinceAutoGrab < 5000 && opMode.opModeIsActive() ){
-            onLoop(50, "autoGrab 2");
-            timeSinceAutoGrab = Math.abs(autoGrabStart - System.currentTimeMillis());
-            opMode.telemetry.addData("time: ", timeSinceAutoGrab);
-            opMode.telemetry.update();
-            RobotLog.d("can drive waiting %d", timeSinceAutoGrab);
+        switch (side) {
+            case SIDE_RED:
+                driveByVector(0.3, 0.3, 0, 1);
+                break;
+            case SIDE_BLUE:
+                driveByVector(0.3, -0.3, 0, 1);
+                break;
         }
+
+        waitOnSnarmState(SnarmState.FEEDING, 5000);
+
         int distanceFromStart = Math.abs(horizontal.getCurrentPosition());
-        driveByGyroWithEncodersVertical(DIRECTION_BACKWARD, distanceFromStart-7000, false, 500, 0);
+        driveAgainstWallWithEncodersVertical(DIRECTION_FORWARD, side, distanceFromStart, 500, 0);
+
         RobotLog.d("drive finished");
         leftFront.setPower(0);
         rightFront.setPower(0);

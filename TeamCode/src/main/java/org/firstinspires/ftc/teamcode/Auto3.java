@@ -42,7 +42,7 @@ public class Auto3 extends LinearOpMode {
             // CONDITION : wait for driving + 300ms
 
             // STATUS_INTAKING
-            robot.autoGrabFreight(0.2);
+            robot.autoGrabFreight(0.2, 0);
             // CONDITION : distance sensor detected freight
             // STATUS_DRIVING_OUT_WAREHOUSE
 

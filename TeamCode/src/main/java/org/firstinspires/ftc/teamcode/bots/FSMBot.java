@@ -34,24 +34,16 @@ package org.firstinspires.ftc.teamcode.bots;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.robot.Robot;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
 public class FSMBot extends NewDistanceSensorBot {
 
-    public enum SnarmState {
-        READY,
-        EXTENDING_STAGE_1,
-        EXTENDING_STAGE_2,
-        EXTENDING_STAGE_3,
-        RELEASING,
-        INTAKING,
-        RAISING_INTAKE,
-        FEEDING
-    }
+    ElapsedTime snarmTimer = new ElapsedTime();
 
-    protected boolean isAutoStart = false;
-
-    SnarmState snarmState = SnarmState.READY;
+    public boolean isAutoStart = false;
+    public boolean drivingDone = false;
 
     public FSMBot(LinearOpMode opMode) {
         super(opMode);
@@ -60,14 +52,20 @@ public class FSMBot extends NewDistanceSensorBot {
     @Override
     public void init(HardwareMap ahwMap) {
         super.init(ahwMap);
+        drivingDone = false;
     }
+
+
 
     protected void onTick() {
         switch (snarmState) {
             case READY:
-                goToIntakePosition(3);
-                if (isAutoStart) {
+                if (isAutoStart || snarmTimer.milliseconds() >= 500) {
+                    RobotLog.d("ready");
+                    stopRotation();
+                    goToIntakePosition(3);
                     setExtension(maxExtension);
+                    isAutoStart = false;
                     snarmState = SnarmState.EXTENDING_STAGE_1;
                 }
                 break;
@@ -90,7 +88,52 @@ public class FSMBot extends NewDistanceSensorBot {
                 if (extender.getCurrentPosition() > maxExtension-100) {
                     RobotLog.d("max passed");
                     box.setPosition(boxOpened);
+                    snarmTimer.reset();
                     snarmState = SnarmState.RELEASING;
+                }
+                break;
+            case RELEASING:
+                if (snarmTimer.milliseconds() >= 100) {
+                    RobotLog.d("retraction started");
+                    setExtension(minExtension);
+                    setRotationPosition(rotationCenter);
+                    snarmState = SnarmState.RETRACTING_STAGE_1;
+                }
+                break;
+            case RETRACTING_STAGE_1:
+                if (extender.getCurrentPosition() < 2600) {
+                    RobotLog.d("2600 passed");
+                    box.setPosition(boxOpened);
+                    setElevationPosition(0.2);//0.23
+                    snarmState = SnarmState.INTAKING;
+                }
+                break;
+            case INTAKING:
+                if (drivingDone && (extender.getCurrentPosition() < minExtension+100)) {
+                    RobotLog.d("intaking started");
+                    drivingDone = false;
+                    intakeFast = false;
+                    goToIntakePosition(4);
+                    startRotation();
+                    snarmState = SnarmState.RAISING_INTAKE;
+                }
+                break;
+            case RAISING_INTAKE:
+                if (distanceIntake < 5 && (intakePosIndex == 3 || intakePosIndex == 4) && extender.getCurrentPosition() < minExtension+100) {
+                    RobotLog.d("intake raised");
+                    stopRotation();
+                    goToIntakePosition(2);
+                    snarmTimer.reset();
+                    snarmState = SnarmState.FEEDING;
+                }
+                break;
+            case FEEDING:
+                if (snarmTimer.milliseconds() >= 500) {
+                    RobotLog.d("feeding started");
+                    intakeFast = true;
+                    startRotation();
+                    snarmTimer.reset();
+                    snarmState = SnarmState.READY;
                 }
                 break;
         }

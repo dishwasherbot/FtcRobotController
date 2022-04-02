@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
 public class SnarmBot extends OdometryBot {
@@ -27,6 +28,20 @@ public class SnarmBot extends OdometryBot {
 
     public final double[] flipperPositions = new double[]{0, 0.05, 0.6, 0.65, 0.7};
     public int flipperPosIndex = 0;
+
+    public enum SnarmState {
+        READY,
+        EXTENDING_STAGE_1,
+        EXTENDING_STAGE_2,
+        EXTENDING_STAGE_3,
+        RELEASING,
+        RETRACTING_STAGE_1,
+        INTAKING,
+        RAISING_INTAKE,
+        FEEDING
+    }
+
+    SnarmState snarmState = SnarmState.READY;
 
     public SnarmBot(LinearOpMode opMode) {
         super(opMode);
@@ -110,6 +125,13 @@ public class SnarmBot extends OdometryBot {
         while (Math.abs(targetExtension - extender.getCurrentPosition()) > 100 && opMode.opModeIsActive()) {
             RobotLog.d(String.format("target: %d  current: %d", targetExtension, extender.getCurrentPosition()));
             sleep(50, "waitOnExtension");
+        }
+    }
+
+    public void waitOnSnarmState(SnarmState desiredState, int maxWait) {
+        ElapsedTime stateWait = new ElapsedTime();
+        while (desiredState != snarmState && opMode.opModeIsActive() && stateWait.milliseconds() <= maxWait) {
+            sleep(50, "snarm state");
         }
     }
 

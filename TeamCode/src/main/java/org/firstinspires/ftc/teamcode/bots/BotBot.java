@@ -25,6 +25,9 @@ public class BotBot {
 
     OutputStreamWriter onLoopWriter;
 
+    public static final int SIDE_RED = 0;
+    public static final int SIDE_BLUE = 1;
+
     public BotBot(LinearOpMode opMode) {
         this.opMode = opMode;
         try {

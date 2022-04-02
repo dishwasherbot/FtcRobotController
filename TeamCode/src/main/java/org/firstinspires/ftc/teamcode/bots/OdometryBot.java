@@ -116,6 +116,84 @@ public class OdometryBot extends GyroBot {
         RobotLog.d(String.format("h: %d", horizontal.getCurrentPosition()));
     }
 
+    public void driveAgainstWallWithEncodersVertical(int direction, int side, int distance, int tolerance, int wait) {
+        if (direction != DIRECTION_FORWARD && direction != DIRECTION_BACKWARD){
+            String msg = String.format("Unaccepted direction value (%d) for driveStraightByGyro()", direction);
+            print(msg);
+            return;
+        }
+
+        int startingPosition = horizontal.getCurrentPosition();
+        double powerMultiplier = 1;
+
+        MiniPID drivePID = new MiniPID(0.06, 0, 0);
+        drivePID.setOutputLimits(1);
+        MiniPID gyroPID = new MiniPID(0.025, 0.005, 0.03);
+        gyroPID.setOutputLimits(1);
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        int currentPosition = horizontal.getCurrentPosition() - startingPosition;
+        double power = drivePID.getOutput(currentPosition, distance);
+
+        double targetAngle = 0;
+        double currentAngle = getAngle();
+        double adjustPower = gyroPID.getOutput(currentAngle, targetAngle);
+
+        int count = 0;
+        RobotLog.d(String.format("current: %d dist: %d power: %d adjust: %d", currentPosition, distance, power, adjustPower));
+        while ((distanceToTarget > tolerance && Math.abs(currentPosition) < distance && power > 0.1) && opMode.opModeIsActive()) {
+            if (count < 4) {
+                powerMultiplier = driveAccelerationCurve[count];
+            } else {
+                powerMultiplier = 1;
+            }
+            RobotLog.d(String.format("current: %d dist: %d power: %d adjust %d", currentPosition, distance, power, adjustPower));
+            switch (direction) {
+                case DIRECTION_FORWARD:
+                    switch (side) {
+                        case SIDE_RED:
+                            driveByVector(1, 0.3, adjustPower, power * powerMultiplier);
+                            break;
+                        case SIDE_BLUE:
+                            driveByVector(1, -0.3, adjustPower, power * powerMultiplier);
+                            break;
+                    }
+                    break;
+                case DIRECTION_BACKWARD:
+                    switch (side) {
+                        case SIDE_RED:
+                            driveByVector(-1, 0.3, adjustPower, power * powerMultiplier);
+                            break;
+                        case SIDE_BLUE:
+                            driveByVector(-1, -0.3, adjustPower, power * powerMultiplier);
+                            break;
+                    }
+                    break;
+            }
+            onLoop(10, "wall drive 2");
+
+            currentPosition = horizontal.getCurrentPosition() - startingPosition;
+            power = drivePID.getOutput(currentPosition, distance);
+
+            currentAngle = getAngle();
+            adjustPower = gyroPID.getOutput(currentAngle, targetAngle);
+
+            count++;
+        }
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftRear.setPower(0);
+        rightRear.setPower(0);
+        sleep(wait, "after gyro wait");
+    }
+
     public void driveByGyroWithEncodersVertical(int direction, int distance, boolean useCurrentAngle, int tolerance, int wait) {
         if (direction != DIRECTION_FORWARD && direction != DIRECTION_BACKWARD){
             String msg = String.format("Unaccepted direction value (%d) for driveStraightByGyro()", direction);

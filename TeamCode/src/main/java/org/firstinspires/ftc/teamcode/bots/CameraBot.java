@@ -20,6 +20,13 @@ import java.util.concurrent.BlockingQueue;
 
 public class CameraBot extends DistanceSensorBot {
 
+    public enum autoSide {
+        RED,
+        BLUE
+    }
+
+    public autoSide side = autoSide.RED;
+
     final int cameraWidth = 1280;
     final int cameraHeight = 720;
     final int offsetX = 0;
