@@ -55,8 +55,6 @@ public class FSMBot extends NewDistanceSensorBot {
         drivingDone = false;
     }
 
-
-
     protected void onTick() {
         switch (snarmState) {
             case READY:
@@ -121,6 +119,10 @@ public class FSMBot extends NewDistanceSensorBot {
             case RAISING_INTAKE:
                 if (distanceIntake < 5 && (intakePosIndex == 3 || intakePosIndex == 4) && extender.getCurrentPosition() < minExtension+100) {
                     RobotLog.d("intake raised");
+                    leftFront.setPower(0);
+                    rightFront.setPower(0);
+                    leftRear.setPower(0);
+                    rightRear.setPower(0);
                     stopRotation();
                     goToIntakePosition(2);
                     snarmTimer.reset();
