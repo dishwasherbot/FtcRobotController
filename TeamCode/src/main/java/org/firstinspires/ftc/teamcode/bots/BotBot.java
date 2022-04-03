@@ -95,8 +95,8 @@ public class BotBot {
      * @param label
      */
     public void sleep(int milliseconds, String label){
-        for (int i=0; i < milliseconds; i+=100){
-            onLoop(100, label);
+        for (int i=0; i < milliseconds; i+=50){
+            onLoop(50, label);
         }
     }
 

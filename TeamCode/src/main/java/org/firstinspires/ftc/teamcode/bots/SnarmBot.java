@@ -14,7 +14,7 @@ public class SnarmBot extends OdometryBot {
     public Servo elevation = null;
     public DcMotor extender = null;
 
-    final public int maxExtension = 3000;//2850
+    final public int maxExtension = 3100;//2850
     final public int minExtension = 0;
     public boolean[] extensionCheckpoints = new boolean[]{true, true, true, false};
     public boolean extending = true;
@@ -38,7 +38,8 @@ public class SnarmBot extends OdometryBot {
         RETRACTING_STAGE_1,
         INTAKING,
         RAISING_INTAKE,
-        FEEDING
+        FEEDING,
+        READY_AGAIN
     }
 
     SnarmState snarmState = SnarmState.READY;
@@ -136,10 +137,10 @@ public class SnarmBot extends OdometryBot {
     }
 
     protected void onTick() {
-        opMode.telemetry.addData("rotation: ", rotation.getPosition());
-        opMode.telemetry.addData("elevation: ", elevation.getPosition());
-        opMode.telemetry.addData("extension: ", extender.getCurrentPosition());
-        opMode.telemetry.update();
+//        opMode.telemetry.addData("rotation: ", rotation.getPosition());
+//        opMode.telemetry.addData("elevation: ", elevation.getPosition());
+//        opMode.telemetry.addData("extension: ", extender.getCurrentPosition());
+//        opMode.telemetry.update();
         RobotLog.d(String.format("current extension: %d", extender.getCurrentPosition()));
         //extensionSafeties();
         super.onTick();

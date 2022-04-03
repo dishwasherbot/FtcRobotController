@@ -52,15 +52,17 @@ public class FSMBot extends NewDistanceSensorBot {
     @Override
     public void init(HardwareMap ahwMap) {
         super.init(ahwMap);
+        snarmTimer.reset();
         drivingDone = false;
     }
 
     protected void onTick() {
         switch (snarmState) {
             case READY:
-                if (isAutoStart || snarmTimer.milliseconds() >= 500) {
+                if (isAutoStart) {
                     RobotLog.d("ready");
                     stopRotation();
+                    box.setPosition(boxLocked);
                     goToIntakePosition(3);
                     setExtension(maxExtension);
                     isAutoStart = false;
@@ -71,7 +73,7 @@ public class FSMBot extends NewDistanceSensorBot {
                 if (extender.getCurrentPosition() > 200) {
                     RobotLog.d("200 passed");
                     setElevationPosition(0.5);
-                    setRotationPosition(0.65);
+                    setRotationPosition(0.64);
                     snarmState = SnarmState.EXTENDING_STAGE_2;
                 }
                 break;
@@ -95,6 +97,7 @@ public class FSMBot extends NewDistanceSensorBot {
                     RobotLog.d("retraction started");
                     setExtension(minExtension);
                     setRotationPosition(rotationCenter);
+                    goToFlipperPosition(0);
                     snarmState = SnarmState.RETRACTING_STAGE_1;
                 }
                 break;
@@ -135,7 +138,18 @@ public class FSMBot extends NewDistanceSensorBot {
                     intakeFast = true;
                     startRotation();
                     snarmTimer.reset();
-                    snarmState = SnarmState.READY;
+                    snarmState = SnarmState.READY_AGAIN;
+                }
+                break;
+            case READY_AGAIN:
+                if (snarmTimer.milliseconds() >= 1500) {
+                    RobotLog.d("ready again");
+                    stopRotation();
+                    box.setPosition(boxLocked);
+                    goToIntakePosition(3);
+                    setExtension(maxExtension);
+                    isAutoStart = false;
+                    snarmState = SnarmState.EXTENDING_STAGE_1;
                 }
                 break;
         }

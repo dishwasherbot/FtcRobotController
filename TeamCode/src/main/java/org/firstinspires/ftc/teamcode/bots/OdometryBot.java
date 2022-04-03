@@ -111,8 +111,8 @@ public class OdometryBot extends GyroBot {
     }
 
     public void outputEncoders() {
-        opMode.telemetry.addData("h", horizontal.getCurrentPosition());
-        opMode.telemetry.update();
+//        opMode.telemetry.addData("h", horizontal.getCurrentPosition());
+//        opMode.telemetry.update();
         RobotLog.d(String.format("h: %d", horizontal.getCurrentPosition()));
     }
 
@@ -126,49 +126,63 @@ public class OdometryBot extends GyroBot {
         int startingPosition = horizontal.getCurrentPosition();
         double powerMultiplier = 1;
 
-        MiniPID drivePID = new MiniPID(0.06, 0, 0);
+        MiniPID drivePID = new MiniPID(0.00008, 0.00001, 0.00006);
         drivePID.setOutputLimits(1);
-        MiniPID gyroPID = new MiniPID(0.025, 0.005, 0.03);
+        MiniPID gyroPID = new MiniPID(0.06, 0.005, 0.03);
         gyroPID.setOutputLimits(1);
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        int targDistance;
+
+        switch (direction) {
+            default:
+                targDistance = -distance;
+            case DIRECTION_FORWARD:
+                targDistance = -distance;
+                break;
+            case DIRECTION_BACKWARD:
+                targDistance = distance;
+                break;
+        }
+
         int currentPosition = horizontal.getCurrentPosition() - startingPosition;
-        double power = drivePID.getOutput(currentPosition, distance);
+        double power = drivePID.getOutput(currentPosition, targDistance);
+        double distanceToTarget = Math.abs(currentPosition - distance);
 
         double targetAngle = 0;
         double currentAngle = getAngle();
         double adjustPower = gyroPID.getOutput(currentAngle, targetAngle);
 
         int count = 0;
-        RobotLog.d(String.format("current: %d dist: %d power: %d adjust: %d", currentPosition, distance, power, adjustPower));
-        while ((distanceToTarget > tolerance && Math.abs(currentPosition) < distance && power > 0.1) && opMode.opModeIsActive()) {
+        RobotLog.d(String.format("current: %d dist: %d power: %.3f adjust: %.3f angle: %.3f", currentPosition, targDistance, power, adjustPower, currentAngle));
+        while ((distanceToTarget > tolerance && Math.abs(power) > 0.09) && opMode.opModeIsActive()) {
             if (count < 4) {
                 powerMultiplier = driveAccelerationCurve[count];
             } else {
                 powerMultiplier = 1;
             }
-            RobotLog.d(String.format("current: %d dist: %d power: %d adjust %d", currentPosition, distance, power, adjustPower));
+            RobotLog.d(String.format("current: %d dist: %d power: %.3f adjust: %.3f angle: %.3f", currentPosition, targDistance, power, adjustPower, currentAngle));
             switch (direction) {
                 case DIRECTION_FORWARD:
                     switch (side) {
                         case SIDE_RED:
-                            driveByVector(1, 0.3, adjustPower, power * powerMultiplier);
+                            driveByVector(1, -0.8, -adjustPower, -power * powerMultiplier);
                             break;
                         case SIDE_BLUE:
-                            driveByVector(1, -0.3, adjustPower, power * powerMultiplier);
+                            driveByVector(1, 0.8, -adjustPower, -power * powerMultiplier);
                             break;
                     }
                     break;
                 case DIRECTION_BACKWARD:
                     switch (side) {
                         case SIDE_RED:
-                            driveByVector(-1, 0.3, adjustPower, power * powerMultiplier);
+                            driveByVector(1, 0.5, adjustPower, -power * powerMultiplier);
                             break;
                         case SIDE_BLUE:
-                            driveByVector(-1, -0.3, adjustPower, power * powerMultiplier);
+                            driveByVector(1, -0.5, adjustPower, -power * powerMultiplier);
                             break;
                     }
                     break;
@@ -176,13 +190,15 @@ public class OdometryBot extends GyroBot {
             onLoop(10, "wall drive 2");
 
             currentPosition = horizontal.getCurrentPosition() - startingPosition;
-            power = drivePID.getOutput(currentPosition, distance);
+            power = drivePID.getOutput(currentPosition, targDistance);
+            distanceToTarget = Math.abs(currentPosition - distance);
 
             currentAngle = getAngle();
             adjustPower = gyroPID.getOutput(currentAngle, targetAngle);
 
             count++;
         }
+        RobotLog.d("wall drive stop");
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -160,19 +161,24 @@ public class NewDistanceSensorBot extends TapeMeasureBot {
         rightFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         leftRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         rightRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        double drive = 0.14;
+        double strafe = 0.1;
+        double twist = -0.03;
         switch (side) {
             case SIDE_RED:
-                driveByVector(0.3, 0.3, 0, 1);
+                driveByVector(drive, strafe, -twist, 1);
                 break;
             case SIDE_BLUE:
-                driveByVector(0.3, -0.3, 0, 1);
+                driveByVector(drive, -strafe, twist, 1);
                 break;
         }
 
-        waitOnSnarmState(SnarmState.FEEDING, 5000);
+        waitOnSnarmState(SnarmState.FEEDING, 10000);
+
+        RobotLog.d("intaking wait finished");
 
         int distanceFromStart = Math.abs(horizontal.getCurrentPosition());
-        driveAgainstWallWithEncodersVertical(DIRECTION_FORWARD, side, distanceFromStart, 500, 0);
+        driveAgainstWallWithEncodersVertical(DIRECTION_BACKWARD, side, distanceFromStart, 1000, 0);
 
         RobotLog.d("drive finished");
         leftFront.setPower(0);
@@ -189,13 +195,13 @@ public class NewDistanceSensorBot extends TapeMeasureBot {
 
     protected void onTick() {
         getDistanceIntake();
-        checkFreightInIntake();
-        checkExtension200();
-        checkExtension1000();
-        checkExtensionMax();
-        checkExtension2600();
-//        opMode.telemetry.addData("distance: ", distanceIntake);
-//        opMode.telemetry.update();
+        //checkFreightInIntake();
+//        checkExtension200();
+//        checkExtension1000();
+//        checkExtensionMax();
+//        checkExtension2600();
+        opMode.telemetry.addData("distance: ", distanceIntake);
+        opMode.telemetry.update();
         super.onTick();
     }
 }

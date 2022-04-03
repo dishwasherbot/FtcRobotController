@@ -20,14 +20,13 @@ public class Auto4 extends LinearOpMode {
 //        int[] pos;
 //        pos = robot.detect();
         if (true) {
-            robot.waitOnSnarmState(FSMBot.SnarmState.RETRACTING_STAGE_1, 10000);
-            robot.driveAgainstWallWithEncodersVertical(robot.DIRECTION_FORWARD, robot.SIDE_BLUE, 35000, 500, 0);
+            robot.waitOnSnarmState(SnarmBot.SnarmState.RELEASING, 10000);
+            robot.driveAgainstWallWithEncodersVertical(robot.DIRECTION_FORWARD, robot.SIDE_BLUE, 27000, 1000, 0);
             robot.drivingDone = true;
 
             robot.autoGrabFreight(0.2, robot.SIDE_BLUE);
-
-            robot.waitOnSnarmState(SnarmBot.SnarmState.RETRACTING_STAGE_1, 10000);
-            robot.driveAgainstWallWithEncodersVertical(robot.DIRECTION_FORWARD, robot.SIDE_BLUE, 35000, 500, 0);
+            robot.waitOnSnarmState(SnarmBot.SnarmState.RELEASING, 10000);
+            robot.driveAgainstWallWithEncodersVertical(robot.DIRECTION_FORWARD, robot.SIDE_BLUE, 27000, 1000, 0);
             robot.drivingDone = true;
 
             robot.sleep(10000);
