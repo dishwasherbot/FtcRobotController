@@ -23,6 +23,8 @@ public class SnarmBot extends OdometryBot {
     final public double boxLocked = 0.45;
     final public double boxOpened = 0.65;
 
+    final public double elevationInit = 0.4;
+
     final public double rotationInit = 0.475;
     final public double rotationCenter = 0.485;//0.475
 
@@ -39,7 +41,8 @@ public class SnarmBot extends OdometryBot {
         INTAKING,
         RAISING_INTAKE,
         FEEDING,
-        READY_AGAIN
+        READY_AGAIN,
+        IDLE
     }
 
     SnarmState snarmState = SnarmState.READY;
