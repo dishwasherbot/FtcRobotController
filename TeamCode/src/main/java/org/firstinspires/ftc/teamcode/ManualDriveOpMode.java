@@ -28,25 +28,26 @@ public class ManualDriveOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
+        robot.isAutoStart = false;
         waitForStart();
         while (opModeIsActive()) {
 // snarm code
             robot.controlExtension(gamepad1.left_trigger, gamepad1.right_trigger);
             robot.controlElevation(gamepad1.dpad_down, gamepad1.dpad_up);
             robot.controlRotation(gamepad1.dpad_left, gamepad1.dpad_right);
-            if (gamepad1.a) {
-                robot.setExtension(0);
-            }
+
+            robot.autoExtend(gamepad1.left_bumper);
+            robot.autoRetract(gamepad1.right_bumper);
 // intake code
-            //robot.changeIntakePosition(gamepad1.dpad_up, gamepad1.dpad_down);
+            robot.changeIntakePosition(gamepad2.dpad_up, gamepad2.dpad_down);
             robot.intakeToggle(gamepad1.a);
 // driving code
             robot.driveByHand(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_button);
-//            robot.holdSpinner(gamepad2.dpad_left, gamepad2.dpad_right, 0.4);
+            robot.holdSpinner(gamepad2.b, gamepad2.y, 0.4);
 // tape arm code
-//            robot.controlElevation(gamepad2.dpad_up, gamepad2.dpad_down);
-//            robot.controlSwing(gamepad2.dpad_left, gamepad2.dpad_right);
-//            robot.controlCoreHex(gamepad2.left_trigger, gamepad2.right_trigger);
+            robot.controlElevation(gamepad2.dpad_up, gamepad2.dpad_down);
+            robot.controlSwing(gamepad2.dpad_left, gamepad2.dpad_right);
+            robot.controlCoreHex(gamepad2.left_trigger, gamepad2.right_trigger);
 // tape arm end
             robot.onLoop(15, "manual drive");
         }

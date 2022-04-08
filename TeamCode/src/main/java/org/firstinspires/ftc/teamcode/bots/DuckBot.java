@@ -15,16 +15,8 @@ import java.util.Date;
 
 
 
-public class DuckBot extends WobbleGoalBot{
+public class DuckBot extends TapeMeasureBot{
     public DcMotor duckSpinner = null;
-
-    long currentTime = 0;
-    long lastTime = 0;
-    long timeDifference = 0;
-
-    double currentPosition = 0;
-    double lastPosition = 0;
-    double positionDifference = 0;
 
     boolean isSpinning = false;
 
@@ -32,11 +24,6 @@ public class DuckBot extends WobbleGoalBot{
 
     //change these values to control what speed the spinner spins around
     public double setSpinnerSpeed = 0.4; //385
-
-    OutputStreamWriter spinnerWriter;
-
-    MiniPID duckPID = new MiniPID(0.6, 0.2, 0.5);
-
 
     public DuckBot(LinearOpMode opMode) {
         super(opMode);
@@ -47,12 +34,6 @@ public class DuckBot extends WobbleGoalBot{
         super.init(ahwMap);
         duckSpinner = hwMap.get(DcMotor.class, "duckArm");
         duckSpinner.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        duckPID.setOutputLimits(0.2, 0.9);
-        try {
-            spinnerWriter = new FileWriter("/sdcard/FIRST/spinnerlog_" + java.text.DateFormat.getDateTimeInstance().format(new Date()) + ".csv", true);
-        } catch (IOException e) {
-            throw new RuntimeException("spinner log file writer open failed: " + e.toString());
-        }
     }
 
     public void toggleSpinner(double power, boolean isForward) {
@@ -85,38 +66,7 @@ public class DuckBot extends WobbleGoalBot{
 
     public void spinCarousel(boolean button) {
         if (button && isSpinning) {
-            // determine current speed:
-
-            //calculate difference in time between last and current cycle
-            currentTime = System.currentTimeMillis();
-            timeDifference = currentTime - lastTime;
-            //calculate difference in position between last and current cycle
-            currentPosition = duckSpinner.getCurrentPosition();
-            positionDifference = Math.abs(currentPosition - lastPosition);
-            //calculate current spinner speed
-            currentSpinnerSpeed = positionDifference / (double)timeDifference;
-
-            // PID controller to adjust to set speed:
-            double adjustSpeed = duckPID.getOutput(currentSpinnerSpeed, setSpinnerSpeed);
-            duckSpinner.setPower(-adjustSpeed);
-
-            //save current time and position for next cycle
-            lastTime = currentTime;
-            lastPosition = currentPosition;
-
-            opMode.telemetry.addData("Spinner speed", currentSpinnerSpeed);
-            opMode.telemetry.addData("Position Difference", positionDifference);
-            opMode.telemetry.addData("Time Difference", (double)timeDifference);
-            opMode.telemetry.addData("Current Position", currentPosition);
-            opMode.telemetry.update();
-            RobotLog.d(String.format("Spinner speed: %f, Adjust speed: %f, time difference: %f", currentSpinnerSpeed, adjustSpeed, (double)timeDifference));
-            try {
-                RobotLog.d("spinnerWriter.write");
-                spinnerWriter.write(String.format("%d, %f, %f\n", currentTime, currentSpinnerSpeed, adjustSpeed));
-                //spinnerWriter.write(String.format("%d, %f\n", currentTime, currentSpinnerSpeed));
-            } catch (IOException e) {
-                throw new RuntimeException("spinner log file writer write failed: " + e.toString());
-            }
+            duckSpinner.setPower(-setSpinnerSpeed);
         } else {
             leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             duckSpinner.setPower(0);
@@ -126,15 +76,4 @@ public class DuckBot extends WobbleGoalBot{
         spinCarousel(true);
         super.onTick();
     }
-    public void close(){
-        try {
-            RobotLog.d("spinner log Writer.close");
-            spinnerWriter.close();
-        } catch (IOException e) {
-            throw new RuntimeException("spinner log file writer close failed: " + e.toString());
-        }
-        super.close();
-    }
-
-
 }

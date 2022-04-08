@@ -43,6 +43,8 @@ public class FSMBot extends NewDistanceSensorBot {
     ElapsedTime snarmTimer = new ElapsedTime();
 
     public boolean isAutoStart = false;
+    public boolean isAutonomous = true;
+    public boolean shouldAutoExtend = true;
     public boolean drivingDone = false;
     public boolean shouldIdle = false;
 
@@ -55,6 +57,30 @@ public class FSMBot extends NewDistanceSensorBot {
         super.init(ahwMap);
         snarmTimer.reset();
         drivingDone = false;
+    }
+
+    public void autoExtend(boolean button) {
+        ElapsedTime timeSince = new ElapsedTime(500);
+        if (button && timeSince.milliseconds()>500) {
+            snarmState = SnarmState.READY;
+            isAutoStart = true;
+            shouldAutoExtend = true;
+        } else {
+            shouldAutoExtend = false;
+        }
+    }
+
+    public void autoRetract(boolean button) {
+        ElapsedTime timeSince = new ElapsedTime(500);
+        if (button && timeSince.milliseconds() > 500) {
+            setExtension(minExtension);
+            snarmState = SnarmState.RETRACTING_STAGE_1;
+        }
+    }
+
+    public void dropFreight(boolean button) {
+        ElapsedTime timeSince = new ElapsedTime(500);
+        isAutonomous = button && timeSince.milliseconds() > 500;
     }
 
     protected void onTick() {
@@ -90,7 +116,7 @@ public class FSMBot extends NewDistanceSensorBot {
                     goToFlipperPosition(0);
 
                     stopRotation();
-                    goToIntakePosition(3);
+                    //goToIntakePosition(3);
 
                     snarmState = SnarmState.EXTENDING_STAGE_2;
                 }
@@ -107,7 +133,7 @@ public class FSMBot extends NewDistanceSensorBot {
                     goToFlipperPosition(3);
 
                     stopRotation();
-                    goToIntakePosition(3);
+                    //goToIntakePosition(3);
 
                     snarmState = SnarmState.EXTENDING_STAGE_3;
                 }
@@ -124,7 +150,7 @@ public class FSMBot extends NewDistanceSensorBot {
                     goToFlipperPosition(3);
 
                     stopRotation();
-                    goToIntakePosition(3);
+                    //goToIntakePosition(3);
 
                     snarmTimer.reset();
 
@@ -132,7 +158,7 @@ public class FSMBot extends NewDistanceSensorBot {
                 }
                 break;
             case RELEASING:
-                if (snarmTimer.milliseconds() >= 100) {
+                if (snarmTimer.milliseconds() >= 100 && isAutonomous) {
                     RobotLog.d("retraction started");
 
                     setElevationPosition(0.5);
@@ -143,7 +169,7 @@ public class FSMBot extends NewDistanceSensorBot {
                     goToFlipperPosition(0);
 
                     stopRotation();
-                    goToIntakePosition(3);
+                    //goToIntakePosition(3);
 
                     snarmState = SnarmState.RETRACTING_STAGE_1;
                 }
@@ -160,7 +186,7 @@ public class FSMBot extends NewDistanceSensorBot {
                     goToFlipperPosition(0);
 
                     stopRotation();
-                    goToIntakePosition(3);
+                    //goToIntakePosition(3);
 
                     snarmState = SnarmState.INTAKING;
                 }
@@ -225,7 +251,7 @@ public class FSMBot extends NewDistanceSensorBot {
 
                     intakeFast = true;
                     startRotation();
-                    goToIntakePosition(2);
+                    //goToIntakePosition(2);
 
                     snarmTimer.reset();
 
@@ -233,7 +259,7 @@ public class FSMBot extends NewDistanceSensorBot {
                 }
                 break;
             case READY_AGAIN:
-                if (snarmTimer.milliseconds() >= 1500) {
+                if (snarmTimer.milliseconds() >= 1500 && shouldAutoExtend) {
                     RobotLog.d("ready again");
 
                     setElevationPosition(0.2);

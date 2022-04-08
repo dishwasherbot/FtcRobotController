@@ -55,7 +55,7 @@ public class NewIntakeBot extends SnarmBot{
     public void changeIntakePosition(boolean up, boolean down) {
         timeSincePosSwitch1 = System.currentTimeMillis() - lastPosSwitch1;
         if (up && timeSincePosSwitch1 > 200) {
-            if (intakePosIndex < 3) {
+            if (intakePosIndex < 4) {
                 intakePosIndex ++;
                 goToIntakePosition(intakePosIndex);
                 lastPosSwitch1 = System.currentTimeMillis();

@@ -45,7 +45,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import static org.firstinspires.ftc.teamcode.bots.CameraBot.autoSide.RED;
 import static org.firstinspires.ftc.teamcode.bots.CameraBot.autoSide.BLUE;
 
-public class NewDistanceSensorBot extends TapeMeasureBot {
+public class NewDistanceSensorBot extends DuckBot {
 
     protected DistanceSensor distSensorIntake = null;
     protected DistanceSensor distSensorBox = null;
