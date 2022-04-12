@@ -24,7 +24,7 @@ public class AutoTest extends LinearOpMode {
         waitForStart();
         robot.isAutoStart = true;
 
-        robot.autoGrabFreight(0.2, robot.SIDE_BLUE);
+        //robot.autoGrabFreight(0.2, robot.SIDE_BLUE);
 
         robot.sleep(10000);
     }

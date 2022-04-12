@@ -4,12 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.bots.CameraBot;
+import org.firstinspires.ftc.teamcode.bots.DistanceSensorBot;
 
 @Autonomous(name="Auto 2", group="Autos")
 
 public class Auto2 extends LinearOpMode {
 
-    protected CameraBot robot = new CameraBot(this);
+    protected DistanceSensorBot robot = new DistanceSensorBot(this);
 
     @Override
     public void runOpMode() {
@@ -17,7 +18,7 @@ public class Auto2 extends LinearOpMode {
         robot.isRepeating = true;
         waitForStart();
         int[] pos;
-        pos = robot.detect();
+        pos = new int[]{0, 0};
         if (pos[1] == 0) {
             robot.driveStraightByDistance(robot.DIRECTION_LEFT, 10.5, 0.5);
             robot.goToAnglePID(90);
@@ -26,9 +27,9 @@ public class Auto2 extends LinearOpMode {
             robot.driveStraightByTime(robot.DIRECTION_BACKWARD, 500, 0.2);
             //robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 2, 0.2);
             robot.driveStraightByDistance(robot.DIRECTION_FORWARD, 0.2, 0.14);
-            robot.toggleSpinner(0.35, false);
+            //robot.toggleSpinner(0.35, false);
             robot.sleep(3500);
-            robot.toggleSpinner(0.35, false);
+            //robot.toggleSpinner(0.35, false);
 
             robot.driveStraightByDistance(robot.DIRECTION_LEFT, 5, 0.6);
             robot.sleep(200);
@@ -83,9 +84,9 @@ public class Auto2 extends LinearOpMode {
             robot.driveStraightByTime(robot.DIRECTION_RIGHT, 500, 0.2);
             //robot.driveStraightByDistance(robot.DIRECTION_RIGHT, 2, 0.2);
             robot.driveStraightByDistance(robot.DIRECTION_LEFT, 0.2, 0.14);
-            robot.toggleSpinner(0.35, true);   
+            //robot.toggleSpinner(0.35, true);
             robot.sleep(3500);
-            robot.toggleSpinner(0.35, true);
+            //robot.toggleSpinner(0.35, true);
 
             robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 5, 0.6, true, 0, true);
             robot.sleep(200);

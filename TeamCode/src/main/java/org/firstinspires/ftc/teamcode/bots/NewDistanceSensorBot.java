@@ -69,7 +69,7 @@ public class NewDistanceSensorBot extends DuckBot {
     public void init(HardwareMap ahwMap) {
         super.init(ahwMap);
         distSensorIntake = hwMap.get(DistanceSensor.class, "distanceSensorIntake");
-        //distSensorBox = hwMap.get(DistanceSensor.class, "distanceSensorBox");
+        distSensorBox = hwMap.get(DistanceSensor.class, "distanceSensorBox");
     }
 
     public void getDistanceIntake() {
@@ -85,9 +85,9 @@ public class NewDistanceSensorBot extends DuckBot {
         distanceIntake = distSensorIntake.getDistance(DistanceUnit.CM);
     }
 
-//    public void getDistanceBox() {
-//        distanceBox = distSensorBox.getDistance(DistanceUnit.CM);
-//    }
+    public void getDistanceBox() {
+        distanceBox = distSensorBox.getDistance(DistanceUnit.CM);
+    }
 
     protected void checkFreightInIntake() {
         if (distanceIntake < 5 && (intakePosIndex == 3 || intakePosIndex == 4) && extender.getCurrentPosition() < 100) {
@@ -156,19 +156,15 @@ public class NewDistanceSensorBot extends DuckBot {
         }
     }
 
-    public void autoGrabFreight(double power, int side) {
-        leftFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        leftRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        rightRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        double drive = 0.14;
-        double strafe = 0.1;
-        double twist = -0.03;
+    public void autoGrabFreight(double power, CameraBot.autoSide side) {
+        double drive = 0.08;
+        double strafe = 0.08;
+        double twist = 0;
         switch (side) {
-            case SIDE_RED:
+            case RED:
                 driveByVector(drive, strafe, -twist, 1);
                 break;
-            case SIDE_BLUE:
+            case BLUE:
                 driveByVector(drive, -strafe, twist, 1);
                 break;
         }
@@ -178,7 +174,7 @@ public class NewDistanceSensorBot extends DuckBot {
         RobotLog.d("intaking wait finished");
 
         int distanceFromStart = Math.abs(horizontal.getCurrentPosition());
-        driveAgainstWallWithEncodersVertical(DIRECTION_BACKWARD, side, distanceFromStart, 1000, 0);
+        driveAgainstWallWithEncodersVertical(DIRECTION_BACKWARD, side, distanceFromStart+4000, 500, 0);
 
         RobotLog.d("drive finished");
         leftFront.setPower(0);
@@ -195,12 +191,14 @@ public class NewDistanceSensorBot extends DuckBot {
 
     protected void onTick() {
         getDistanceIntake();
+        getDistanceBox();
         //checkFreightInIntake();
 //        checkExtension200();
 //        checkExtension1000();
 //        checkExtensionMax();
 //        checkExtension2600();
-        opMode.telemetry.addData("distance: ", distanceIntake);
+        opMode.telemetry.addData("distanceIntake: ", distanceIntake);
+        opMode.telemetry.addData("distanceBox: ", distanceBox);
         opMode.telemetry.update();
         super.onTick();
     }

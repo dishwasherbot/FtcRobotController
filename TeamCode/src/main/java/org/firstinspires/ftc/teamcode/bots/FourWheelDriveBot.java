@@ -78,13 +78,15 @@ public class FourWheelDriveBot extends BotBot{
     }
 
     //    public void driveByHand(double _lf, double _lr, double _rf, double _rr) {
-    public void driveByHand(double left_stick_x, double left_stick_y, double right_stick_x, boolean button) {
-        double drive  = - left_stick_y;
-        double strafe = left_stick_x;
-        double twist  = right_stick_x;
+    public void driveByHand(double left_stick_x1, double left_stick_y1, double right_stick_x1, boolean button1, double left_stick_x2, double left_stick_y2, double right_stick_x2, boolean button2) {
+
+
+        double drive  = - left_stick_y1 - left_stick_y2;
+        double strafe = left_stick_x1 + left_stick_x2;
+        double twist  = right_stick_x1 + right_stick_x2;
 
         timeSinceToggle5 = System.currentTimeMillis() - lastToggleDone5;
-        if (button && timeSinceToggle5 > 300) {
+        if (button1 && timeSinceToggle5 > 300) {
             if (isSlow) {
                 driveMultiplier = 0.85;
                 isSlow = false;
@@ -92,7 +94,7 @@ public class FourWheelDriveBot extends BotBot{
                 lastToggleDone5 = System.currentTimeMillis();
                 //RobotLog.d("robot not slow");
             } else if (!isSlow) {
-                driveMultiplier = 0.85;
+                driveMultiplier = 0.95;
                 isSlow = true;
                 opMode.telemetry.addData("FAST", driveMultiplier);
                 lastToggleDone5 = System.currentTimeMillis();
@@ -121,6 +123,10 @@ public class FourWheelDriveBot extends BotBot{
         }
         //RobotLog.d(String.format("multiplier: %f speeds 0: %f", multiplier, speeds[0]));
         // apply the calculated values to the motors.
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftFront.setPower(speeds[0] * multiplier);
         rightFront.setPower(speeds[1] * multiplier * highRPMToLowRPM);
         leftRear.setPower(speeds[2] * multiplier * highRPMToLowRPM);
@@ -293,10 +299,10 @@ public class FourWheelDriveBot extends BotBot{
         long startTime = System.currentTimeMillis();
         long timeSince = System.currentTimeMillis() - startTime;
 
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         switch (direction){
             case DIRECTION_FORWARD:
                 leftFront.setPower(maxPower);

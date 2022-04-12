@@ -18,7 +18,7 @@ import java.io.IOException;
 
 import java.util.concurrent.BlockingQueue;
 
-public class CameraBot extends DistanceSensorBot {
+public class CameraBot extends FSMBot {
 
     public enum autoSide {
         RED,
@@ -154,6 +154,11 @@ public class CameraBot extends DistanceSensorBot {
             pos[0] = choosePosition(left, middle, right);
             //RobotLog.d("Determined which position the duck/TSE is in");
             pos[1] = chooseSide(blue, red);
+            if (pos[1] == 0) {
+                side = autoSide.BLUE;
+            } else {
+                side = autoSide.RED;
+            }
             return pos;
         } catch (InterruptedException e) {
             print("Photo taken has been interrupted !");

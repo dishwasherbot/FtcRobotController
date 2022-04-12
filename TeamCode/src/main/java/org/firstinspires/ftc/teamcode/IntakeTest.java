@@ -21,7 +21,6 @@ public class IntakeTest extends LinearOpMode {
         robot.init(hardwareMap);
         robot.goToIntakePosition(4);
         waitForStart();
-        robot.startRotation();
         robot.sleep(15000);
     }
 

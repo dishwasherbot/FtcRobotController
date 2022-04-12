@@ -27,11 +27,11 @@ public class TapeTest extends LinearOpMode {
         robot.sleep(500);
         robot.setElevation(0.35);
         robot.sleep(500);
-        for (int i = 0; i < 2; i++) {
-            robot.controlSwing(true, false);
-            robot.onLoop(50, "swinging");
-        }
-        robot.controlSwing(false, false);
+//        for (int i = 0; i < 2; i++) {
+//            robot.controlSwing(true, false);
+//            robot.onLoop(50, "swinging");
+//        }
+//        robot.controlSwing(false, false);
         robot.sleep(500);
         for (int i = 0; i < 45; i++) {
             robot.controlCoreHex(0, 1);

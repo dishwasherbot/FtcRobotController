@@ -4,13 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.bots.CameraBot;
+import org.firstinspires.ftc.teamcode.bots.DistanceSensorBot;
 import org.firstinspires.ftc.teamcode.bots.FourWheelDriveBot;
 
 @Autonomous(name="Auto 1", group="Autos")
 
 public class Auto1 extends LinearOpMode {
 
-    protected CameraBot robot = new CameraBot(this);
+    protected DistanceSensorBot robot = new DistanceSensorBot(this);
 
     @Override
     public void runOpMode() {
@@ -18,7 +19,7 @@ public class Auto1 extends LinearOpMode {
         robot.isRepeating = true;
         waitForStart();
         int[] pos;
-        pos = robot.detect();
+        pos = new int[]{0, 0};
         if (pos[1] == 0) {
             robot.servoPosIndex = 1;
             robot.driveStraightByGyro(robot.DIRECTION_BACKWARD, 3, 0.6, false, 0, true);

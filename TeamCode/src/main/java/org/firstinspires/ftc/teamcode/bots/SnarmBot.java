@@ -14,7 +14,7 @@ public class SnarmBot extends OdometryBot {
     public Servo elevation = null;
     public DcMotor extender = null;
 
-    final public int maxExtension = 3100;//2850
+    public int maxExtension = 3100;//2850
     final public int minExtension = 0;
     public boolean[] extensionCheckpoints = new boolean[]{true, true, true, false};
     public boolean extending = true;
@@ -28,7 +28,7 @@ public class SnarmBot extends OdometryBot {
     final public double rotationInit = 0.475;
     final public double rotationCenter = 0.485;//0.475
 
-    public final double[] flipperPositions = new double[]{0, 0.05, 0.6, 0.65, 0.7};
+    public final double[] flipperPositions = new double[]{0, 0.05, 0.6, 0.65, 0.62};
     public int flipperPosIndex = 0;
 
     public enum SnarmState {

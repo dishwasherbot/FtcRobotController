@@ -43,7 +43,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
-public class DistanceSensorBot extends DuckBot {
+public class DistanceSensorBot extends WobbleGoalBot {
 
     protected DistanceSensor distSensor = null;
 

@@ -20,33 +20,33 @@ public class TapeMeasureBot extends NewIntakeBot{
         super.init(ahwMap);
         tapeExtend = hwMap.get(CRServo.class, "tapeExtend");
         tapeExtend.setDirection(DcMotorSimple.Direction.FORWARD);
-        tapeSwing = hwMap.get(Servo.class, "tapeSwing");
-        tapeSwing.setPosition(0.95);
+//        tapeSwing = hwMap.get(Servo.class, "tapeSwing");
+//        tapeSwing.setPosition(0.95);
         tapeElevate = hwMap.get(Servo.class, "tapeElevate");
-        tapeElevate.setPosition(0.5);
+        tapeElevate.setPosition(0);
     }
 
-    public void setSwing(double input){
-        tapeSwing.setPosition(input);
-    }
-
-    public void controlSwing(boolean left, boolean right) {
-        if (left) {
-            tapeSwing.setPosition(tapeSwing.getPosition()-0.003);
-        } else if (right) {
-            tapeSwing.setPosition(tapeSwing.getPosition()+0.003);
-        }
-    }
+//    public void setSwing(double input){
+//        tapeSwing.setPosition(input);
+//    }
+//
+//    public void controlSwing(boolean left, boolean right) {
+//        if (left) {
+//            tapeSwing.setPosition(tapeSwing.getPosition()-0.003);
+//        } else if (right) {
+//            tapeSwing.setPosition(tapeSwing.getPosition()+0.003);
+//        }
+//    }
 
     public void setElevation(double input) {
         tapeElevate.setPosition(input);
     }
 
-    public void controlElevation(boolean up, boolean down) {
+    public void controlElevationTape(boolean down, boolean up) {
         if (up) {
-            tapeElevate.setPosition(tapeElevate.getPosition()+0.003);
+            tapeElevate.setPosition(tapeElevate.getPosition()+0.01);
         } else if (down) {
-            tapeElevate.setPosition(tapeElevate.getPosition()-0.003);
+            tapeElevate.setPosition(tapeElevate.getPosition()-0.01);
         }
     }
 
