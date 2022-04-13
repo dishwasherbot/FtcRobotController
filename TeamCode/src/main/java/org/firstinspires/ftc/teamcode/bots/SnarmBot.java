@@ -26,7 +26,7 @@ public class SnarmBot extends OdometryBot {
     final public double elevationInit = 0.4;
 
     final public double rotationInit = 0.475;
-    final public double rotationCenter = 0.485;//0.475
+    final public double rotationCenter = 0.48;//0.485
 
     public final double[] flipperPositions = new double[]{0, 0.05, 0.6, 0.65, 0.62};
     public int flipperPosIndex = 0;

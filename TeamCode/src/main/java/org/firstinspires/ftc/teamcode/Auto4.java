@@ -27,14 +27,13 @@ public class Auto4 extends LinearOpMode {
         int drivingDistance = distanceFromStart + 27000;
         robot.driveAgainstWallWithEncodersVertical(robot.DIRECTION_FORWARD, robot.side, drivingDistance, 500, 0);
         robot.drivingDone = true;
-
-        robot.autoGrabFreight(0.2, robot.side);
-        if (robot.side == CameraBot.autoSide.BLUE) {
-            robot.driveStraightByTime(robot.DIRECTION_LEFT, 500, 0.2);
-        } else {
-            robot.driveStraightByTime(robot.DIRECTION_RIGHT, 500, 0.2);
-        }
         robot.setDropHeight(0);
+        robot.autoGrabFreight(0.2, robot.side);
+//        if (robot.side == CameraBot.autoSide.BLUE) {
+//            robot.driveStraightByTime(robot.DIRECTION_LEFT, 500, 0.2);
+//        } else {
+//            robot.driveStraightByTime(robot.DIRECTION_RIGHT, 500, 0.2);
+//        }
 
         robot.waitOnSnarmState(SnarmBot.SnarmState.RELEASING, 10000);
         distanceFromStart = Math.abs(robot.horizontal.getCurrentPosition());

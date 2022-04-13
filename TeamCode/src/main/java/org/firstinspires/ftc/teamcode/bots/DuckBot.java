@@ -50,16 +50,16 @@ public class DuckBot extends TapeMeasureBot{
         }
     }
 
-    public void holdSpinner (boolean button, boolean switchDirection, double power) {
+    public void holdSpinner (boolean button, boolean blue, double power) {
         setSpinnerSpeed = power;
         if (button) {
             isSpinning = true;
         } else {
             isSpinning = false;
         }
-        if (duckSpinner.getDirection() == DcMotorSimple.Direction.FORWARD && switchDirection) {
+        if (blue) {
             duckSpinner.setDirection(DcMotorSimple.Direction.REVERSE);
-        } else if (duckSpinner.getDirection() == DcMotorSimple.Direction.REVERSE && switchDirection){
+        } else {
             duckSpinner.setDirection(DcMotorSimple.Direction.FORWARD);
         }
     }

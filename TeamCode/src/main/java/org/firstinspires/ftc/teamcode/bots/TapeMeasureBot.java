@@ -23,7 +23,7 @@ public class TapeMeasureBot extends NewIntakeBot{
 //        tapeSwing = hwMap.get(Servo.class, "tapeSwing");
 //        tapeSwing.setPosition(0.95);
         tapeElevate = hwMap.get(Servo.class, "tapeElevate");
-        tapeElevate.setPosition(0);
+        tapeElevate.setPosition(0.3);
     }
 
 //    public void setSwing(double input){

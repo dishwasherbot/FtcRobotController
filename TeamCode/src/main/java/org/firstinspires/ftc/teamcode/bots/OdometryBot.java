@@ -117,7 +117,7 @@ public class OdometryBot extends GyroBot {
     public void outputEncoders() {
 //        opMode.telemetry.addData("h", horizontal.getCurrentPosition());
 //        opMode.telemetry.update();
-        RobotLog.d(String.format("h: %d time: %.5f", horizontal.getCurrentPosition(), robotLogTimer.milliseconds()));
+        RobotLog.d(String.format("h: %d time: %.0f", horizontal.getCurrentPosition(), robotLogTimer.milliseconds()));
     }
 
     public void driveAgainstWallWithEncodersVertical(int direction, CameraBot.autoSide side, int distance, int tolerance, int wait) {
@@ -131,7 +131,7 @@ public class OdometryBot extends GyroBot {
         double powerMultiplier = 1;
 
         MiniPID drivePID = new MiniPID(0.00003, 0.000001, 0.000007);
-        drivePID.setOutputLimits(0.7);
+        drivePID.setOutputLimits(1);
 //        MiniPID gyroPID = new MiniPID(0.06, 0.005, 0.03);
 //        gyroPID.setOutputLimits(1);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -173,10 +173,10 @@ public class OdometryBot extends GyroBot {
                 case DIRECTION_FORWARD:
                     switch (side) {
                         case RED:
-                            driveByVector(1, -0.35, 0, -power * powerMultiplier);
+                            driveByVector(1, -0.5, 0.2, -power * powerMultiplier);
                             break;
                         case BLUE:
-                            driveByVector(1, 0.35, 0, -power * powerMultiplier);
+                            driveByVector(1, 0.5, -0.2, -power * powerMultiplier);
                             break;
                     }
                     break;

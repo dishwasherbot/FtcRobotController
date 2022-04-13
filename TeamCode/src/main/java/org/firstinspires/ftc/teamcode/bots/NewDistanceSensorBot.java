@@ -197,9 +197,9 @@ public class NewDistanceSensorBot extends DuckBot {
 //        checkExtension1000();
 //        checkExtensionMax();
 //        checkExtension2600();
-        opMode.telemetry.addData("distanceIntake: ", distanceIntake);
-        opMode.telemetry.addData("distanceBox: ", distanceBox);
-        opMode.telemetry.update();
+//        opMode.telemetry.addData("distanceIntake: ", distanceIntake);
+//        opMode.telemetry.addData("distanceBox: ", distanceBox);
+//        opMode.telemetry.update();
         super.onTick();
     }
 }

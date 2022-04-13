@@ -19,7 +19,7 @@ public class NewIntakeBot extends SnarmBot{
     private long timeSincePosSwitch1 = 0;
     private long lastPosSwitch1 = 0;
 
-    public final double[] intakePositions = new double[]{0.38, 0.45, 0.64, 0.9, 0.92};//0.97
+    public final double[] intakePositions = new double[]{0.38, 0.45, 0.64, 0.9, 0.92, 0.55};//0.97
     public int intakePosIndex = 0;//0
 
     public NewIntakeBot(LinearOpMode opMode) {

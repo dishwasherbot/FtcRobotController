@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.bots.FSMBot;
 import org.firstinspires.ftc.teamcode.bots.LEDBot;
 
-@TeleOp(name = "Manual Drive")
+@TeleOp(name = "Manual Drive (Blue)")
 public class ManualDriveOpMode extends LinearOpMode {
 
     private LEDBot robot = new LEDBot(this);
@@ -16,6 +16,8 @@ public class ManualDriveOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.isAutonomous = false;
+        robot.setSnarmRotation(0);
+        robot.setDropHeight(0);
         robot.init(hardwareMap);
         robot.isAutoStart = false;
         robot.odometryRaise.setPosition(0.65);
@@ -29,14 +31,15 @@ public class ManualDriveOpMode extends LinearOpMode {
 
             robot.autoExtend(gamepad1.left_bumper);
             robot.autoRetract(gamepad1.right_bumper);
-            robot.dropFreight(gamepad1.a);
-            robot.toggleBox(gamepad1.x);
+            robot.dropFreight(gamepad1.cross);
+            //robot.toggleBox(gamepad1.x);
+            robot.toggleHub(true, gamepad1.square);
 // intake code
             robot.changeIntakePosition(gamepad1.dpad_down, gamepad1.dpad_up);
-            robot.intakeToggle(gamepad1.y);
+            robot.intakeToggle(gamepad1.triangle);
 // driving code
             robot.driveByHand(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_button, gamepad2.left_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_x, gamepad2.left_stick_button);
-            robot.holdSpinner(gamepad1.b, gamepad1.y, 0.4);
+            robot.holdSpinner(gamepad1.circle, true, 0.4);
 // tape arm code
             robot.controlElevationTape(gamepad2.dpad_up, gamepad2.dpad_down);
             robot.controlRotation(gamepad2.dpad_right, gamepad2.dpad_left);
