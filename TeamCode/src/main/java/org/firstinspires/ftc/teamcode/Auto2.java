@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.bots.CameraBot;
 import org.firstinspires.ftc.teamcode.bots.DistanceSensorBot;
 
 @Autonomous(name="Auto 2", group="Autos")
-
+@Disabled
 public class Auto2 extends LinearOpMode {
 
     protected DistanceSensorBot robot = new DistanceSensorBot(this);

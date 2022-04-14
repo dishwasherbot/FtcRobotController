@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.bots.GyroBot;
 import org.firstinspires.ftc.teamcode.bots.OdometryBot;
 
 @Autonomous(name="Odometry Test", group="Tests")
-
+@Disabled
 public class OdometryTest extends LinearOpMode {
 
     protected OdometryBot robot = new OdometryBot(this);

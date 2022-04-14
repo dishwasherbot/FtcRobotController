@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.bots.CameraBot;
 import org.firstinspires.ftc.teamcode.bots.FSMBot;
 import org.firstinspires.ftc.teamcode.bots.SnarmBot;
 
-@Autonomous(name="Auto 4 (FSM)", group="Autos")
+@Autonomous(name="Auto 4 (Warehouse)", group="Autos")
 
 public class Auto4 extends LinearOpMode {
 
@@ -28,36 +28,34 @@ public class Auto4 extends LinearOpMode {
         robot.driveAgainstWallWithEncodersVertical(robot.DIRECTION_FORWARD, robot.side, drivingDistance, 500, 0);
         robot.drivingDone = true;
         robot.setDropHeight(0);
-        robot.autoGrabFreight(0.2, robot.side);
+        int warehouseDepletion = Math.abs(robot.autoGrabFreight(0.2, robot.side));
 //        if (robot.side == CameraBot.autoSide.BLUE) {
 //            robot.driveStraightByTime(robot.DIRECTION_LEFT, 500, 0.2);
 //        } else {
 //            robot.driveStraightByTime(robot.DIRECTION_RIGHT, 500, 0.2);
 //        }
-
         robot.waitOnSnarmState(SnarmBot.SnarmState.RELEASING, 10000);
         distanceFromStart = Math.abs(robot.horizontal.getCurrentPosition());
-        drivingDistance = distanceFromStart + 27000;
+        drivingDistance = distanceFromStart + warehouseDepletion - 7000;
         robot.driveAgainstWallWithEncodersVertical(robot.DIRECTION_FORWARD, robot.side, drivingDistance, 500, 0);
         robot.drivingDone = true;
 
-        robot.autoGrabFreight(0.2, robot.side);
+        warehouseDepletion = Math.abs(robot.autoGrabFreight(0.2, robot.side));
         robot.setDropHeight(0);
 
         robot.waitOnSnarmState(SnarmBot.SnarmState.RELEASING, 10000);
         distanceFromStart = Math.abs(robot.horizontal.getCurrentPosition());
-        drivingDistance = distanceFromStart + 27000;
+        drivingDistance = distanceFromStart + warehouseDepletion - 7000;
         robot.driveAgainstWallWithEncodersVertical(robot.DIRECTION_FORWARD, robot.side, drivingDistance, 500, 0);
         robot.drivingDone = true;
 
-        robot.autoGrabFreight(0.2, robot.side);
+        warehouseDepletion = Math.abs(robot.autoGrabFreight(0.2, robot.side));
         robot.setDropHeight(0);
 
         robot.waitOnSnarmState(SnarmBot.SnarmState.RELEASING, 10000);
         distanceFromStart = Math.abs(robot.horizontal.getCurrentPosition());
-        drivingDistance = distanceFromStart + 27000;
+        drivingDistance = distanceFromStart + warehouseDepletion - 7000;
         robot.driveAgainstWallWithEncodersVertical(robot.DIRECTION_FORWARD, robot.side, drivingDistance, 500, 0);
-        robot.drivingDone = true;
         robot.sleep(10000);
     }
 }

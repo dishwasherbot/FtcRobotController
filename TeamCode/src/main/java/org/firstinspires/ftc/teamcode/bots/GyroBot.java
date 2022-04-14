@@ -265,12 +265,12 @@ public class GyroBot extends FourWheelDriveBot {
         // distance (in mm) = revolution * pi * diameter (100 mm)
         int distanceTicks = (int) (distance * CENTIMETER_TO_DRIVING_MOTOR_CONVERSION_RATE);
         int startingPosition = leftFront.getCurrentPosition();
-        MiniPID pid = new MiniPID(0.03, 0, 0);
+        MiniPID pid = new MiniPID(0.02, 0, 0);
         pid.setOutputLimits(maxPower);
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         double angle;
         angle = getAngle();

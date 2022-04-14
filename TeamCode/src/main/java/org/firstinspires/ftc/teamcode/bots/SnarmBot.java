@@ -28,7 +28,7 @@ public class SnarmBot extends OdometryBot {
     final public double rotationInit = 0.475;
     final public double rotationCenter = 0.48;//0.485
 
-    public final double[] flipperPositions = new double[]{0, 0.05, 0.6, 0.65, 0.62};
+    public final double[] flipperPositions = new double[]{0, 0.05, 0.6, 0.65, 0.6};
     public int flipperPosIndex = 0;
 
     public enum SnarmState {
@@ -42,10 +42,11 @@ public class SnarmBot extends OdometryBot {
         RAISING_INTAKE,
         FEEDING,
         READY_AGAIN,
-        IDLE
+        IDLE,
+        IDLE_WAIT
     }
 
-    SnarmState snarmState = SnarmState.READY;
+    public SnarmState snarmState = SnarmState.READY;
 
     public SnarmBot(LinearOpMode opMode) {
         super(opMode);

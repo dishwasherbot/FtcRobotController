@@ -52,6 +52,7 @@ public class FSMBot extends NewDistanceSensorBot {
     public boolean shouldAutoExtend = true;
     public boolean drivingDone = false;
     public boolean shouldIdle = false;
+    public boolean breakOutOfIdle = false;
     public boolean isAllianceHub = true;
 
     protected double dropHeight = 0;
@@ -222,7 +223,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         RobotLog.d("200 passed");
 
                         setElevationPosition(dropHeight);
-                        setRotationPosition(0.64);
+                        setRotationPosition(snarmRotation);
                         setExtension(maxExtension);
 
                         box.setPosition(boxLocked);
@@ -239,7 +240,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         RobotLog.d("1000 passed");
 
                         setElevationPosition(dropHeight);
-                        setRotationPosition(0.64);
+                        setRotationPosition(snarmRotation);
                         setExtension(maxExtension);
 
                         box.setPosition(boxLocked);
@@ -256,7 +257,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         RobotLog.d("max passed");
 
                         setElevationPosition(dropHeight);
-                        setRotationPosition(0.64);
+                        setRotationPosition(snarmRotation);
                         setExtension(maxExtension);
 
                         box.setPosition(boxOpened);
@@ -396,6 +397,26 @@ public class FSMBot extends NewDistanceSensorBot {
                 case IDLE:
                     if (!shouldIdle) {
                         RobotLog.d("idle");
+
+                        setElevationPosition(0.2);
+                        setRotationPosition(rotationCenter);
+                        setExtension(minExtension);
+
+                        box.setPosition(boxLocked);
+                        goToFlipperPosition(4);
+
+                        intakeFast = false;
+                        stopRotation();
+                        goToIntakePosition(0);
+
+                        isAutoStart = false;
+
+                        snarmState = SnarmState.READY;
+                    }
+                    break;
+                case IDLE_WAIT:
+                    if (breakOutOfIdle) {
+                        RobotLog.d("idle_wait");
 
                         setElevationPosition(0.1);
                         setRotationPosition(rotationCenter);

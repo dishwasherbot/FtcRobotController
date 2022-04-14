@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.bots.CameraBot;
 import org.firstinspires.ftc.teamcode.bots.TapeMeasureBot;
 
 @Autonomous(name="Tape Test", group="Tests")
-
+@Disabled
 public class TapeTest extends LinearOpMode {
 
     protected TapeMeasureBot robot = new TapeMeasureBot(this);

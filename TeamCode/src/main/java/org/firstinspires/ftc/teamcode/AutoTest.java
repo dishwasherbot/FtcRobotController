@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
@@ -10,7 +11,7 @@ import org.firstinspires.ftc.teamcode.bots.NewDistanceSensorBot;
 import org.firstinspires.ftc.teamcode.bots.SnarmBot;
 
 @Autonomous(name="Auto Test", group="Tests")
-
+@Disabled
 public class AutoTest extends LinearOpMode {
 
     protected FSMBot robot = new FSMBot(this);

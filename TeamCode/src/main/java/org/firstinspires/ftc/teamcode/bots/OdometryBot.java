@@ -130,7 +130,7 @@ public class OdometryBot extends GyroBot {
         int startingPosition = horizontal.getCurrentPosition();
         double powerMultiplier = 1;
 
-        MiniPID drivePID = new MiniPID(0.00003, 0.000001, 0.000007);
+        MiniPID drivePID = new MiniPID(0.00004, 0.000001, 0.000007);
         drivePID.setOutputLimits(1);
 //        MiniPID gyroPID = new MiniPID(0.06, 0.005, 0.03);
 //        gyroPID.setOutputLimits(1);
@@ -173,10 +173,10 @@ public class OdometryBot extends GyroBot {
                 case DIRECTION_FORWARD:
                     switch (side) {
                         case RED:
-                            driveByVector(1, -0.5, 0.2, -power * powerMultiplier);
+                            driveByVector(1, 0.35, 0, -power * powerMultiplier);
                             break;
                         case BLUE:
-                            driveByVector(1, 0.5, -0.2, -power * powerMultiplier);
+                            driveByVector(1, -0.35, -0.25, -power * powerMultiplier);
                             break;
                     }
                     break;

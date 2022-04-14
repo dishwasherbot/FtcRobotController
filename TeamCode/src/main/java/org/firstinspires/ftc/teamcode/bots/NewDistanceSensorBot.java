@@ -156,8 +156,8 @@ public class NewDistanceSensorBot extends DuckBot {
         }
     }
 
-    public void autoGrabFreight(double power, CameraBot.autoSide side) {
-        double drive = 0.08;
+    public int autoGrabFreight(double power, CameraBot.autoSide side) {
+        double drive = 0.16;
         double strafe = 0.08;
         double twist = 0;
         switch (side) {
@@ -181,6 +181,7 @@ public class NewDistanceSensorBot extends DuckBot {
         rightFront.setPower(0);
         leftRear.setPower(0);
         rightRear.setPower(0);
+        return distanceFromStart;
     }
 
 //    public void checkFreightInBox() {
@@ -197,9 +198,9 @@ public class NewDistanceSensorBot extends DuckBot {
 //        checkExtension1000();
 //        checkExtensionMax();
 //        checkExtension2600();
-//        opMode.telemetry.addData("distanceIntake: ", distanceIntake);
-//        opMode.telemetry.addData("distanceBox: ", distanceBox);
-//        opMode.telemetry.update();
+        opMode.telemetry.addData("distanceIntake: ", distanceIntake);
+        opMode.telemetry.addData("distanceBox: ", distanceBox);
+        opMode.telemetry.update();
         super.onTick();
     }
 }
