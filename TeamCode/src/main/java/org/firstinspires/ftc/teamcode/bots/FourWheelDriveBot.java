@@ -86,23 +86,29 @@ public class FourWheelDriveBot extends BotBot{
         double twist  = right_stick_x1 + right_stick_x2;
 
         timeSinceToggle5 = System.currentTimeMillis() - lastToggleDone5;
-        if (button1 && timeSinceToggle5 > 300) {
-            if (isSlow) {
-                driveMultiplier = 0.85;
-                isSlow = false;
-                opMode.telemetry.addData("SLOW", driveMultiplier);
-                lastToggleDone5 = System.currentTimeMillis();
-                //RobotLog.d("robot not slow");
-            } else if (!isSlow) {
-                driveMultiplier = 0.95;
-                isSlow = true;
-                opMode.telemetry.addData("FAST", driveMultiplier);
-                lastToggleDone5 = System.currentTimeMillis();
-                //RobotLog.d("robot slow");
-            }
-            opMode.telemetry.update();
+        if (button1 || button2) {
+//            if (isSlow) {
+//                driveMultiplier = 0.85;
+//                isSlow = false;
+//                opMode.telemetry.addData("SLOW", driveMultiplier);
+//                lastToggleDone5 = System.currentTimeMillis();
+//                //RobotLog.d("robot not slow");
+//            } else if (!isSlow) {
+//                driveMultiplier = 0.95;
+//                isSlow = true;
+//                opMode.telemetry.addData("FAST", driveMultiplier);
+//                lastToggleDone5 = System.currentTimeMillis();
+//                //RobotLog.d("robot slow");
+//            }
+//            opMode.telemetry.update();
             //RobotLog.d("stick button pressed");
+            driveMultiplier = 0.95;
+            opMode.telemetry.addData("FAST", driveMultiplier);
+        } else {
+            driveMultiplier = 0.85;
+            opMode.telemetry.addData("SLOW", driveMultiplier);
         }
+        opMode.telemetry.update();
         driveByVector(drive, strafe, twist, driveMultiplier);
     }
 

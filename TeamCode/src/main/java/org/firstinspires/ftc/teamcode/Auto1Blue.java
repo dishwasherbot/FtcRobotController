@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.bots.CameraBot;
 import org.firstinspires.ftc.teamcode.bots.SnarmBot;
 
-@Autonomous(name="Auto 5 (Duck)", group="Autos")
+@Autonomous(name="Auto 1 (BLUE Duck)", group="Autos")
 
-public class Auto5 extends LinearOpMode {
+public class Auto1Blue extends LinearOpMode {
 
     protected CameraBot robot = new CameraBot(this);
 
@@ -19,7 +19,7 @@ public class Auto5 extends LinearOpMode {
         robot.isAutoStart = true;
         int[] pos;
         pos = robot.detect();
-        if (pos[1] == 1) {
+        if (true) {
             robot.setSnarmRotation(1);
         } else {
             robot.setSnarmRotation(0);

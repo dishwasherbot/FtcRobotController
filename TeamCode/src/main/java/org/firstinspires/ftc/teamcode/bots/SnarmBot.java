@@ -26,9 +26,9 @@ public class SnarmBot extends OdometryBot {
     final public double elevationInit = 0.4;
 
     final public double rotationInit = 0.475;
-    final public double rotationCenter = 0.48;//0.485
+    final public double rotationCenter = 0.485;//0.485
 
-    public final double[] flipperPositions = new double[]{0, 0.05, 0.6, 0.65, 0.6};
+    public final double[] flipperPositions = new double[]{0, 0.05, 0.6, 0.65, 0.6, 0.45};
     public int flipperPosIndex = 0;
 
     public enum SnarmState {
@@ -42,6 +42,7 @@ public class SnarmBot extends OdometryBot {
         RAISING_INTAKE,
         FEEDING,
         READY_AGAIN,
+        AFTER_READY_AGAIN,
         IDLE,
         IDLE_WAIT
     }
@@ -111,6 +112,14 @@ public class SnarmBot extends OdometryBot {
             rotation.setPosition(rotation.getPosition()-0.005);
         } else if (right) {
             rotation.setPosition(rotation.getPosition()+0.005);
+        }
+    }
+
+    public void controlRotationSlow(boolean left, boolean right) {
+        if (left) {
+            rotation.setPosition(rotation.getPosition()-0.002);
+        } else if (right) {
+            rotation.setPosition(rotation.getPosition()+0.002);
         }
     }
 

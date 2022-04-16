@@ -156,11 +156,20 @@ public class NewDistanceSensorBot extends DuckBot {
         }
     }
 
-    public int autoGrabFreight(double power, CameraBot.autoSide side) {
-        double drive = 0.16;
-        double strafe = 0.08;
-        double twist = 0;
-        switch (side) {
+    public int autoGrabFreight(boolean fast, CameraBot.autoSide side1, CameraBot.autoSide side2, boolean drop) {
+        double drive;
+        double strafe;
+        double twist;
+        if (fast) {
+            drive = 0.15;
+            strafe = 0.08;
+            twist = 0;
+        } else {
+            drive = 0.09;
+            strafe = 0.05;
+            twist = 0;
+        }
+        switch (side1) {
             case RED:
                 driveByVector(drive, strafe, -twist, 1);
                 break;
@@ -172,10 +181,13 @@ public class NewDistanceSensorBot extends DuckBot {
         waitOnSnarmState(SnarmState.FEEDING, 10000);
 
         RobotLog.d("intaking wait finished");
-
         int distanceFromStart = Math.abs(horizontal.getCurrentPosition());
-        driveAgainstWallWithEncodersVertical(DIRECTION_BACKWARD, side, distanceFromStart+4000, 500, 0);
-
+        if (drop) {
+            driveAgainstWallWithEncodersVertical(DIRECTION_BACKWARD, side2, distanceFromStart + 2500, 500, 0);
+        } else {
+            waitOnSnarmState(SnarmState.READY, 2000);
+            snarmState = SnarmState.RETRACTING_STAGE_1;
+        }
         RobotLog.d("drive finished");
         leftFront.setPower(0);
         rightFront.setPower(0);

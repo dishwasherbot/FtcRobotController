@@ -154,11 +154,11 @@ public class CameraBot extends FSMBot {
             pos[0] = choosePosition(left, middle, right);
             //RobotLog.d("Determined which position the duck/TSE is in");
             pos[1] = chooseSide(blue, red);
-            if (pos[1] == 0) {
-                side = autoSide.BLUE;
-            } else {
-                side = autoSide.RED;
-            }
+//            if (pos[1] == 0) {
+//                side = autoSide.BLUE;
+//            } else {
+//                side = autoSide.RED;
+//            }
             return pos;
         } catch (InterruptedException e) {
             print("Photo taken has been interrupted !");
@@ -167,12 +167,13 @@ public class CameraBot extends FSMBot {
     }
 
     public int choosePosition(int left, int middle, int right){
+        //don't mind the right and lefts not lining up.
         if (left > middle && left > right) {
-            return LEFT;
+            return RIGHT;
         } else if (middle > left && middle > right) {
             return MIDDLE;
         } else if (right > left && right > middle) {
-            return RIGHT;
+            return LEFT;
         }
         return LEFT;
     }
@@ -236,7 +237,7 @@ public class CameraBot extends FSMBot {
                 if ((red < 180 && red > 30) && (green < 220 && green > 90) && blue > 220
                         && blue > average) {
                     //bmp.setPixel(x, y, Color.RED);
-                    //RobotLog.d(String.format("viable pixel found at %d, %d with rgb %d %d %d", x, y, red, green, blue));
+                    //RobotLog.d(String.format("viable blue pixel found at %d, %d with rgb %d %d %d", x, y, red, green, blue));
                     viablePixelsCount++;
                 }
             }
@@ -262,7 +263,7 @@ public class CameraBot extends FSMBot {
                 if (red > 230 && (green < 200 && green > 120) && (blue < 180 && blue > 100)
                         && red > average) {
                     //bmp.setPixel(x, y, Color.RED);
-                    //RobotLog.d(String.format("viable pixel found at %d, %d with rgb %d %d %d", x, y, red, green, blue));
+                    //RobotLog.d(String.format("viable red pixel found at %d, %d with rgb %d %d %d", x, y, red, green, blue));
                     viablePixelsCount++;
                 }
             }
