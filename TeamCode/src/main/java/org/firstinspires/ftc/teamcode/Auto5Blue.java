@@ -42,7 +42,7 @@ public class Auto5Blue extends LinearOpMode {
         robot.driveAgainstWallWithEncodersVertical(robot.DIRECTION_FORWARD, robot.side, drivingDistance, 500, 0);
         robot.drivingDone = true;
 
-        warehouseDepletion = Math.abs(robot.autoGrabFreight(true, CameraBot.autoSide.RED, robot.side, true));
+        warehouseDepletion = Math.abs(robot.autoGrabFreight(true, robot.side, robot.side, true));
         robot.setDropHeight(0);
 
         robot.waitOnSnarmState(SnarmBot.SnarmState.RELEASING, 10000);
@@ -67,6 +67,7 @@ public class Auto5Blue extends LinearOpMode {
         distanceFromStart = Math.abs(robot.horizontal.getCurrentPosition());
         drivingDistance = distanceFromStart + warehouseDepletion - 14000;
         robot.driveAgainstWallWithEncodersVertical(robot.DIRECTION_FORWARD, robot.side, drivingDistance, 500, 0);
+        robot.drivingDone = true;
 
         warehouseDepletion = Math.abs(robot.autoGrabFreight(true, CameraBot.autoSide.RED, robot.side, true));
         robot.sleep(2000);

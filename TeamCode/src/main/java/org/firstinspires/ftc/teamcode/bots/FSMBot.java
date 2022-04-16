@@ -34,7 +34,6 @@ package org.firstinspires.ftc.teamcode.bots;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
@@ -396,7 +395,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         goToFlipperPosition(0);
 
                         intakeFast = true;
-                        startRotation();
+                        stopRotation();
                         goToIntakePosition(3);
 
                         isAutoStart = false;
@@ -405,7 +404,7 @@ public class FSMBot extends NewDistanceSensorBot {
                     }
                     break;
                 case AFTER_READY_AGAIN:
-                    if (snarmTimer.milliseconds() > 150) {
+                    if (snarmTimer.milliseconds() > 150 && keepExtending) {
                         RobotLog.d("after ready again");
 
                         setElevationPosition(snarmIntakingHeight);
@@ -420,8 +419,6 @@ public class FSMBot extends NewDistanceSensorBot {
                         goToIntakePosition(3);
 
                         isAutoStart = false;
-
-                        snarmTimer.reset();
 
                         snarmState = SnarmState.EXTENDING_STAGE_1;
                     }

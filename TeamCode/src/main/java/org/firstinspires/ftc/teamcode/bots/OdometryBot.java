@@ -173,20 +173,20 @@ public class OdometryBot extends GyroBot {
                 case DIRECTION_FORWARD:
                     switch (side) {
                         case RED:
-                            driveByVector(1, 0.45, 0, -power * powerMultiplier);
+                            driveByVector(1, 0.45, 0.35, -power * powerMultiplier);
                             break;
                         case BLUE:
-                            driveByVector(1, -0.45, -0.25, -power * powerMultiplier);
+                            driveByVector(1, -0.45, -0.35, -power * powerMultiplier);
                             break;
                     }
                     break;
                 case DIRECTION_BACKWARD:
                     switch (side) {
                         case RED:
-                            driveByVector(1, -0.45, -0, -power * powerMultiplier);
+                            driveByVector(1, -0.55, -0, -power * powerMultiplier);
                             break;
                         case BLUE:
-                            driveByVector(1, 0.45, -0, -power * powerMultiplier);
+                            driveByVector(1, 0.55, -0, -power * powerMultiplier);
                             break;
                     }
                     break;

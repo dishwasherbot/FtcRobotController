@@ -41,7 +41,7 @@ public class Auto4Red extends LinearOpMode {
         robot.driveAgainstWallWithEncodersVertical(robot.DIRECTION_FORWARD, robot.side, drivingDistance, 500, 0);
         robot.drivingDone = true;
 
-        warehouseDepletion = Math.abs(robot.autoGrabFreight(false, CameraBot.autoSide.BLUE, robot.side, true));
+        warehouseDepletion = Math.abs(robot.autoGrabFreight(false, robot.side, robot.side, true));
         robot.setDropHeight(0);
 
         robot.waitOnSnarmState(SnarmBot.SnarmState.RELEASING, 10000);
@@ -57,8 +57,9 @@ public class Auto4Red extends LinearOpMode {
         distanceFromStart = Math.abs(robot.horizontal.getCurrentPosition());
         drivingDistance = distanceFromStart + warehouseDepletion - 14000;
         robot.driveAgainstWallWithEncodersVertical(robot.DIRECTION_FORWARD, robot.side, drivingDistance, 500, 0);
+        robot.drivingDone = true;
 
-        warehouseDepletion = Math.abs(robot.autoGrabFreight(false, CameraBot.autoSide.BLUE, robot.side, true));
+        warehouseDepletion = Math.abs(robot.autoGrabFreight(false, CameraBot.autoSide.BLUE, robot.side, false));
         robot.sleep(2000);
 
     }

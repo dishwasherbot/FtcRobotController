@@ -54,6 +54,7 @@ public class NewDistanceSensorBot extends DuckBot {
     public double distanceBox = 0;
 
     public boolean isRepeating = false;
+    public boolean keepExtending = true;
 
     boolean shouldGrabDrive = false;
     private boolean canDrive = false;
@@ -180,13 +181,14 @@ public class NewDistanceSensorBot extends DuckBot {
 
         waitOnSnarmState(SnarmState.FEEDING, 10000);
 
+        if (!drop) {
+            keepExtending = false;
+        }
+
         RobotLog.d("intaking wait finished");
         int distanceFromStart = Math.abs(horizontal.getCurrentPosition());
         if (drop) {
             driveAgainstWallWithEncodersVertical(DIRECTION_BACKWARD, side2, distanceFromStart + 2500, 500, 0);
-        } else {
-            waitOnSnarmState(SnarmState.READY, 2000);
-            snarmState = SnarmState.RETRACTING_STAGE_1;
         }
         RobotLog.d("drive finished");
         leftFront.setPower(0);
