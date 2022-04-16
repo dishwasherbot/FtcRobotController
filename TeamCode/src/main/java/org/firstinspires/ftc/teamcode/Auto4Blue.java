@@ -15,6 +15,7 @@ public class Auto4Blue extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
+        robot.snarmSnarmState = 0;
         robot.side = CameraBot.autoSide.BLUE;
         waitForStart();
         robot.isAutoStart = true;

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.bots.LEDBot;
 import org.firstinspires.ftc.teamcode.bots.RumbleBot;
 
 @TeleOp(name = "Manual Drive (Blue)")
-public class ManualDriveOpMode extends LinearOpMode {
+public class ManualDriveBlue extends LinearOpMode {
 
     //ElapsedTime runtime = new ElapsedTime();    // Use to determine when end game is starting.
 
@@ -20,7 +20,7 @@ public class ManualDriveOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
+        robot.snarmSnarmState = 1;
         robot.isAutonomous = false;
         robot.setSnarmRotation(0);
         robot.setDropHeight(0);

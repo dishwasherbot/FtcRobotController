@@ -15,6 +15,7 @@ public class Auto1Red extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
+        robot.snarmSnarmState = 0;
         waitForStart();
         robot.isAutoStart = true;
         int[] pos;

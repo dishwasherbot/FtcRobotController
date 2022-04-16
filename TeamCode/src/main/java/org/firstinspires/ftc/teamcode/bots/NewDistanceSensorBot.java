@@ -179,7 +179,7 @@ public class NewDistanceSensorBot extends DuckBot {
                 break;
         }
 
-        waitOnSnarmState(SnarmState.FEEDING, 10000);
+        waitOnSnarmState(SnarmState.FEEDING, 5000);
 
         if (!drop) {
             keepExtending = false;
