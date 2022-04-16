@@ -95,7 +95,7 @@ public class FSMBot extends NewDistanceSensorBot {
                 retractionStep = 2600;
                 break;
             case 2:
-                dropHeight = 0.65;
+                dropHeight = 0.68;
                 maxExtension = 2900;
                 extensionStep1 = 200;
                 extensionStep2 = 1000;
@@ -186,7 +186,7 @@ public class FSMBot extends NewDistanceSensorBot {
     public void dropFreight(boolean button) {
         if (button && timeSince3.milliseconds() > 500) {
             snarmState = SnarmState.EXTENDING_STAGE_3;
-            extender.setTargetPosition(extender.getCurrentPosition());
+            //extender.setTargetPosition(extender.getCurrentPosition());
             isAutonomous = true;
             timeSince3.reset();
         } else {
