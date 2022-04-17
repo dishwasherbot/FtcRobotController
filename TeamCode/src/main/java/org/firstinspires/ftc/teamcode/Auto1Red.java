@@ -15,6 +15,7 @@ public class Auto1Red extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
+        robot.odometryRaise.setPosition(0.65);
         robot.snarmSnarmState = 0;
         waitForStart();
         robot.isAutoStart = true;
@@ -38,16 +39,16 @@ public class Auto1Red extends LinearOpMode {
 
         robot.goToAnglePID(90);
 
-        robot.driveStraightByGyro(robot.DIRECTION_RIGHT, 9, 0.2, true, 90, true);
-        robot.driveStraightByTime(robot.DIRECTION_RIGHT, 500, 0.2);
+        robot.driveStraightByGyro(robot.DIRECTION_RIGHT, 16, 0.2, true, 90, true);
+        robot.driveStraightByTime(robot.DIRECTION_RIGHT, 800, 0.2);
         robot.sleep(200);
-        robot.driveStraightByTime(robot.DIRECTION_FORWARD, 500, 0.2);
-        robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 0.2, 0.14);
-        robot.toggleSpinner(0.27, false);
+        robot.driveStraightByTime(robot.DIRECTION_FORWARD, 1800, 0.14);
+        robot.driveStraightByDistance(robot.DIRECTION_BACKWARD, 0.1, 0.14);
+        robot.toggleSpinner(0.27, true);
         robot.sleep(3500);
-        robot.toggleSpinner(0.27, false);
+        robot.toggleSpinner(0.27, true);
         //robot.goToAnglePID(0);
         robot.sleep(200);
-        robot.driveStraightByGyro(robot.DIRECTION_BACKWARD, 15, 0.5, true, 90, true);
+        robot.driveStraightByGyro(robot.DIRECTION_BACKWARD, 11, 0.3, true, 90, true);
     }
 }

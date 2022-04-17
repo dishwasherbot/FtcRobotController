@@ -54,6 +54,7 @@ public class FSMBot extends NewDistanceSensorBot {
     public boolean shouldIdle = false;
     public boolean breakOutOfIdle = false;
     public boolean isAllianceHub = true;
+    public boolean manualIntakeSensor = false;
 
     public int snarmSnarmState = 0;
 
@@ -102,8 +103,8 @@ public class FSMBot extends NewDistanceSensorBot {
                 retractionStep = 2600;
                 break;
             case 3:
-                dropHeight = 0.75;
-                maxExtension = 800;
+                dropHeight = 0.8;
+                maxExtension = 1000;
                 extensionStep1 = 200;
                 extensionStep2 = 500;
                 retractionStep = 300;
@@ -212,6 +213,10 @@ public class FSMBot extends NewDistanceSensorBot {
                 timeSince4.reset();
             }
         }
+    }
+
+    public void manualRaiseIntake(boolean button) {
+        manualIntakeSensor = button;
     }
 
     protected void onTick() {
@@ -406,7 +411,7 @@ public class FSMBot extends NewDistanceSensorBot {
 
                             intakeFast = true;
                             stopRotation();
-                            goToIntakePosition(3);
+                            goToIntakePosition(2);
 
                             isAutoStart = false;
 
@@ -539,7 +544,7 @@ public class FSMBot extends NewDistanceSensorBot {
                             setExtension(maxExtension);
 
                             box.setPosition(boxOpened);
-                            goToFlipperPosition(5);
+                            goToFlipperPosition(3);
 
                             stopRotation();
                             //goToIntakePosition(3);
@@ -604,7 +609,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         }
                         break;
                     case RAISING_INTAKE:
-                        if (distanceIntake < 5 && (intakePosIndex == 3 || intakePosIndex == 4) && extender.getCurrentPosition() < minExtension + 100) {
+                        if ((distanceIntake < 5 || manualIntakeSensor) && (intakePosIndex == 3 || intakePosIndex == 4) && extender.getCurrentPosition() < minExtension + 100) {
                             RobotLog.d("intake raised");
 
                             setElevationPosition(snarmIntakingHeight);
@@ -663,7 +668,7 @@ public class FSMBot extends NewDistanceSensorBot {
 
                             intakeFast = true;
                             startRotation();
-                            goToIntakePosition(3);
+                            goToIntakePosition(2);
 
                             isAutoStart = false;
 
@@ -685,7 +690,7 @@ public class FSMBot extends NewDistanceSensorBot {
 
                             intakeFast = false;
                             stopRotation();
-                            goToIntakePosition(3);
+                            goToIntakePosition(2);
 
                             isAutoStart = false;
 
@@ -723,7 +728,7 @@ public class FSMBot extends NewDistanceSensorBot {
 
                             setElevationPosition(elevationInit);
                             setRotationPosition(rotationInit);
-                            setExtension(maxExtension);
+                            setExtension(maxExtension - 200);
 
                             box.setPosition(boxLocked);
                             goToFlipperPosition(0);
@@ -742,7 +747,7 @@ public class FSMBot extends NewDistanceSensorBot {
 
                             setElevationPosition(dropHeight);
                             setRotationPosition(snarmRotation);
-                            setExtension(maxExtension);
+                            setExtension(maxExtension - 200);
 
                             box.setPosition(boxLocked);
                             goToFlipperPosition(0);
@@ -759,7 +764,7 @@ public class FSMBot extends NewDistanceSensorBot {
 
                             setElevationPosition(dropHeight);
                             setRotationPosition(snarmRotation);
-                            setExtension(maxExtension);
+                            setExtension(maxExtension - 200);
 
                             box.setPosition(boxLocked);
                             goToFlipperPosition(3);
@@ -775,11 +780,11 @@ public class FSMBot extends NewDistanceSensorBot {
                             RobotLog.d("max passed");
 
                             setElevationPosition(dropHeight);
-                            setRotationPosition(snarmRotation);
-                            setExtension(maxExtension);
+                            //setRotationPosition(snarmRotation);
+                            //setExtension(maxExtension);
 
                             box.setPosition(boxOpened);
-                            goToFlipperPosition(5);
+                            goToFlipperPosition(3);
 
                             stopRotation();
                             //goToIntakePosition(3);
@@ -794,7 +799,7 @@ public class FSMBot extends NewDistanceSensorBot {
                             RobotLog.d("retraction started");
 
                             setElevationPosition(snarmIntakingHeight);
-                            setRotationPosition(snarmRotation);
+                            //setRotationPosition(snarmRotation);
                             setExtension(minExtension);
 
                             box.setPosition(boxOpened);
@@ -844,7 +849,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         }
                         break;
                     case RAISING_INTAKE:
-                        if (distanceIntake < 5 && (intakePosIndex == 3 || intakePosIndex == 4) && extender.getCurrentPosition() < minExtension + 100) {
+                        if ((distanceIntake < 5 || manualIntakeSensor) && (intakePosIndex == 3 || intakePosIndex == 4) && extender.getCurrentPosition() < minExtension + 100) {
                             RobotLog.d("intake raised");
 
                             setElevationPosition(snarmIntakingHeight);
@@ -903,7 +908,7 @@ public class FSMBot extends NewDistanceSensorBot {
 
                             intakeFast = true;
                             startRotation();
-                            goToIntakePosition(3);
+                            goToIntakePosition(2);
 
                             isAutoStart = false;
 
@@ -925,7 +930,7 @@ public class FSMBot extends NewDistanceSensorBot {
 
                             intakeFast = false;
                             stopRotation();
-                            goToIntakePosition(3);
+                            goToIntakePosition(2);
 
                             isAutoStart = false;
 

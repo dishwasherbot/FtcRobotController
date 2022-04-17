@@ -41,7 +41,9 @@ public class ManualDriveRed extends LinearOpMode {
             robot.intakeToggle(gamepad1.triangle);
 // driving code
             robot.driveByHand(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_button, gamepad2.left_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_x, gamepad2.left_stick_button);
-            robot.holdSpinner(gamepad1.circle, false, 0.325);
+            //robot.holdSpinner(gamepad1.circle, false, 0.325);
+            //robot.timedSpin(gamepad1.circle, 0.325);
+            robot.bigTimedSpin(gamepad1.circle, 0.325);
 // tape arm code
             robot.controlElevationTape(gamepad2.dpad_up, gamepad2.dpad_down);
             robot.controlRotationSlow(gamepad2.dpad_right, gamepad2.dpad_left);
@@ -54,6 +56,9 @@ public class ManualDriveRed extends LinearOpMode {
 
             robot.prepareTape(gamepad2.square);
 // tape arm end
+            robot.unlockExtensionSafeties(gamepad2.left_bumper);
+            robot.resetExtension(gamepad2.right_bumper);
+            robot.manualRaiseIntake(gamepad2.circle);
             robot.onLoop(15, "manual drive");
         }
         robot.close();

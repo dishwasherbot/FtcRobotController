@@ -15,6 +15,7 @@ public class Auto1Blue extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
+        robot.odometryRaise.setPosition(0.65);
         robot.snarmSnarmState = 0;
         waitForStart();
         robot.isAutoStart = true;

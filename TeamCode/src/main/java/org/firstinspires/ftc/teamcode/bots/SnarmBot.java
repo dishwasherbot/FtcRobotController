@@ -14,10 +14,14 @@ public class SnarmBot extends OdometryBot {
     public Servo elevation = null;
     public DcMotor extender = null;
 
+    ElapsedTime timeSince7 = new ElapsedTime(500);
+    ElapsedTime timeSince8 = new ElapsedTime(500);
+
     public int maxExtension = 3100;//2850
     final public int minExtension = 0;
     public boolean[] extensionCheckpoints = new boolean[]{true, true, true, false};
     public boolean extending = true;
+    public boolean safetiesOn = true;
 
     final public double boxInit = 0.42;
     final public double boxLocked = 0.45;
@@ -82,15 +86,49 @@ public class SnarmBot extends OdometryBot {
         extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
+    public void unlockExtensionSafeties(boolean button) {
+        if (button && timeSince7.milliseconds() > 500) {
+            if (safetiesOn) {
+                safetiesOn = false;
+                opMode.telemetry.addData("safeties:", safetiesOn);
+            } else {
+                safetiesOn = true;
+                opMode.telemetry.addData("safeties:", safetiesOn);
+            }
+            opMode.telemetry.update();
+            timeSince7.reset();
+        }
+    }
+
+    public void resetExtension(boolean button) {
+        if (button && timeSince8.milliseconds() > 500) {
+            extender.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            safetiesOn = true;
+            timeSince8.reset();
+        }
+    }
+
     public void controlExtension(float down, float up) {
-        if (up > 0 && extender.getCurrentPosition() <= maxExtension){
-            extender.setTargetPosition((int) (extender.getCurrentPosition()+up*150));
-            extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            extender.setPower(0.5);
-        } else if (down > 0 && extender.getCurrentPosition() >= minExtension){
-            extender.setTargetPosition((int) (extender.getCurrentPosition()-down*150));
-            extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            extender.setPower(0.5);
+        if (safetiesOn) {
+            if (up > 0 && extender.getCurrentPosition() <= maxExtension) {
+                extender.setTargetPosition((int) (extender.getCurrentPosition() + up * 150));
+                extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                extender.setPower(0.5);
+            } else if (down > 0 && extender.getCurrentPosition() >= minExtension) {
+                extender.setTargetPosition((int) (extender.getCurrentPosition() - down * 150));
+                extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                extender.setPower(0.5);
+            }
+        } else {
+            if (up > 0) {
+                extender.setTargetPosition((int) (extender.getCurrentPosition() + up * 150));
+                extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                extender.setPower(0.5);
+            } else if (down > 0) {
+                extender.setTargetPosition((int) (extender.getCurrentPosition() - down * 150));
+                extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                extender.setPower(0.5);
+            }
         }
     }
 

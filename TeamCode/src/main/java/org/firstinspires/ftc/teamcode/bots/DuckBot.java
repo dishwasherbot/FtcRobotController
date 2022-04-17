@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.stormbots.MiniPID;
 
@@ -19,8 +20,13 @@ public class DuckBot extends TapeMeasureBot{
     public DcMotor duckSpinner = null;
 
     boolean isSpinning = false;
+    boolean shouldTimeSpin = false;
+
+    int count = 0;
 
     public double currentSpinnerSpeed = 1;
+
+    ElapsedTime duckTimer = new ElapsedTime(2000);
 
     //change these values to control what speed the spinner spins around
     public double setSpinnerSpeed = 0.4; //385
@@ -55,6 +61,7 @@ public class DuckBot extends TapeMeasureBot{
         if (button) {
             isSpinning = true;
         } else {
+            duckSpinner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             isSpinning = false;
         }
         if (blue) {
@@ -68,10 +75,41 @@ public class DuckBot extends TapeMeasureBot{
         if (button && isSpinning) {
             duckSpinner.setPower(-setSpinnerSpeed);
         } else {
-            leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            duckSpinner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             duckSpinner.setPower(0);
         }
     }
+
+    public void timedSpin(boolean button, double power) {
+        setSpinnerSpeed = power;
+        if (button) {
+            duckTimer.reset();
+            isSpinning = true;
+        } else if (duckTimer.milliseconds() > 1500) {
+            isSpinning = false;
+        }
+    }
+
+    public void bigTimedSpin(boolean button, double power) {
+        setSpinnerSpeed = power;
+        if (button) {
+            duckTimer.reset();
+            shouldTimeSpin = true;
+        } else if (duckTimer.milliseconds() > 29250){
+            shouldTimeSpin = false;
+            isSpinning = false;
+        }
+        if (shouldTimeSpin) {
+            if (duckTimer.milliseconds() > count && !isSpinning) {
+                count += 1500;
+                isSpinning = true;
+            } else if (duckTimer.milliseconds() > count && isSpinning) {
+                count += 750;
+                isSpinning = false;
+            }
+        }
+    }
+
     protected void onTick(){
         spinCarousel(true);
         super.onTick();
