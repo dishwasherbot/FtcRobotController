@@ -23,6 +23,8 @@ public class SnarmBot extends OdometryBot {
     public boolean extending = true;
     public boolean safetiesOn = true;
 
+    public boolean isAutonomous = true;
+
     final public double boxInit = 0.42;
     final public double boxLocked = 0.45;
     final public double boxOpened = 0.65;
@@ -61,18 +63,25 @@ public class SnarmBot extends OdometryBot {
     public void init(HardwareMap ahwMap) {
         super.init(ahwMap);
         box = hwMap.get(Servo.class, "box");
-        box.setPosition(boxInit);
         flipper = hwMap.get(Servo.class, "flipper");
-        goToFlipperPosition(4);//4
         rotation = hwMap.get(Servo.class, "rotation");
-        rotation.setPosition(rotationInit);
         elevation = hwMap.get(Servo.class, "elevation");
-        elevation.setPosition(0.4);//0.4
         extender = hwMap.get(DcMotor.class, "extender");
         extender.setPower(0);
         extender.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extender.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         extender.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        if (isAutonomous) {
+            box.setPosition(boxInit);
+            goToFlipperPosition(4);//4
+            rotation.setPosition(rotationInit);
+            elevation.setPosition(0.4);//0.4
+        } else {
+            box.setPosition(boxLocked);
+            goToFlipperPosition(0);
+            rotation.setPosition(rotationInit);
+            elevation.setPosition(0.1);//0.4
+        }
     }
 
     public void goToFlipperPosition(int index) {

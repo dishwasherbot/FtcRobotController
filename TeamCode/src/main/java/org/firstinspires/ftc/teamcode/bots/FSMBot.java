@@ -48,7 +48,6 @@ public class FSMBot extends NewDistanceSensorBot {
     ElapsedTime timeSince6 = new ElapsedTime(500);
 
     public boolean isAutoStart = false;
-    public boolean isAutonomous = true;
     public boolean shouldAutoExtend = true;
     public boolean drivingDone = false;
     public boolean shouldIdle = false;
