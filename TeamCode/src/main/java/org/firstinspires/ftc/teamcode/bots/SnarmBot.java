@@ -31,10 +31,11 @@ public class SnarmBot extends OdometryBot {
 
     final public double elevationInit = 0.4;
 
-    final public double rotationInit = 0.475;
-    final public double rotationCenter = 0.485;//0.485
+    final public double rotationInit = 0.485;//0.475 0.415
+    final public double rotationCenter = 0.495;//0.485 0.435
+    final public double rotationAvoid = 0.505;
 
-    public final double[] flipperPositions = new double[]{0, 0.05, 0.6, 0.65, 0.6, 0.45};
+    public final double[] flipperPositions = new double[]{0, 0.05, 0.6, 0.65, 0.6, 0.35};
     public int flipperPosIndex = 0;
 
     public enum SnarmState {
@@ -44,7 +45,9 @@ public class SnarmBot extends OdometryBot {
         EXTENDING_STAGE_3,
         RELEASING,
         RETRACTING_STAGE_1,
+        RETRACTING_STAGE_2,
         INTAKING,
+        WAITING_FOR_ROTATION,
         RAISING_INTAKE,
         FEEDING,
         READY_AGAIN,
@@ -90,7 +93,11 @@ public class SnarmBot extends OdometryBot {
     }
 
     public void setExtension(int position) {
-        extender.setPower(1);
+        setExtension(position, 1);
+    }
+
+    public void setExtension(int position, double power) {
+        extender.setPower(power);
         extender.setTargetPosition(position);
         extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }

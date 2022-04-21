@@ -39,7 +39,7 @@ public class Auto1Blue extends LinearOpMode {
         robot.driveStraightByGyro(robot.DIRECTION_FORWARD, 9, 0.2, false, 0, true);
         robot.driveStraightByTime(robot.DIRECTION_FORWARD, 500, 0.2);
         robot.sleep(200);
-        robot.driveStraightByTime(robot.DIRECTION_RIGHT, 500, 0.2);
+        robot.driveStraightByTime(robot.DIRECTION_RIGHT, 1800, 0.2);
         robot.driveStraightByDistance(robot.DIRECTION_LEFT, 0.2, 0.14);
         robot.toggleSpinner(0.27, false);
         robot.sleep(3500);
