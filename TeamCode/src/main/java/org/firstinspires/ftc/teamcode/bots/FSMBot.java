@@ -54,6 +54,7 @@ public class FSMBot extends NewDistanceSensorBot {
     public boolean breakOutOfIdle = false;
     public boolean isAllianceHub = true;
     public boolean manualIntakeSensor = false;
+    public boolean bypassAfterReadyAgain = true;
 
     public int snarmSnarmState = 0;
 
@@ -62,7 +63,7 @@ public class FSMBot extends NewDistanceSensorBot {
     protected double retractionStep = 2600;
     protected double extensionStep1 = 200;
     protected double extensionStep2 = 1000;
-    final protected double snarmIntakingHeight = 0.04;
+    final public double snarmIntakingHeight = 0.04;
     final protected double snarmTravelHeight = 0.3;
 
     final public double blueAllianceRotation = 0.66; //0.6
@@ -683,8 +684,8 @@ public class FSMBot extends NewDistanceSensorBot {
                         }
                         break;
                     case AFTER_READY_AGAIN:
-                        if (snarmTimer.milliseconds() > 150) {
-                            RobotLog.d("LLIANCE: after ready again");
+                        if (snarmTimer.milliseconds() > 150 && bypassAfterReadyAgain) {
+                            RobotLog.d("ALLIANCE: after ready again");
 
                             setElevationPosition(snarmIntakingHeight);
                             setRotationPosition(rotationCenter);
@@ -962,7 +963,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         }
                         break;
                     case AFTER_READY_AGAIN:
-                        if (snarmTimer.milliseconds() > 150) {
+                        if (snarmTimer.milliseconds() > 150 && bypassAfterReadyAgain) {
                             RobotLog.d("SHARED: after ready again");
 
                             setElevationPosition(snarmIntakingHeight);
