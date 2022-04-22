@@ -188,7 +188,7 @@ public class NewDistanceSensorBot extends DuckBot {
         RobotLog.d("intaking wait finished");
         int distanceFromStart = Math.abs(horizontal.getCurrentPosition());
         if (drop) {
-            driveAgainstWallWithEncodersVertical(DIRECTION_BACKWARD, side2, distanceFromStart + 4000, 500, 0);
+            driveAgainstWallWithEncodersVertical(DIRECTION_BACKWARD, side2, distanceFromStart + 3000, 500, 0);
         }
         RobotLog.d("drive finished");
         leftFront.setPower(0);

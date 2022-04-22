@@ -90,14 +90,20 @@ public class DuckBot extends TapeMeasureBot{
         }
     }
 
-    public void bigTimedSpin(boolean button, double power) {
+    public void bigTimedSpin(boolean start, boolean stop, double power, boolean blue) {
         setSpinnerSpeed = power;
-        if (button) {
+        if (blue) {
+            duckSpinner.setDirection(DcMotorSimple.Direction.REVERSE);
+        } else {
+            duckSpinner.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
+        if (start) {
             duckTimer.reset();
             shouldTimeSpin = true;
-        } else if (duckTimer.milliseconds() > 29250){
+        } else if (duckTimer.milliseconds() > 29250 || stop){
             shouldTimeSpin = false;
             isSpinning = false;
+            count = 0;
         }
         if (shouldTimeSpin) {
             if (duckTimer.milliseconds() > count && !isSpinning) {

@@ -62,7 +62,13 @@ public class FSMBot extends NewDistanceSensorBot {
     protected double retractionStep = 2600;
     protected double extensionStep1 = 200;
     protected double extensionStep2 = 1000;
-    protected double snarmIntakingHeight = 0.04;
+    final protected double snarmIntakingHeight = 0.04;
+    final protected double snarmTravelHeight = 0.3;
+
+    final public double blueAllianceRotation = 0.66; //0.6
+    final public double redAllianceRotation = 0.34; //0.25
+    final public double blueSharedRotation = 0.7; //0.63
+    final public double redSharedRotation = 0.29; //0.22
 
     public FSMBot(LinearOpMode opMode) {
         super(opMode);
@@ -81,14 +87,14 @@ public class FSMBot extends NewDistanceSensorBot {
     public void setDropHeight(int pos) {
         switch (pos) {
             case 0:
-                dropHeight = 0.3;
+                dropHeight = 0.25;
                 maxExtension = 3100;
                 extensionStep1 = 200;
                 extensionStep2 = 1000;
                 retractionStep = 2600;
                 break;
             case 1:
-                dropHeight = 0.49;
+                dropHeight = 0.46;
                 maxExtension = 3100;
                 extensionStep1 = 200;
                 extensionStep2 = 1000;
@@ -114,16 +120,16 @@ public class FSMBot extends NewDistanceSensorBot {
     public void setSnarmRotation(int side) {
         switch (side) {
             case 0:
-                snarmRotation = 0.66; //0.6
+                snarmRotation = blueAllianceRotation; //0.6
                 break;
             case 1:
-                snarmRotation = 0.33; // 0.25
+                snarmRotation = redAllianceRotation; // 0.25
                 break;
             case 2:
-                snarmRotation = 0.7; // 0.63
+                snarmRotation = blueSharedRotation; // 0.63
                 break;
             case 3:
-                snarmRotation = 0.29; // 0.22
+                snarmRotation = redSharedRotation; // 0.22
                 break;
         }
     }
@@ -538,9 +544,9 @@ public class FSMBot extends NewDistanceSensorBot {
                         if (isAutonomous) {
                             RobotLog.d("ALLIANCE: max passed");
 
-                            setElevationPosition(dropHeight);
-                            setRotationPosition(snarmRotation);
-                            setExtension(maxExtension);
+                            //setElevationPosition(dropHeight);
+                            //setRotationPosition(snarmRotation);
+                            //setExtension(maxExtension);
 
                             box.setPosition(boxOpened);
                             goToFlipperPosition(3);
@@ -608,7 +614,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         }
                         break;
                     case RAISING_INTAKE:
-                        if ((distanceIntake < 5 || manualIntakeSensor) && (intakePosIndex == 3 || intakePosIndex == 4) && extender.getCurrentPosition() < minExtension + 100) {
+                        if ((distanceIntake < 5 || manualIntakeSensor) && (intakePosIndex == 3 || intakePosIndex == 4) && extender.getCurrentPosition() < minExtension + 100 && !shouldTimeSpin) {
                             RobotLog.d("ALLIANCE: intake raised");
 
                             setElevationPosition(snarmIntakingHeight);
@@ -703,7 +709,7 @@ public class FSMBot extends NewDistanceSensorBot {
                             RobotLog.d("ALLIANCE: idle");
 
                             setElevationPosition(0.2);
-                            setRotationPosition(rotationCenter);
+                            //setRotationPosition(rotationCenter);
                             setExtension(minExtension);
 
                             box.setPosition(boxLocked);
@@ -778,7 +784,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         if (isAutonomous) {
                             RobotLog.d("SHARED: max passed");
 
-                            setElevationPosition(dropHeight);
+                            //setElevationPosition(dropHeight);
                             //setRotationPosition(snarmRotation);
                             //setExtension(maxExtension);
 
@@ -797,12 +803,12 @@ public class FSMBot extends NewDistanceSensorBot {
                         if (snarmTimer.milliseconds() >= 300) {
                             RobotLog.d("SHARED: retraction started");
 
-                            setElevationPosition(snarmIntakingHeight);
+                            setElevationPosition(snarmTravelHeight);
                             //setRotationPosition(snarmRotation);
                             //setExtension(minExtension);
 
                             box.setPosition(boxOpened);
-                            goToFlipperPosition(3);
+                            goToFlipperPosition(5);
 
                             stopRotation();
                             goToIntakePosition(3);
@@ -814,12 +820,12 @@ public class FSMBot extends NewDistanceSensorBot {
                         if (snarmTimer.milliseconds() >= 150) {
                             RobotLog.d("SHARED: 2600 passed");
 
-                            setElevationPosition(snarmIntakingHeight);
+                            setElevationPosition(snarmTravelHeight);
                             //setRotationPosition(rotationCenter);
                             setExtension(minExtension, 0.5);
 
                             box.setPosition(boxOpened);
-                            goToFlipperPosition(3);
+                            goToFlipperPosition(5);
 
                             stopRotation();
                             //goToIntakePosition(3);
@@ -831,12 +837,12 @@ public class FSMBot extends NewDistanceSensorBot {
                         if (extender.getCurrentPosition() < retractionStep) {
                             RobotLog.d("SHARED: 2600 passed");
 
-                            setElevationPosition(snarmIntakingHeight);
+                            setElevationPosition(snarmTravelHeight);
                             setRotationPosition(rotationAvoid);
                             setExtension(minExtension, 0.7);
 
                             box.setPosition(boxOpened);
-                            goToFlipperPosition(3);
+                            goToFlipperPosition(5);
 
                             stopRotation();
                             //goToIntakePosition(3);
@@ -848,7 +854,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         if ((extender.getCurrentPosition() < minExtension + 100)) {
                             RobotLog.d("SHARED: intaking started");
 
-                            setElevationPosition(snarmIntakingHeight);
+                            setElevationPosition(snarmTravelHeight);
                             setRotationPosition(rotationAvoid);
                             setExtension(minExtension);
 
@@ -887,7 +893,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         }
                         break;
                     case RAISING_INTAKE:
-                        if ((distanceIntake < 5 || manualIntakeSensor) && (intakePosIndex == 3 || intakePosIndex == 4) && extender.getCurrentPosition() < minExtension + 100) {
+                        if ((distanceIntake < 5 || manualIntakeSensor) && (intakePosIndex == 3 || intakePosIndex == 4) && extender.getCurrentPosition() < minExtension + 100 && !shouldTimeSpin) {
                             RobotLog.d("SHARED: intake raised");
 
                             setElevationPosition(snarmIntakingHeight);
@@ -982,7 +988,7 @@ public class FSMBot extends NewDistanceSensorBot {
                             RobotLog.d("SHARED: idle");
 
                             setElevationPosition(0.2);
-                            setRotationPosition(rotationCenter);
+                            //setRotationPosition(rotationCenter);
                             setExtension(minExtension);
 
                             box.setPosition(boxLocked);
