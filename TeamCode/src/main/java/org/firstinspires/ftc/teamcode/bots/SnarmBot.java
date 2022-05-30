@@ -17,7 +17,7 @@ public class SnarmBot extends OdometryBot {
     ElapsedTime timeSince7 = new ElapsedTime(500);
     ElapsedTime timeSince8 = new ElapsedTime(500);
 
-    public int maxExtension = 3100;//2850
+    public int maxExtension = 1500;//3100
     final public int minExtension = 0;
     public boolean[] extensionCheckpoints = new boolean[]{true, true, true, false};
     public boolean extending = true;
@@ -93,7 +93,7 @@ public class SnarmBot extends OdometryBot {
     }
 
     public void setExtension(int position) {
-        setExtension(position, 1);
+        setExtension(position, 0.4); //1
     }
 
     public void setExtension(int position, double power) {
