@@ -115,6 +115,13 @@ public class FSMBot extends NewDistanceSensorBot {
                 extensionStep2 = 500;
                 retractionStep = 300;
                 break;
+            case 4:
+                dropHeight = 0.22;
+                maxExtension = 1500;
+                extensionStep1 = 200;
+                extensionStep2 = 600;
+                retractionStep = 1000;
+                break;
         }
     }
 
@@ -132,6 +139,8 @@ public class FSMBot extends NewDistanceSensorBot {
             case 3:
                 snarmRotation = redSharedRotation; // 0.22
                 break;
+            case 4:
+                snarmRotation = blueAllianceRotation;
         }
     }
 
@@ -1009,7 +1018,7 @@ public class FSMBot extends NewDistanceSensorBot {
                 switch (snarmState) {
                     case READY:
                         if (isAutoStart) {
-                            RobotLog.d("ALLIANCE: ready");
+                            RobotLog.d("DEMO: ready");
 
                             setElevationPosition(elevationInit);
                             setRotationPosition(rotationInit);
@@ -1028,14 +1037,14 @@ public class FSMBot extends NewDistanceSensorBot {
                         break;
                     case EXTENDING_STAGE_1:
                         if (extender.getCurrentPosition() > extensionStep1) {
-                            RobotLog.d("ALLIANCE: 200 passed");
+                            RobotLog.d("DEMO: 200 passed");
 
                             setElevationPosition(dropHeight);
                             setRotationPosition(snarmRotation);
                             setExtension(maxExtension);
 
                             box.setPosition(boxLocked);
-                            goToFlipperPosition(0);
+                            goToFlipperPosition(3);
 
                             stopRotation();
                             //goToIntakePosition(3);
@@ -1045,7 +1054,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         break;
                     case EXTENDING_STAGE_2:
                         if (extender.getCurrentPosition() > extensionStep2) {
-                            RobotLog.d("ALLIANCE: 1000 passed");
+                            RobotLog.d("DEMO: 1000 passed");
 
                             setElevationPosition(dropHeight);
                             setRotationPosition(snarmRotation);
@@ -1062,7 +1071,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         break;
                     case EXTENDING_STAGE_3:
                         if (isAutonomous) {
-                            RobotLog.d("ALLIANCE: max passed");
+                            RobotLog.d("DEMO: max passed");
 
                             //setElevationPosition(dropHeight);
                             //setRotationPosition(snarmRotation);
@@ -1081,7 +1090,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         break;
                     case RELEASING:
                         if (snarmTimer.milliseconds() >= 150) {
-                            RobotLog.d("ALLIANCE: retraction started");
+                            RobotLog.d("DEMO: retraction started");
 
                             setElevationPosition(snarmIntakingHeight);
                             setRotationPosition(rotationAvoid);
@@ -1098,7 +1107,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         break;
                     case RETRACTING_STAGE_1:
                         if (extender.getCurrentPosition() < retractionStep) {
-                            RobotLog.d("ALLIANCE: 2600 passed");
+                            RobotLog.d("DEMO: 2600 passed");
 
                             setElevationPosition(snarmIntakingHeight);
                             setRotationPosition(rotationAvoid);
@@ -1115,7 +1124,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         break;
                     case INTAKING:
                         if ((extender.getCurrentPosition() < minExtension + 100)) {
-                            RobotLog.d("ALLIANCE: intaking started");
+                            RobotLog.d("DEMO: intaking started");
 
                             setElevationPosition(snarmIntakingHeight);
                             setRotationPosition(rotationAvoid);
@@ -1135,7 +1144,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         break;
                     case RAISING_INTAKE:
                         if ((distanceIntake < 5 || manualIntakeSensor) && (intakePosIndex == 3 || intakePosIndex == 4) && extender.getCurrentPosition() < minExtension + 100 && !shouldTimeSpin) {
-                            RobotLog.d("ALLIANCE: intake raised");
+                            RobotLog.d("DEMO: intake raised");
 
                             setElevationPosition(snarmIntakingHeight);
                             setRotationPosition(rotationCenter);
@@ -1162,7 +1171,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         break;
                     case FEEDING:
                         if (snarmTimer.milliseconds() >= 500) {
-                            RobotLog.d("ALLIANCE: feeding started");
+                            RobotLog.d("DEMO: feeding started");
 
                             setElevationPosition(snarmIntakingHeight);
                             setRotationPosition(rotationCenter);
@@ -1182,7 +1191,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         break;
                     case READY_AGAIN:
                         if (distanceBox < 8 || snarmTimer.milliseconds() > 1000) {
-                            RobotLog.d("ALLIANCE: ready again");
+                            RobotLog.d("DEMO: ready again");
 
                             setElevationPosition(snarmIntakingHeight);
                             setRotationPosition(rotationCenter);
@@ -1204,7 +1213,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         break;
                     case AFTER_READY_AGAIN:
                         if (snarmTimer.milliseconds() > 150 && bypassAfterReadyAgain) {
-                            RobotLog.d("ALLIANCE: after ready again");
+                            RobotLog.d("DEMO: after ready again");
 
                             setElevationPosition(snarmIntakingHeight);
                             setRotationPosition(rotationCenter);
@@ -1226,7 +1235,7 @@ public class FSMBot extends NewDistanceSensorBot {
                         break;
                     case IDLE:
                         if (!shouldIdle) {
-                            RobotLog.d("ALLIANCE: idle");
+                            RobotLog.d("DEMO: idle");
 
                             setElevationPosition(0.2);
                             //setRotationPosition(rotationCenter);

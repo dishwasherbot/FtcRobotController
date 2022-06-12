@@ -19,12 +19,13 @@ public class ManualDriveDemo extends LinearOpMode {
     public void runOpMode() {
         robot.snarmSnarmState = 3;
         robot.isAutonomous = false;
-        robot.setSnarmRotation(0);
-        robot.setDropHeight(0);
+        robot.setSnarmRotation(4);
+        robot.setDropHeight(4);
         robot.init(hardwareMap);
         robot.isAutoStart = false;
-        robot.odometryRaise.setPosition(0.65);
+        robot.odometryRaise.setPosition(0.75);
         robot.goToIntakePosition(3);
+        robot.goToFlipperPosition(0);
         waitForStart();
         while (opModeIsActive()) {
 // snarm code
