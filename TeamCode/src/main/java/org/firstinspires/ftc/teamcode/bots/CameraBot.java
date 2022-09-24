@@ -122,16 +122,16 @@ public class CameraBot extends TempArmBot {
         try {
             Bitmap bmp = getImageFromCamera();
 
-            int left = countYellowPixels(bmp, 0, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
+            //int left = countYellowPixels(bmp, 0, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
             //RobotLog.d("Counted left pixels");
-            int middle = countYellowPixels(bmp, cameraWidth/3, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
+            //int middle = countYellowPixels(bmp, cameraWidth/3, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
             //RobotLog.d("Counted middle pixels");
-            int right = countYellowPixels(bmp, (cameraWidth/3)*2, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
+            //int right = countYellowPixels(bmp, (cameraWidth/3)*2, 0, offsetX, offsetY, cameraWidth/3, cameraHeight);
             //RobotLog.d("Counted right pixels");
             //int total = countPixels(bmp, 0, 0, 0, 0, cameraWidth, cameraHeight);
-
-            int blue = countBluePixels(bmp, 0, 0, 0, 200, cameraWidth, cameraHeight);
-            int red = countRedPixels(bmp, 0, 0, 0, 200, cameraWidth, cameraHeight);
+            int red = countRedPixels(bmp, cameraWidth/3, 0, 0, offsetY, cameraWidth, cameraHeight);
+            int blue = countBluePixels(bmp, cameraWidth/3, 0, 0, offsetY, cameraWidth, cameraHeight);
+            int green = countGreenPixels(bmp, cameraWidth/3, 0, 0, offsetY, cameraWidth, cameraHeight);
 
             //Bitmap bmp2 = Bitmap.createBitmap(bmp, 0, 0, redDotWidth, 110);
             //printAndSave(bmp, viablePixels, "red");
@@ -144,9 +144,9 @@ public class CameraBot extends TempArmBot {
             //opMode.telemetry.addData("total:", total);
 
             int[] pos = new int[2];
-            pos[0] = choosePosition(left, middle, right);
+            pos[0] = choosePosition(red,green,blue);
             //RobotLog.d("Determined which position the duck/TSE is in");
-            pos[1] = chooseSide(blue, red);
+            //pos[1] = chooseSide(blue, red);
             return pos;
         } catch (InterruptedException e) {
             print("Photo taken has been interrupted !");
@@ -154,17 +154,18 @@ public class CameraBot extends TempArmBot {
         }
     }
 
-    public int choosePosition(int left, int middle, int right){
-        if (left > middle && left > right) {
+    public int choosePosition(int blue, int red, int green){
+        if (blue > red && blue > green) {
             return LEFT;
-        } else if (middle > left && middle > right) {
+        } else if (red > blue && red > green) {
             return MIDDLE;
-        } else if (right > left && right > middle) {
+        } else if (green > blue && green > red) {
             return RIGHT;
         }
         return LEFT;
     }
 
+/*
     public int chooseSide(int blue, int red){
         if (blue > red) {
             return 0;
@@ -205,6 +206,8 @@ public class CameraBot extends TempArmBot {
         opMode.telemetry.update();
         return viablePixelsCount;
     }
+
+ */
 
     public int countBluePixels(Bitmap bmp, int startX, int startY, int offsetX, int offsetY, int width, int height){
         int viablePixelsCount = 0;
@@ -247,8 +250,34 @@ public class CameraBot extends TempArmBot {
                 //int redGreenDifference = Math.abs(red - green);
                 //int greenBlueDifference = Math.abs(green - blue);
                 //RobotLog.d(String.format("tested pixel at %d, %d with rgb %d %d %d", x, y, red, green, blue));
-                if (red > 230 && (green < 200 && green > 120) && (blue < 180 && blue > 100)
+                if (red > 150 && (green < 200 && green < 91) && (blue > 133)
                         && red > average) {
+                    //bmp.setPixel(x, y, Color.RED);
+                    //RobotLog.d(String.format("viable pixel found at %d, %d with rgb %d %d %d", x, y, red, green, blue));
+                    viablePixelsCount++;
+                }
+            }
+        }
+        return viablePixelsCount;
+    }
+
+    public int countGreenPixels(Bitmap bmp, int startX, int startY, int offsetX, int offsetY, int width, int height){
+        int viablePixelsCount = 0;
+
+        for (int y = startY + offsetY; y < startY + height - offsetY; y += spacing) {
+            for (int x = startX + offsetX; x < startX + width - offsetX; x += spacing) {
+                int pixel = bmp.getPixel(x, y);
+
+                int red = Color.red(pixel);
+                int green = Color.green(pixel);
+                int blue = Color.blue(pixel);
+                //int redBlueDifference = Math.abs(red - blue);
+                int average = (red + green + blue) / 3;
+                //int redGreenDifference = Math.abs(red - green);
+                //int greenBlueDifference = Math.abs(green - blue);
+                //RobotLog.d(String.format("tested pixel at %d, %d with rgb %d %d %d", x, y, red, green, blue));
+                if (green > 230 && (red < 200 && red > 120) && (blue < 180 && blue > 100)
+                        && green > average) {
                     //bmp.setPixel(x, y, Color.RED);
                     //RobotLog.d(String.format("viable pixel found at %d, %d with rgb %d %d %d", x, y, red, green, blue));
                     viablePixelsCount++;
